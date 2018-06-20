@@ -18,6 +18,7 @@ import net.sf.saxon.s9api.XdmValue;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.opengis.cite.cat20.dgiwg10.util.XMLUtils;
 import org.w3c.dom.Document;
@@ -27,6 +28,7 @@ import org.w3c.dom.Document;
  * (TestNGController).
  * 
  */
+@Ignore
 public class VerifyTestNGController {
 
     private static DocumentBuilder docBuilder;
