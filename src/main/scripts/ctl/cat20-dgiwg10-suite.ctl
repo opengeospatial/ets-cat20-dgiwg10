@@ -6,20 +6,20 @@
   xmlns:tec="java:com.occamlab.te.TECore"
   xmlns:tng="java:org.opengis.cite.cat20.dgiwg10.TestNGController">
 
-  <ctl:function name="tns:run-ets-cat20-dgiwg10">
+  <ctl:function name="tns:run-ets-${ets-code}">
 		<ctl:param name="testRunArgs">A Document node containing test run arguments (as XML properties).</ctl:param>
     <ctl:param name="outputDir">The directory in which the test results will be written.</ctl:param>
 		<ctl:return>The test results as a Source object (root node).</ctl:return>
-		<ctl:description>Runs the cat20-dgiwg10 ${version} test suite.</ctl:description>
+		<ctl:description>Runs the DGIWG CAT 2.0 (${version}) test suite.</ctl:description>
     <ctl:code>
       <xsl:variable name="controller" select="tng:new($outputDir)" />
       <xsl:copy-of select="tng:doTestRun($controller, $testRunArgs)" />
     </ctl:code>
 	</ctl:function>
 
-   <ctl:suite name="tns:ets-cat20-dgiwg10-${version}">
-     <ctl:title>Test suite: ets-cat20-dgiwg10</ctl:title>
-     <ctl:description>Describe scope of testing.</ctl:description>
+  <ctl:suite name="tns:ets-${ets-code}-${version}">
+     <ctl:title>DGIWG CSW 2.0 Conformance Test Suite</ctl:title>
+     <ctl:description>Checks DGIWG CSW 2.0 implementations for conformance.</ctl:description>
      <ctl:starting-test>tns:Main</ctl:starting-test>
    </ctl:suite>
  
@@ -28,18 +28,16 @@
 	  <ctl:code>
         <xsl:variable name="form-data">
            <ctl:form method="POST" width="800" height="600" xmlns="http://www.w3.org/1999/xhtml">
-             <h2>Test suite: ets-cat20-dgiwg10</h2>
+             <h2>DGIWG CSW 2.0 Conformance Test Suite</h2>
              <div style="background:#F0F8FF" bgcolor="#F0F8FF">
                <p>The implementation under test (IUT) is checked against the following specifications:</p>
                <ul>
-                 <li><a href="http://www.w3.org/TR/xml/">Extensible Markup Language (XML) 1.0</a>, 
-				 Fifth Edition</li>
-				 <li><a href="http://www.w3.org/TR/xmlbase/">XML Base</a>, Second Edition</li>
+                 <li><a href="https://portal.dgiwg.org/files/?artifact_id=68270&amp;format=pdf">DGIWG CSW 2.0</a></li>
                </ul>
-               <p>Two conformance levels are defined:</p>
+               <p>The following conformance levels are defined:</p>
                <ul>
-                 <li>Level 1</li>
-                 <li>Level 2</li>
+                 <li>DGIWG_Basic_CSW</li>
+                 <li>DGIWG_CSWT</li>
                </ul>
              </div>
              <fieldset style="background:#ccffff">
@@ -50,20 +48,13 @@
                  <label for="uri">
                    <h4 style="margin-bottom: 0.5em">Location of IUT (absolute http: or file: URI)</h4>
                  </label>
-                 <input id="uri" name="uri" size="128" type="text" value="http://www.w3schools.com/xml/note.xml" />
+                 <input id="uri" name="uri" size="128" type="text" />
                </p>
                <p>
                  <label for="doc">
                    <h4 style="margin-bottom: 0.5em">Upload IUT</h4>
                  </label>
                  <input name="doc" id="doc" size="128" type="file" />
-               </p>
-               <p>
-                 <label for="level">Conformance class: </label>
-                 <input id="level-1" type="radio" name="level" value="1" checked="checked" />
-                 <label for="level-1"> Level 1 | </label>
-                 <input id="level-2" type="radio" name="level" value="2" />
-                 <label class="form-label" for="level-2"> Level 2</label>
                </p>
              </fieldset>
              <p>
@@ -85,14 +76,13 @@
               </xsl:otherwise>
             </xsl:choose>
           </entry>
-          <entry key="ics"><xsl:value-of select="$form-data/values/value[@key='level']"/></entry>
 		    </properties>
 		   </xsl:variable>
        <xsl:variable name="testRunDir">
          <xsl:value-of select="tec:getTestRunDirectory($te:core)"/>
        </xsl:variable>
        <xsl:variable name="test-results">
-        <ctl:call-function name="tns:run-ets-cat20-dgiwg10">
+         <ctl:call-function name="tns:run-ets-${ets-code}">
 			    <ctl:with-param name="testRunArgs" select="$test-run-props"/>
           <ctl:with-param name="outputDir" select="$testRunDir" />
 			  </ctl:call-function>

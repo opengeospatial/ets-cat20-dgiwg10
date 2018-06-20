@@ -4,15 +4,15 @@
 <organization>
   <name>OGC</name>
   <standard>
-    <name>Test suite: ets-cat20-dgiwg10</name>
+    <name>DGIWG Catalogue Service for the Web 2.0 (DGIWG CSW 2.0)</name>
     <version>
       <name>${spec-version}</name>
       <suite>
         <namespace-uri>http://www.opengis.net/cite/cat20-dgiwg10</namespace-uri>
         <prefix>tns</prefix>
-        <local-name>ets-cat20-dgiwg10-${version}</local-name>
-        <title>Test suite ets-cat20-dgiwg10</title>
-        <description>Describe scope of testing.</description>
+        <local-name>ets-${ets-code}-${version}</local-name>
+        <title>DGIWG Catalogue Service for the Web 2.0 Test Suite</title>
+        <description>Checks DGIWG CSW 2.0 implementations for conformance.</description>
       </suite>
       <revision>
         <name>${version}</name>
