@@ -6,15 +6,12 @@ import java.net.URI;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.opengis.cite.cat20.dgiwg10.util.ClientUtils;
 import org.opengis.cite.cat20.dgiwg10.util.TestSuiteLogger;
 import org.opengis.cite.cat20.dgiwg10.util.URIUtils;
 import org.opengis.cite.cat20.dgiwg10.util.XMLUtils;
 import org.testng.ISuite;
 import org.testng.ISuiteListener;
 import org.w3c.dom.Document;
-
-import com.sun.jersey.api.client.Client;
 
 /**
  * A listener that performs various tasks before and after a test suite is run,
@@ -34,7 +31,6 @@ public class SuiteFixtureListener implements ISuiteListener {
     @Override
     public void onStart(ISuite suite) {
         processSuiteParameters(suite);
-        registerClientComponent(suite);
     }
 
     @Override
@@ -50,7 +46,7 @@ public class SuiteFixtureListener implements ISuiteListener {
      * entity referenced by the {@link TestRunArg#IUT iut} argument is retrieved
      * and written to a File that is set as the value of the suite attribute
      * {@link SuiteAttribute#TEST_SUBJ_FILE testSubjectFile}.
-     * 
+     *
      * @param suite
      *            An ISuite object representing a TestNG test suite.
      */
@@ -83,21 +79,6 @@ public class SuiteFixtureListener implements ISuiteListener {
             logMsg.append(iutRef).append("\n");
             logMsg.append(XMLUtils.writeNodeToString(iutDoc));
             TestSuiteLogger.log(Level.FINE, logMsg.toString());
-        }
-    }
-
-    /**
-     * A client component is added to the suite fixture as the value of the
-     * {@link SuiteAttribute#CLIENT} attribute; it may be subsequently accessed
-     * via the {@link org.testng.ITestContext#getSuite()} method.
-     *
-     * @param suite
-     *            The test suite instance.
-     */
-    void registerClientComponent(ISuite suite) {
-        Client client = ClientUtils.buildClient();
-        if (null != client) {
-            suite.setAttribute(SuiteAttribute.CLIENT.getName(), client);
         }
     }
 
