@@ -79,6 +79,26 @@ public class GetCapabilitiesTest {
     }
 
     @Test
+    public void testVerifyGetRecordsQueryables()
+                            throws Exception {
+        Document capabilitiesDocument = parseCapabilitiesDocument( "GetCapabilities-DGIWG-response.xml" );
+
+        GetCapabilities getCapabilities = new GetCapabilities();
+        getCapabilities.setResponseDocument( capabilitiesDocument );
+        getCapabilities.verifyGetRecordsQueryables();
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testVerifyGetRecordsQueryables_invalid()
+                            throws Exception {
+        Document capabilitiesDocument = parseCapabilitiesDocument( "GetCapabilities-response.xml" );
+
+        GetCapabilities getCapabilities = new GetCapabilities();
+        getCapabilities.setResponseDocument( capabilitiesDocument );
+        getCapabilities.verifyGetRecordsQueryables();
+    }
+
+    @Test
     public void testVerifySupportGetRecordByIdReturnType()
                             throws Exception {
         Document capabilitiesDocument = parseCapabilitiesDocument( "GetCapabilities-DGIWG-response.xml" );
@@ -96,6 +116,26 @@ public class GetCapabilitiesTest {
         GetCapabilities getCapabilities = new GetCapabilities();
         getCapabilities.setResponseDocument( capabilitiesDocument );
         getCapabilities.verifySupportGetRecordByIdReturnType();
+    }
+
+    @Test
+    public void testVerifyGetRecordByIdQueryables()
+                            throws Exception {
+        Document capabilitiesDocument = parseCapabilitiesDocument( "GetCapabilities-DGIWG-response.xml" );
+
+        GetCapabilities getCapabilities = new GetCapabilities();
+        getCapabilities.setResponseDocument( capabilitiesDocument );
+        getCapabilities.verifyGetRecordByIdQueryables();
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testVerifyGetRecordByIdQueryables_invalid()
+                            throws Exception {
+        Document capabilitiesDocument = parseCapabilitiesDocument( "GetCapabilities-response.xml" );
+
+        GetCapabilities getCapabilities = new GetCapabilities();
+        getCapabilities.setResponseDocument( capabilitiesDocument );
+        getCapabilities.verifyGetRecordByIdQueryables();
     }
 
     private Document parseCapabilitiesDocument( String resource )

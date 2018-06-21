@@ -1,5 +1,6 @@
 package org.opengis.cite.cat20.dgiwg10.getcapabilities;
 
+import static javax.xml.xpath.XPathConstants.BOOLEAN;
 import static org.opengis.cite.cat20.dgiwg10.DGIWG1CAT2.ACCEPT_VERSIONS_PARAM;
 import static org.opengis.cite.cat20.dgiwg10.DGIWG1CAT2.GETCAPABILITIES;
 import static org.opengis.cite.cat20.dgiwg10.DGIWG1CAT2.REQUEST_PARAM;
@@ -11,10 +12,18 @@ import static org.opengis.cite.cat20.dgiwg10.ProtocolBinding.GET;
 import static org.opengis.cite.cat20.dgiwg10.util.NamespaceBindings.withStandardBindings;
 import static org.opengis.cite.cat20.dgiwg10.util.ServiceMetadataUtils.getOperationEndpoint;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.opengis.cite.cat20.dgiwg10.CommonFixture;
 import org.testng.SkipException;
@@ -62,6 +71,23 @@ import com.sun.jersey.api.client.ClientResponse;
 public class GetCapabilities extends CommonFixture {
 
     private static final String ABSTRACT_TEXT = "This service implements the DGIWG Catalogue Service for the Web ISO Profile version 1.0, DGIWG Basic CSW conformance class (http://www.dgiwg.org/std/csw/1.0/conf/basic)";
+
+    private static List<String> ADDITIONAL_ISO_QUERYABLES = Arrays.asList( "AnyText", "Title", "Abstract",
+                                                                           "Identifier", "Modified", "Type",
+                                                                           "BoundingBox", "Source", "Association",
+                                                                           "CRS", "RevisionDate", "AlternateTitle",
+                                                                           "CreationDate", "PublicationDate",
+                                                                           "OrganisationName",
+                                                                           "HasSecurityConstraints",
+                                                                           "ResourceIdentifier", "ParentIdentifier",
+                                                                           "KeywordType", "TopicCategory",
+                                                                           "ResourceLanguage",
+                                                                           "GeographicDescriptionCode", "Denominator",
+                                                                           "DistanceValue", "DistanceUOM",
+                                                                           "ServiceType", "ServiceTypeVersion",
+                                                                           "GeographicDescriptionCode", "OperatesOn",
+                                                                           "OperatesOnIdentifier", "OperatesOnName",
+                                                                           "CouplingType", "Operation" );
 
     private ClientResponse capabilitiesResponse;
 
@@ -121,18 +147,22 @@ public class GetCapabilities extends CommonFixture {
         String xpath = "//ows:OperationsMetadata/ows:Operation[@name='GetRecords']/ows:Parameter[@name='typeNames']/ows:Value [text() = 'csw:Record' ] and "
                        + "//ows:OperationsMetadata/ows:Operation[@name='GetRecords']/ows:Parameter[@name='typeNames']/ows:Value[text() = 'gmd:MD_Metadata' ]";
         assertXPath( xpath, capabilitiesDocument, withStandardBindings().getAllBindings(),
-                     "Return types csw:Record and gmd:MD_Metadata for the GetRecords operation are not supported." );
+                     "Return types csw:Record and/or gmd:MD_Metadata for the GetRecords operation are not supported." );
     }
 
     /**
      * Verify that the reported queriables and returnables for the GetRecords operation. At least include those defined
-     * in section s 7.1.1 and 7.1.3. (Requirements 5, 8 ).
+     * in section s 7.1.1 and 7.1.3. (Requirements 5, 8).
+     * 
+     * Requirement 5 is tested here for queryables.
      */
-    @Test(description = "Implements A.1.1 GetCapabilities for DGIWG Basic CSW (Requirement 5, 8)", dependsOnMethods = "verifyNoError")
-    public void verifyGetRecordsQueryablesAndReturnables() {
+    @Test(description = "Implements A.1.1 GetCapabilities for DGIWG Basic CSW (Requirement 5, GetRecords)", dependsOnMethods = "verifyNoError")
+    public void verifyGetRecordsQueryables() {
         setCurrentResponse();
         assertResponseDocument();
-        // TODO
+        List<String> unsupportedQuerables = collectUnsupportedQueryables( "GetRecords" );
+        assertTrue( unsupportedQuerables.isEmpty(), "Missing queryables for GetRecords operation: "
+                                                    + unsupportedQuerables );
     }
 
     /**
@@ -146,18 +176,22 @@ public class GetCapabilities extends CommonFixture {
         String xpath = "//ows:OperationsMetadata/ows:Operation[@name='GetRecordById']/ows:Parameter[@name='typeNames']/ows:Value [text() = 'csw:Record' ] and "
                        + "//ows:OperationsMetadata/ows:Operation[@name='GetRecordById']/ows:Parameter[@name='typeNames']/ows:Value[text() = 'gmd:MD_Metadata' ]";
         assertXPath( xpath, capabilitiesDocument, withStandardBindings().getAllBindings(),
-                     "Return types csw:Record and gmd:MD_Metadata for the GetRecordById operation are not supported." );
+                     "Return types csw:Record and/or gmd:MD_Metadata for the GetRecordById operation are not supported." );
     }
 
     /**
      * Verify that the reported queriables and returnables for the GetRecordById operation. At least include those
      * defined in section s 7.1.1 and 7.1.3. (Requirement 10).
+     *
+     * Requirement 5 is tested here for queryables.
      */
-    @Test(description = "Implements A.1.1 GetCapabilities for DGIWG Basic CSW (Requirement 10)", dependsOnMethods = "verifyNoError")
-    public void verifyGetRecordByIdQueryablesAndReturnables() {
+    @Test(description = "Implements A.1.1 GetCapabilities for DGIWG Basic CSW (Requirement 5, GetRecordById)", dependsOnMethods = "verifyNoError")
+    public void verifyGetRecordByIdQueryables() {
         setCurrentResponse();
         assertResponseDocument();
-        // TODO
+        List<String> unsupportedQuerables = collectUnsupportedQueryables( "GetRecordById" );
+        assertTrue( unsupportedQuerables.isEmpty(), "Missing queryables for GetRecordById operation: "
+                                                    + unsupportedQuerables );
     }
 
     private void setCurrentResponse() {
@@ -167,7 +201,7 @@ public class GetCapabilities extends CommonFixture {
 
     /**
      * For testing purposes only!
-     * 
+     *
      * @param rspDocument
      *            never <code>null</code>
      */
@@ -178,6 +212,45 @@ public class GetCapabilities extends CommonFixture {
     private void assertResponseDocument() {
         if ( capabilitiesDocument == null )
             throw new SkipException( "Capabilities document could not be requested, test will be skipped." );
+    }
+
+    private List<String> collectUnsupportedQueryables( String operation ) {
+        List<String> unsupportedQuerables = new ArrayList<>();
+
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        xpath.setNamespaceContext( withStandardBindings() );
+        for ( String additionalQueryable : ADDITIONAL_ISO_QUERYABLES ) {
+            String xpathExpr = createQueryablePropertiesXPath( operation, additionalQueryable );
+            try {
+                Boolean queryableExists = (Boolean) xpath.evaluate( xpathExpr, capabilitiesDocument, BOOLEAN );
+                if ( !queryableExists )
+                    unsupportedQuerables.add( additionalQueryable );
+            } catch ( XPathExpressionException e ) {
+                // XPath is correct
+            }
+        }
+        return unsupportedQuerables;
+    }
+
+    private String createQueryablePropertiesXPath( String operationName, String additionalQueryable ) {
+        StringBuilder xpath = new StringBuilder();
+        // Per Operation
+        xpath.append( "(" );
+        xpath.append( "//ows:OperationsMetadata/ows:Operation[@name='" );
+        xpath.append( operationName );
+        xpath.append( "']/ows:Constraint[@name='SupportedISOQueryables']/ows:Value[text()='" );
+        xpath.append( additionalQueryable );
+        xpath.append( "' ]" );
+        xpath.append( ")" );
+        // OR
+        xpath.append( " or " ).append( "\n" );
+        // global
+        xpath.append( "(" );
+        xpath.append( "//ows:OperationsMetadata/ows:Constraint[@name='SupportedISOQueryables']/ows:Value[text()='" );
+        xpath.append( additionalQueryable );
+        xpath.append( "' ]" );
+        xpath.append( ")" );
+        return xpath.toString();
     }
 
 }
