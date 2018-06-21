@@ -1,5 +1,8 @@
 package org.opengis.cite.cat20.dgiwg10;
 
+import static org.opengis.cite.cat20.dgiwg10.ErrorMessageKeys.XPATH_RESULT;
+import static org.testng.Assert.assertTrue;
+
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,6 +72,34 @@ public class ETSAssert {
      *            (key) to a prefix (value). It may be {@code null}.
      */
     public static void assertXPath( String expr, Node context, Map<String, String> namespaceBindings ) {
+        assertXPath( expr, context, namespaceBindings, null );
+    }
+
+    /**
+     * Asserts that an XPath 1.0 expression holds true for the given evaluation context. The following standard
+     * namespace bindings do not need to be explicitly declared:
+     *
+     * <ul>
+     * <li>{@value org.opengis.cite.cat20.dgiwg10.Namespaces#OWS_PREFIX}:
+     * {@value org.opengis.cite.cat20.dgiwg10.Namespaces#OWS}</li>
+     * <li>{@value org.opengis.cite.cat20.dgiwg10.Namespaces#XLINK_PREFIX}:
+     * {@value org.opengis.cite.cat20.dgiwg10.Namespaces#XLINK}</li>
+     * <li>{@value org.opengis.cite.cat20.dgiwg10.Namespaces#CSW_PREFIX}:
+     * {@value org.opengis.cite.cat20.dgiwg10.Namespaces#CSW}</li>
+     * </ul>
+     *
+     * @param expr
+     *            A valid XPath 1.0 expression.
+     * @param context
+     *            The context node.
+     * @param namespaceBindings
+     *            A collection of namespace bindings for the XPath expression, where each entry maps a namespace URI
+     *            (key) to a prefix (value). It may be {@code null}.
+     * @param assertionErrorMessage
+     *            an optional message thrown if the assertion fails, if <code>null</code> the default message is used
+     */
+    public static void assertXPath( String expr, Node context, Map<String, String> namespaceBindings,
+                                    String assertionErrorMessage ) {
         if ( null == context ) {
             throw new NullPointerException( "Context node is null." );
         }
@@ -90,7 +121,10 @@ public class ETSAssert {
         } else {
             elemNode = (Element) context;
         }
-        Assert.assertTrue( result, ErrorMessage.format( ErrorMessageKeys.XPATH_RESULT, elemNode.getNodeName(), expr ) );
+        String errorMessage = assertionErrorMessage;
+        if ( errorMessage == null )
+            errorMessage = ErrorMessage.format( XPATH_RESULT, elemNode.getNodeName(), expr );
+        assertTrue( result, errorMessage );
     }
 
     /**
@@ -158,12 +192,12 @@ public class ETSAssert {
         } catch ( XPathExpressionException xpe ) {
             // won't happen
         }
-        Assert.assertTrue( nodeList.getLength() > 0, "Exception not found in response: " + expr );
+        assertTrue( nodeList.getLength() > 0, "Exception not found in response: " + expr );
         if ( null != locator && !locator.isEmpty() ) {
             Element exception = (Element) nodeList.item( 0 );
             String locatorValue = exception.getAttribute( "locator" ).toLowerCase();
-            Assert.assertTrue( locatorValue.contains( locator.toLowerCase() ),
-                               String.format( "Expected locator attribute to contain '%s']", locator ) );
+            assertTrue( locatorValue.contains( locator.toLowerCase() ),
+                        String.format( "Expected locator attribute to contain '%s']", locator ) );
         }
     }
 }
