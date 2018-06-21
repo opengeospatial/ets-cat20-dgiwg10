@@ -11,7 +11,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.opengis.cite.cat20.dgiwg10.util.ServiceMetadataUtilsTest;
 import org.testng.ISuite;
 import org.testng.ITestContext;
 import org.w3c.dom.Document;
@@ -38,7 +37,7 @@ public class GetCapabilitiesTest {
         dbf.setNamespaceAware( true );
         docBuilder = dbf.newDocumentBuilder();
     }
-/*
+
     @Test
     public void testVerifyMetadataLink()
                             throws Exception {
@@ -101,9 +100,8 @@ public class GetCapabilitiesTest {
 
     private Document parseCapabilitiesDocument( String resource )
                             throws SAXException, IOException {
-        InputStream is = ServiceMetadataUtilsTest.class.getResourceAsStream( resource );
+        InputStream is = getClass().getResourceAsStream( resource );
         return docBuilder.parse( is );
     }
-    */
 
 }
