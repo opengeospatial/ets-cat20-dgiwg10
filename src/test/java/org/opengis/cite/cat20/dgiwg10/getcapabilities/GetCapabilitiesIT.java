@@ -46,6 +46,6 @@ public class GetCapabilitiesIT {
         GetCapabilities getCapabilities = new GetCapabilities();
         getCapabilities.initCommonFixture( testContext );
         getCapabilities.issueGetCapabilities();
-        getCapabilities.verifyNoError();
+        getCapabilities.req1Req3VerifyNoError();
     }
 }
