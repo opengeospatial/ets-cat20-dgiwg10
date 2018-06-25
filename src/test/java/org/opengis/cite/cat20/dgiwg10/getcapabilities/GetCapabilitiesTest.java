@@ -45,7 +45,7 @@ public class GetCapabilitiesTest {
 
         GetCapabilities getCapabilities = new GetCapabilities();
         getCapabilities.setResponseDocument( capabilitiesDocument );
-        getCapabilities.req4VerifyMetadataLink();
+        getCapabilities.verifyMetadataLink();
     }
 
     @Test(expected = AssertionError.class)
@@ -55,7 +55,7 @@ public class GetCapabilitiesTest {
 
         GetCapabilities getCapabilities = new GetCapabilities();
         getCapabilities.setResponseDocument( capabilitiesDocument );
-        getCapabilities.req4VerifyMetadataLink();
+        getCapabilities.verifyMetadataLink();
     }
 
     @Test
@@ -65,7 +65,7 @@ public class GetCapabilitiesTest {
 
         GetCapabilities getCapabilities = new GetCapabilities();
         getCapabilities.setResponseDocument( capabilitiesDocument );
-        getCapabilities.req6VerifySupportGetRecordsReturnType();
+        getCapabilities.verifySupportGetRecordsReturnType();
     }
 
     @Test(expected = AssertionError.class)
@@ -75,7 +75,7 @@ public class GetCapabilitiesTest {
 
         GetCapabilities getCapabilities = new GetCapabilities();
         getCapabilities.setResponseDocument( capabilitiesDocument );
-        getCapabilities.req6VerifySupportGetRecordsReturnType();
+        getCapabilities.verifySupportGetRecordsReturnType();
     }
 
     @Test
@@ -85,7 +85,7 @@ public class GetCapabilitiesTest {
 
         GetCapabilities getCapabilities = new GetCapabilities();
         getCapabilities.setResponseDocument( capabilitiesDocument );
-        getCapabilities.req5VerifyGetRecordsQueryables();
+        getCapabilities.verifyGetRecordsQueryables();
     }
 
     @Test(expected = AssertionError.class)
@@ -95,7 +95,7 @@ public class GetCapabilitiesTest {
 
         GetCapabilities getCapabilities = new GetCapabilities();
         getCapabilities.setResponseDocument( capabilitiesDocument );
-        getCapabilities.req5VerifyGetRecordsQueryables();
+        getCapabilities.verifyGetRecordsQueryables();
     }
 
     @Test
@@ -105,7 +105,7 @@ public class GetCapabilitiesTest {
 
         GetCapabilities getCapabilities = new GetCapabilities();
         getCapabilities.setResponseDocument( capabilitiesDocument );
-        getCapabilities.req11VerifySupportGetRecordByIdReturnType();
+        getCapabilities.verifySupportGetRecordByIdReturnType();
     }
 
     @Test(expected = AssertionError.class)
@@ -115,7 +115,7 @@ public class GetCapabilitiesTest {
 
         GetCapabilities getCapabilities = new GetCapabilities();
         getCapabilities.setResponseDocument( capabilitiesDocument );
-        getCapabilities.req11VerifySupportGetRecordByIdReturnType();
+        getCapabilities.verifySupportGetRecordByIdReturnType();
     }
 
     @Test
@@ -125,7 +125,7 @@ public class GetCapabilitiesTest {
 
         GetCapabilities getCapabilities = new GetCapabilities();
         getCapabilities.setResponseDocument( capabilitiesDocument );
-        getCapabilities.req5VerifyGetRecordByIdQueryables();
+        getCapabilities.verifyGetRecordByIdQueryables();
     }
 
     @Test(expected = AssertionError.class)
@@ -135,7 +135,7 @@ public class GetCapabilitiesTest {
 
         GetCapabilities getCapabilities = new GetCapabilities();
         getCapabilities.setResponseDocument( capabilitiesDocument );
-        getCapabilities.req5VerifyGetRecordByIdQueryables();
+        getCapabilities.verifyGetRecordByIdQueryables();
     }
 
     private Document parseCapabilitiesDocument( String resource )

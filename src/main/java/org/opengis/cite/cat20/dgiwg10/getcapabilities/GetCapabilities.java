@@ -113,7 +113,7 @@ public class GetCapabilities extends CommonFixture {
      * Requirement 3).
      */
     @Test(description = "Implements A.1.1 GetCapabilities for DGIWG Basic CSW (Requirement 1, 3)", dependsOnMethods = "issueGetCapabilities")
-    public void req1Req3VerifyNoError() {
+    public void verifyNoError() {
         setCurrentResponse();
         int status = this.capabilitiesResponse.getStatus();
         assertEquals( status, 200, String.format( "Expected status code 200 but received %d.", status ) );
@@ -126,8 +126,8 @@ public class GetCapabilities extends CommonFixture {
     /**
      * Verify that the response metadata link includes the profile text described in requirement 4.
      */
-    @Test(description = "Implements A.1.1 GetCapabilities for DGIWG Basic CSW (Requirement 4)", dependsOnMethods = "req1Req3VerifyNoError")
-    public void req4VerifyMetadataLink() {
+    @Test(description = "Implements A.1.1 GetCapabilities for DGIWG Basic CSW (Requirement 4)", dependsOnMethods = "verifyNoError")
+    public void verifyMetadataLink() {
         setCurrentResponse();
         assertResponseDocument();
         String xpath = "contains(normalize-space(//csw:Capabilities/ows:ServiceIdentification/ows:Abstract), '"
@@ -140,8 +140,8 @@ public class GetCapabilities extends CommonFixture {
      * Verify that the XML response indicates support for csw:Record and gmd:MD_Metadata return types for the GetRecords
      * operation. (Requirement 6).
      */
-    @Test(description = "Implements A.1.1 GetCapabilities for DGIWG Basic CSW (Requirement 6)", dependsOnMethods = "req1Req3VerifyNoError")
-    public void req6VerifySupportGetRecordsReturnType() {
+    @Test(description = "Implements A.1.1 GetCapabilities for DGIWG Basic CSW (Requirement 6)", dependsOnMethods = "verifyNoError")
+    public void verifySupportGetRecordsReturnType() {
         setCurrentResponse();
         assertResponseDocument();
         String xpath = "//ows:OperationsMetadata/ows:Operation[@name='GetRecords']/ows:Parameter[@name='typeNames']/ows:Value [text() = 'csw:Record' ] and "
@@ -156,8 +156,8 @@ public class GetCapabilities extends CommonFixture {
      * 
      * Requirement 5 is tested here for queryables.
      */
-    @Test(description = "Implements A.1.1 GetCapabilities for DGIWG Basic CSW (Requirement 5, GetRecords)", dependsOnMethods = "req1Req3VerifyNoError")
-    public void req5VerifyGetRecordsQueryables() {
+    @Test(description = "Implements A.1.1 GetCapabilities for DGIWG Basic CSW (Requirement 5, 8, GetRecords)", dependsOnMethods = "verifyNoError")
+    public void verifyGetRecordsQueryables() {
         setCurrentResponse();
         assertResponseDocument();
         List<String> unsupportedQuerables = collectUnsupportedQueryables( "GetRecords" );
@@ -169,8 +169,8 @@ public class GetCapabilities extends CommonFixture {
      * Verify that the XML response indicates support for csw:Record and gmd:MD_Metadata return types for the
      * GetRecordById operation. (Requirement 11).
      */
-    @Test(description = "Implements A.1.1 GetCapabilities for DGIWG Basic CSW (Requirement 11)", dependsOnMethods = "req1Req3VerifyNoError")
-    public void req11VerifySupportGetRecordByIdReturnType() {
+    @Test(description = "Implements A.1.1 GetCapabilities for DGIWG Basic CSW (Requirement 11)", dependsOnMethods = "verifyNoError")
+    public void verifySupportGetRecordByIdReturnType() {
         setCurrentResponse();
         assertResponseDocument();
         String xpath = "//ows:OperationsMetadata/ows:Operation[@name='GetRecordById']/ows:Parameter[@name='typeNames']/ows:Value [text() = 'csw:Record' ] and "
@@ -185,8 +185,8 @@ public class GetCapabilities extends CommonFixture {
      *
      * Requirement 5 is tested here for queryables.
      */
-    @Test(description = "Implements A.1.1 GetCapabilities for DGIWG Basic CSW (Requirement 5, GetRecordById)", dependsOnMethods = "req1Req3VerifyNoError")
-    public void req5VerifyGetRecordByIdQueryables() {
+    @Test(description = "Implements A.1.1 GetCapabilities for DGIWG Basic CSW (Requirement 5, 10, GetRecordById)", dependsOnMethods = "verifyNoError")
+    public void verifyGetRecordByIdQueryables() {
         setCurrentResponse();
         assertResponseDocument();
         List<String> unsupportedQuerables = collectUnsupportedQueryables( "GetRecordById" );
