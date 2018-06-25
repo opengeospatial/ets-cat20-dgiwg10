@@ -49,6 +49,7 @@
     <ets-code>cat20-dgiwg10</ets-code>
     <spec-version>1.0</spec-version>
     <docker.teamengine.version>5.3</docker.teamengine.version>
+    <docker.tebase.dir>${project.build.directory}</docker.tebase.dir>
   </properties>
 
   <dependencies>
@@ -199,6 +200,11 @@
                       </http>
                       <time>120000</time>
                     </wait>
+                    <volumes>
+                      <bind>
+                        <volume>${docker.tebase.dir}:/root/te_base/users</volume>
+                      </bind>
+                    </volumes>
                   </run>
                 </image>
               </images>
