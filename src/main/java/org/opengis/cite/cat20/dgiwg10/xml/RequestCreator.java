@@ -16,6 +16,7 @@ import org.opengis.cite.cat20.dgiwg10.util.OutputSchema;
 import org.opengis.cite.cat20.dgiwg10.util.TestSuiteLogger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 /**
@@ -48,6 +49,23 @@ public class RequestCreator {
      *             if no POST endpoint for operation GetRecords could be found in the capabilities
      */
     public Document createGetRecordsRequest( OutputSchema outputSchema, ElementSetName elementSetName ) {
+        return createGetRecordsRequest( outputSchema, elementSetName, null );
+    }
+
+    /**
+     * @param outputSchema
+     *            the outputSchema to use in the request, never <code>null</code>
+     * @param elementSetName
+     *            the elementSetName to use in the request, never <code>null</code>
+     * @param filter
+     *            the filter to append (local name must be 'Filter'), may be <code>null</code> if no filter should be
+     *            added
+     * @return the request, never <code>null</code>
+     * @throws IllegalArgumentException
+     *             if no POST endpoint for operation GetRecords could be found in the capabilities or the passed filter
+     *             does not have a local name 'Filter'
+     */
+    public Document createGetRecordsRequest( OutputSchema outputSchema, ElementSetName elementSetName, Node filter ) {
         Document request;
         try {
             InputStream requestAsStream = getClass().getResourceAsStream( "/org/opengis/cite/cat20/dgiwg10/getrecords/GetRecords-request.xml" );
@@ -62,7 +80,20 @@ public class RequestCreator {
         query.setAttribute( "typeNames", outputSchema.getTypeName() );
         Element elementSetNameElement = (Element) query.getElementsByTagNameNS( CSW, "ElementSetName" ).item( 0 );
         elementSetNameElement.setTextContent( elementSetName.name().toLowerCase() );
+        appendFilter( request, query, filter );
         return request;
+    }
+
+    private void appendFilter( Document request, Element query, Node filter ) {
+        if ( filter == null )
+            return;
+        if ( !"Filter".equals( filter.getLocalName() ) )
+            throw new IllegalArgumentException( "filter has no local name 'Filter'" );
+
+        Element constraint = request.createElementNS( CSW, "Constraint" );
+        constraint.setAttribute( "version", "1.1.0" );
+        constraint.appendChild( request.importNode( filter, true ) );
+        query.appendChild( constraint );
     }
 
 }

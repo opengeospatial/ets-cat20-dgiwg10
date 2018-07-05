@@ -17,6 +17,7 @@
   <test name="DGIWG_Basic_CSW">
     <packages>
       <package name="org.opengis.cite.cat20.dgiwg10.getcapabilities" />
+      <package name="org.opengis.cite.cat20.dgiwg10.getrecords" />
     </packages>
   </test>
 
