@@ -10,6 +10,8 @@ public class DGIWG1CAT2 {
 
     public static final String TRANSACTION = "Transaction";
 
+    public static final String GETRECORDS = "GetRecords";
+
     /** PARAMETER **/
 
     public static final String REQUEST_PARAM = "REQUEST";

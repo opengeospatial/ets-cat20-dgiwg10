@@ -2,6 +2,8 @@ package org.opengis.cite.cat20.dgiwg10.util;
 
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.CSW;
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.CSW_PREFIX;
+import static org.opengis.cite.cat20.dgiwg10.Namespaces.DC;
+import static org.opengis.cite.cat20.dgiwg10.Namespaces.DC_PREFIX;
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.OWS;
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.OWS_PREFIX;
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.XLINK;
@@ -99,6 +101,7 @@ public class NamespaceBindings implements NamespaceContext {
         nsBindings.addNamespaceBinding( OWS, OWS_PREFIX );
         nsBindings.addNamespaceBinding( XLINK, XLINK_PREFIX );
         nsBindings.addNamespaceBinding( CSW, CSW_PREFIX );
+        nsBindings.addNamespaceBinding( DC, DC_PREFIX );
         return nsBindings;
     }
 
