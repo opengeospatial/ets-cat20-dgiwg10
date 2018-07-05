@@ -2,9 +2,13 @@ package org.opengis.cite.cat20.dgiwg10.util;
 
 import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathConstants.STRING;
+import static org.opengis.cite.cat20.dgiwg10.DGIWG1CAT2.GETRECORDS;
+import static org.opengis.cite.cat20.dgiwg10.ProtocolBinding.POST;
 import static org.opengis.cite.cat20.dgiwg10.util.ElementSetName.FULL;
 import static org.opengis.cite.cat20.dgiwg10.util.OutputSchema.DC;
+import static org.opengis.cite.cat20.dgiwg10.util.ServiceMetadataUtils.getOperationEndpoint;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +16,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.opengis.cite.cat20.dgiwg10.xml.RequestCreator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -41,8 +46,15 @@ public class DataSampler {
      * Requests 10 records in dublin core (full) from the CSW.
      */
     public void acquireRecords() {
+        URI endpoint = getOperationEndpoint( this.capabilitiesDocument, GETRECORDS, POST );
+        if ( endpoint == null ) {
+            throw new IllegalArgumentException( "No POST binding available for GetRecords request." );
+        }
+        RequestCreator requestCreator = new RequestCreator();
+        Document request = requestCreator.createGetRecordsRequest( DC, FULL);
+
         CSWClient cswClient = new CSWClient( this.capabilitiesDocument );
-        ClientResponse getRecordsResponse = cswClient.getRecords( DC, FULL );
+        ClientResponse getRecordsResponse = cswClient.submitPostRequest( endpoint, request );
         if ( getRecordsResponse.getStatus() != 200 )
             return;
         try {
