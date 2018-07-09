@@ -26,7 +26,7 @@
 	============================================================== -->
 	<include schemaLocation="gml.xsd"/>
 	<include schemaLocation="basicTypes.xsd"/>
-	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="http://www.w3.org/1999/xlink.xsd"/>
+	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="../../../w3c/xlink/1999/xlink.xsd"/>
 	<!-- =========================================================== -->
 	<!-- ==================== Objects ================================ -->
 	<!-- =========================================================== -->
