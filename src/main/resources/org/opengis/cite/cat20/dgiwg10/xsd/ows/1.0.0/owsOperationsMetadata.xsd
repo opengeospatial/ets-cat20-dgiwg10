@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://www.opengis.net/ows/1.1" 
-xmlns:ows="http://www.opengis.net/ows/1.1" 
+<schema targetNamespace="http://www.opengis.net/ows" 
+xmlns:ows="http://www.opengis.net/ows" 
 xmlns="http://www.w3.org/2001/XMLSchema" 
-elementFormDefault="qualified" version="1.1.0.3" xml:lang="en">
+elementFormDefault="qualified" version="1.0.0.2" xml:lang="en">
 	<annotation>
 		<appinfo>owsOperationsMetadata.xsd</appinfo>
 		<documentation>This XML Schema Document encodes the basic contents of the "OperationsMetadata" section of the GetCapabilities operation response, also known as the Capabilities XML document.
-			
-			OWS is an OGC Standard.
-			Copyright (c) 2006,2010 Open Geospatial Consortium.
-			To obtain additional rights of use, visit http://www.opengeospatial.org/legal/ .
+		
+		OWS is an OGC Standard.
+		Copyright (c) 2005,2010 Open Geospatial Consortium.
+		To obtain additional rights of use, visit http://www.opengeospatial.org/legal/ .
 		</documentation>
 	</annotation>
 	<!-- ==============================================================
@@ -18,7 +18,6 @@ elementFormDefault="qualified" version="1.1.0.3" xml:lang="en">
 	<include schemaLocation="owsAll.xsd"/>
 	<include schemaLocation="owsCommon.xsd"/>
 	<include schemaLocation="ows19115subset.xsd"/>
-	<include schemaLocation="owsDomainType.xsd"/>
 	<!-- ==============================================================
 		elements and types
 	============================================================== -->
@@ -138,4 +137,26 @@ elementFormDefault="qualified" version="1.1.0.3" xml:lang="en">
 		</complexContent>
 	</complexType>
 	<!-- ========================================================== -->
+	<complexType name="DomainType">
+		<annotation>
+			<documentation>Valid domain (or set of values) of one parameter or other quantity used by this server. A non-parameter quantity may not be explicitly represented in the server software. (Informative: An example is the outputFormat parameter of a WFS. Each WFS server should provide a Parameter element for the outputFormat parameter that lists the supported output formats, such as GML2, GML3, etc. as the allowed "Value" elements.) </documentation>
+		</annotation>
+		<sequence>
+			<element name="Value" type="string" maxOccurs="unbounded">
+				<annotation>
+					<documentation>Unordered list of all the valid values for this parameter or other quantity. For those parameters that contain a list or sequence of values, these values shall be for individual values in the list. The allowed set of values and the allowed server restrictions on that set of values shall be specified in the Implementation Specification for this service. </documentation>
+				</annotation>
+			</element>
+			<element ref="ows:Metadata" minOccurs="0" maxOccurs="unbounded">
+				<annotation>
+					<documentation>Optional unordered list of additional metadata about this parameter. A list of required and optional metadata elements for this domain should be specified in the Implementation Specification for this service. (Informative: This metadata might specify the meanings of the valid values.) </documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="name" type="string" use="required">
+			<annotation>
+				<documentation>Name or identifier of this parameter or other quantity. </documentation>
+			</annotation>
+		</attribute>
+	</complexType>
 </schema>

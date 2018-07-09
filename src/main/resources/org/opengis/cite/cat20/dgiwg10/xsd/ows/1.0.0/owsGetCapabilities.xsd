@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://www.opengis.net/ows/1.1" 
-xmlns:ows="http://www.opengis.net/ows/1.1" 
+<schema targetNamespace="http://www.opengis.net/ows" 
+xmlns:ows="http://www.opengis.net/ows" 
 xmlns="http://www.w3.org/2001/XMLSchema" 
-elementFormDefault="qualified" version="1.1.0.3" xml:lang="en">
+elementFormDefault="qualified" version="1.0.0.2" xml:lang="en">
 	<annotation>
 		<appinfo>owsGetCapabilities.xsd</appinfo>
 		<documentation>This XML Schema Document defines the GetCapabilities operation request and response XML elements and types, which are common to all OWSs. This XML Schema shall be edited by each OWS, for example, to specify a specific value for the "service" attribute.
 		
 		OWS is an OGC Standard.
-		Copyright (c) 2006,2010 Open Geospatial Consortium.
+		Copyright (c) 2005,2010 Open Geospatial Consortium.
 		To obtain additional rights of use, visit http://www.opengeospatial.org/legal/ .
 		</documentation>
 	</annotation>
@@ -32,11 +32,7 @@ elementFormDefault="qualified" version="1.1.0.3" xml:lang="en">
 			<element ref="ows:OperationsMetadata" minOccurs="0"/>
 		</sequence>
 		<attribute name="version" type="ows:VersionType" use="required"/>
-		<attribute name="updateSequence" type="ows:UpdateSequenceType" use="optional">
-			<annotation>
-				<documentation>Service metadata document version, having values that are "increased" whenever any change is made in service metadata document. Values are selected by each server, and are always opaque to clients. When not supported by server, server shall not return this attribute. </documentation>
-			</annotation>
-		</attribute>
+		<attribute name="updateSequence" type="ows:UpdateSequenceType" use="optional"/>
 	</complexType>
 	<!-- =========================================================== -->
 	<element name="GetCapabilities" type="ows:GetCapabilitiesType"/>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://www.opengis.net/ows/1.1" 
-xmlns:ows="http://www.opengis.net/ows/1.1" 
+<schema targetNamespace="http://www.opengis.net/ows" 
+xmlns:ows="http://www.opengis.net/ows" 
 xmlns:xlink="http://www.w3.org/1999/xlink" 
 xmlns="http://www.w3.org/2001/XMLSchema" 
-elementFormDefault="qualified" version="1.1.0.3" xml:lang="en">
+elementFormDefault="qualified" version="1.0.0.2" xml:lang="en">
 	<annotation>
 		<appinfo>ows19115subset.xsd</appinfo>
-		<documentation>This XML Schema Document encodes the parts of ISO 19115 used by the common "ServiceIdentification" and "ServiceProvider" sections of the GetCapabilities operation response, known as the service metadata XML document. The parts encoded here are the MD_Keywords, CI_ResponsibleParty, and related classes. The UML package prefixes were omitted from XML names, and the XML element names were all capitalized, for consistency with other OWS Schemas. This document also provides a simple coding of text in multiple languages, simplified from Annex J of ISO 19115.
+		<documentation>This XML Schema Document encodes the parts of ISO 19115 used by the common "ServiceIdentification" and "ServiceProvider" sections of the GetCapabilities operation response, known as the service metadata XML document. The parts encoded here are the MD_Keywords, CI_ResponsibleParty, and related classes. This XML Schema largely follows the current draft for ISO 19139, with the addition of documentation text extracted and edited from Annex B of ISO 19115. The UML package prefixes were omitted from XML names, and the XML element names were all capitalized, for consistency with other OWS Schemas. Also, the optional smXML:id attributes were omitted, as not being useful in a service metadata document.
 		
 		OWS is an OGC Standard.
-		Copyright (c) 2006,2010 Open Geospatial Consortium.
+		Copyright (c) 2005,2010 Open Geospatial Consortium.
 		To obtain additional rights of use, visit http://www.opengeospatial.org/legal/ .
 		</documentation>
 	</annotation>
@@ -18,28 +18,16 @@ elementFormDefault="qualified" version="1.1.0.3" xml:lang="en">
 	============================================================== -->
     <include schemaLocation="owsAll.xsd"/>
 	<import namespace="http://www.w3.org/1999/xlink" schemaLocation="http://www.w3.org/1999/xlink.xsd"/>
-	<import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
 	<!-- ==============================================================
 		elements and types
 	============================================================== -->
-	<complexType name="LanguageStringType">
-		<annotation>
-			<documentation>Text string with the language of the string identified as recommended in the XML 1.0 W3C Recommendation, section 2.12. </documentation>
-		</annotation>
-		<simpleContent>
-			<extension base="string">
-				<attribute ref="xml:lang" use="optional"/>
-			</extension>
-		</simpleContent>
-	</complexType>
-	<!-- =========================================================== -->
-	<element name="Title" type="ows:LanguageStringType">
+	<element name="Title" type="string">
 		<annotation>
 			<documentation>Title of this resource, normally used for display to a human. </documentation>
 		</annotation>
 	</element>
 	<!-- =========================================================== -->
-	<element name="Abstract" type="ows:LanguageStringType">
+	<element name="Abstract" type="string">
 		<annotation>
 			<documentation>Brief narrative description of this resource, normally used for display to a human. </documentation>
 		</annotation>
@@ -49,19 +37,18 @@ elementFormDefault="qualified" version="1.1.0.3" xml:lang="en">
 	<!-- =========================================================== -->
 	<complexType name="KeywordsType">
 		<annotation>
-			<documentation>Unordered list of one or more commonly used or formalised word(s) or phrase(s) used to describe the subject. When needed, the optional "type" can name the type of the associated list of keywords that shall all have the same type. Also when needed, the codeSpace attribute of that "type" can reference the type name authority and/or thesaurus.
-			If the xml:lang attribute is not included in a Keyword element, then no language is specified for that element unless specified by another means.  All Keyword elements in the same Keywords element that share the same xml:lang attribute value represent different keywords in that language. </documentation>
+			<documentation>Unordered list of one or more commonly used or formalised word(s) or phrase(s) used to describe the subject. When needed, the optional "type" can name the type of the associated list of keywords that shall all have the same type. Also when needed, the codeSpace attribute of that "type" can reference the type name authority and/or thesaurus. </documentation>
 			<documentation>For OWS use, the optional thesaurusName element was omitted as being complex information that could be referenced by the codeSpace attribute of the Type element. </documentation>
 		</annotation>
 		<sequence>
-			<element name="Keyword" type="ows:LanguageStringType" maxOccurs="unbounded"/>
+			<element name="Keyword" type="string" maxOccurs="unbounded"/>
 			<element name="Type" type="ows:CodeType" minOccurs="0"/>
 		</sequence>
 	</complexType>
 	<!-- =========================================================== -->
 	<complexType name="CodeType">
 		<annotation>
-			<documentation>Name or code with an (optional) authority. If the codeSpace attribute is present, its value shall reference a dictionary, thesaurus, or authority for the name or code, such as the organisation who assigned the value, or the dictionary from which it is taken. </documentation>
+			<documentation>Name or code with an (optional) authority. If the codeSpace attribute is present, its value should reference a dictionary, thesaurus, or authority for the name or code, such as the organisation who assigned the value, or the dictionary from which it is taken. </documentation>
 			<documentation>Type copied from basicTypes.xsd of GML 3 with documentation edited, for possible use outside the ServiceIdentification section of a service metadata document. </documentation>
 		</annotation>
 		<simpleContent>

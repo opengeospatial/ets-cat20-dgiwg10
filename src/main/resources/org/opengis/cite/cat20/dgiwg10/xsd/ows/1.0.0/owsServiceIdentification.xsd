@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://www.opengis.net/ows/1.1" 
-xmlns:ows="http://www.opengis.net/ows/1.1" 
+<schema targetNamespace="http://www.opengis.net/ows" 
+xmlns:ows="http://www.opengis.net/ows" 
 xmlns="http://www.w3.org/2001/XMLSchema" 
-elementFormDefault="qualified" version="1.1.0.3" xml:lang="en">
+elementFormDefault="qualified" version="1.0.0.2" xml:lang="en">
 	<annotation>
 		<appinfo>owsServiceIdentification.xsd</appinfo>
-		<documentation>This XML Schema Document encodes the common "ServiceIdentification" section of the GetCapabilities operation response, known as the Capabilities XML document. This section encodes the SV_ServiceIdentification class of ISO 19119 (OGC Abstract Specification Topic 12). 
+		<documentation>This XML Schema Document encodes the common "ServiceIdentification" section of the GetCapabilities operation response, known as the Capabilities XML document. This section encodes the SV_ServiceIdentification class of ISO 19119 (OGC Abstract Specification Topic 12).
 		
 		OWS is an OGC Standard.
-		Copyright (c) 2006,2010 Open Geospatial Consortium.
+		Copyright (c) 2005,2010 Open Geospatial Consortium.
 		To obtain additional rights of use, visit http://www.opengeospatial.org/legal/ .
 		</documentation>
 	</annotation>
@@ -38,11 +38,6 @@ elementFormDefault="qualified" version="1.1.0.3" xml:lang="en">
 								<documentation>Unordered list of one or more versions of this service type implemented by this server. This information is not adequate for version negotiation, and shall not be used for that purpose. </documentation>
 							</annotation>
 						</element>
-						<element name="Profile" type="anyURI" minOccurs="0" maxOccurs="unbounded">
-							<annotation>
-								<documentation>Unordered list of identifiers of Application Profiles that are implemented by this server. This element should be included for each specified application profile implemented by this server. The identifier value should be specified by each Application Profile. If this element is omitted, no meaning is implied. </documentation>
-							</annotation>
-						</element>
 						<element ref="ows:Fees" minOccurs="0">
 							<annotation>
 								<documentation>If this element is omitted, no meaning is implied. </documentation>
@@ -50,7 +45,7 @@ elementFormDefault="qualified" version="1.1.0.3" xml:lang="en">
 						</element>
 						<element ref="ows:AccessConstraints" minOccurs="0" maxOccurs="unbounded">
 							<annotation>
-								<documentation>Unordered list of access constraints applied to assure the protection of privacy or intellectual property, and any other restrictions on retrieving or using data from or otherwise using this server. The reserved value NONE (case insensitive) shall be used to mean no access constraints are imposed. When this element is omitted, no meaning is implied. </documentation>
+								<documentation>Unordered list of access constraints applied to assure the protection of privacy or intellectual property, and any other restrictions on retrieving or using data from or otherwise using this server. The reserved value NONE (case insensitive) shall be used to mean no access constraints are imposed. If this element is omitted, no meaning is implied. </documentation>
 							</annotation>
 						</element>
 					</sequence>
