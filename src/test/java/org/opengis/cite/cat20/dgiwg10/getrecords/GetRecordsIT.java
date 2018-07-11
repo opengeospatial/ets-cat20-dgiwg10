@@ -47,7 +47,7 @@ public class GetRecordsIT {
         when( suite.getAttribute( SuiteAttribute.DATA_SAMPLER.getName() ) ).thenReturn( dataSampler );
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void testGetRecords() {
         GetRecords getRecords = new GetRecords();
         getRecords.initCommonFixture( testContext );

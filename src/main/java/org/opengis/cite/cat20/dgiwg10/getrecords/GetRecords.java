@@ -107,7 +107,7 @@ public class GetRecords extends CommonFixture {
         String identifier = findIdentifier();
         if ( identifier == null )
             throw new SkipException( "No identifier for available." );
-        Element identifierFilter = filterCreator.createIdentifierFilter( identifier );
+        Element identifierFilter = filterCreator.createIdentifierFilter( DC, identifier );
         this.requestDocument = requestCreator.createGetRecordsRequest( DC, FULL, identifierFilter );
 
         this.response = this.cswClient.submitPostRequest( endpoint, this.requestDocument );
