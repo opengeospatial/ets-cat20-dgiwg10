@@ -38,7 +38,7 @@ public class CommonFixture {
     /**
      * An HTTP request message.
      */
-    protected ClientRequest request;
+    protected Document requestDocument;
 
     /**
      * An HTTP response message.
@@ -68,8 +68,9 @@ public class CommonFixture {
 
     @BeforeMethod
     public void clearMessages() {
-        this.request = null;
+        this.requestDocument = null;
         this.response = null;
+        this.responseDocument = null;
     }
 
     /**

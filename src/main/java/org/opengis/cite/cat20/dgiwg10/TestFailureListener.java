@@ -7,7 +7,6 @@ import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 import org.w3c.dom.Document;
 
-import com.sun.jersey.api.client.ClientRequest;
 import com.sun.jersey.api.client.ClientResponse;
 
 /**
@@ -30,7 +29,7 @@ public class TestFailureListener extends TestListenerAdapter {
         Object instance = result.getInstance();
         if ( CommonFixture.class.isInstance( instance ) ) {
             CommonFixture fixture = CommonFixture.class.cast( instance );
-            result.setAttribute( "request", getRequestMessageInfo( fixture.request ) );
+            result.setAttribute( "request", getRequestMessageInfo( fixture.requestDocument ) );
             result.setAttribute( "response", getResponseMessageInfo( fixture.response, fixture.responseDocument ) );
         }
     }
@@ -39,30 +38,15 @@ public class TestFailureListener extends TestListenerAdapter {
      * Gets diagnostic information about a request message. If the request contains a message body, it should be
      * represented as a DOM Document node or as an object having a meaningful toString() implementation.
      *
-     * @param req
-     *            An object representing an HTTP request message.
+     * @param requestDocument
+     *            The XML request entity.
      * @return A string containing information gleaned from the request message.
      */
-    String getRequestMessageInfo( ClientRequest req ) {
-        if ( null == req ) {
-            return "No request message.";
+    String getRequestMessageInfo( Document requestDocument ) {
+        if ( requestDocument != null ) {
+            return XMLUtils.writeNodeToString( requestDocument );
         }
-        StringBuilder msgInfo = new StringBuilder();
-        msgInfo.append( "Method: " ).append( req.getMethod() ).append( '\n' );
-        msgInfo.append( "Target URI: " ).append( req.getURI() ).append( '\n' );
-        msgInfo.append( "Headers: " ).append( req.getHeaders() ).append( '\n' );
-        if ( null != req.getEntity() ) {
-            Object entity = req.getEntity();
-            String body;
-            if ( Document.class.isInstance( entity ) ) {
-                Document doc = Document.class.cast( entity );
-                body = XMLUtils.writeNodeToString( doc );
-            } else {
-                body = entity.toString();
-            }
-            msgInfo.append( body ).append( '\n' );
-        }
-        return msgInfo.toString();
+        return "No request document.";
     }
 
     /**
@@ -71,6 +55,7 @@ public class TestFailureListener extends TestListenerAdapter {
      * @param rsp
      *            An object representing an HTTP response message.
      * @param responseDocument
+     *            The XML response entity.
      * @return A string containing information gleaned from the response message.
      */
     String getResponseMessageInfo( ClientResponse rsp, Document responseDocument ) {
