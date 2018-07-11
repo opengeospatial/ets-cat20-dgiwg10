@@ -1,7 +1,10 @@
 package org.opengis.cite.cat20.dgiwg10.getrecords;
 
 import static org.opengis.cite.cat20.dgiwg10.DGIWG1CAT2.GETRECORDS;
+import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertSchemaValid;
+import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertXPath;
 import static org.opengis.cite.cat20.dgiwg10.ErrorMessageKeys.UNEXPECTED_STATUS;
+import static org.opengis.cite.cat20.dgiwg10.Namespaces.XSD;
 import static org.opengis.cite.cat20.dgiwg10.ProtocolBinding.POST;
 import static org.opengis.cite.cat20.dgiwg10.util.ElementSetName.FULL;
 import static org.opengis.cite.cat20.dgiwg10.util.OutputSchema.DC;
@@ -9,12 +12,22 @@ import static org.opengis.cite.cat20.dgiwg10.util.ServiceMetadataUtils.getOperat
 import static org.testng.Assert.assertEquals;
 
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Map;
+import java.util.logging.Level;
+
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.Validator;
 
 import org.opengis.cite.cat20.dgiwg10.CommonFixture;
 import org.opengis.cite.cat20.dgiwg10.ErrorMessage;
 import org.opengis.cite.cat20.dgiwg10.SuiteAttribute;
 import org.opengis.cite.cat20.dgiwg10.util.DataSampler;
+import org.opengis.cite.cat20.dgiwg10.util.NamespaceBindings;
+import org.opengis.cite.cat20.dgiwg10.util.TestSuiteLogger;
+import org.opengis.cite.cat20.dgiwg10.util.ValidationUtils;
 import org.opengis.cite.cat20.dgiwg10.xml.FilterCreator;
 import org.opengis.cite.cat20.dgiwg10.xml.RequestCreator;
 import org.testng.ITestContext;
@@ -24,8 +37,7 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import com.sun.jersey.api.client.ClientResponse;
+import org.w3c.dom.ls.LSResourceResolver;
 
 /**
  *
@@ -62,9 +74,25 @@ public class GetRecords extends CommonFixture {
 
     private DataSampler dataSampler;
 
+    private Validator cswValidator;
+
     @BeforeClass
-    public void retrieveDatSampler( ITestContext testContext ) {
+    public void retrieveDataSampler( ITestContext testContext ) {
         this.dataSampler = (DataSampler) testContext.getSuite().getAttribute( SuiteAttribute.DATA_SAMPLER.getName() );
+    }
+
+    @BeforeClass
+    public void buildValidator() {
+        try {
+            URL schemaUrl = getClass().getResource( "/org/opengis/cite/cat20/dgiwg10/xsd/csw/2.0.2/csw.xsd" );
+            Schema schema = ValidationUtils.createSchema( schemaUrl.toURI() );
+            this.cswValidator = schema.newValidator();
+            LSResourceResolver resolver = ValidationUtils.createSchemaResolver( XSD );
+            this.cswValidator.setResourceResolver( resolver );
+        } catch ( URISyntaxException e ) {
+            // very unlikely to occur with no schema to process
+            TestSuiteLogger.log( Level.WARNING, "Failed to build XML Schema Validator for csw.xsd.", e );
+        }
     }
 
     /**
@@ -82,8 +110,13 @@ public class GetRecords extends CommonFixture {
         Element identifierFilter = filterCreator.createIdentifierFilter( identifier );
         Document request = requestCreator.createGetRecordsRequest( DC, FULL, identifierFilter );
 
-        ClientResponse getRecordsResponse = this.cswClient.submitPostRequest( endpoint, request );
-        assertEquals( getRecordsResponse.getStatus(), 200, ErrorMessage.format( UNEXPECTED_STATUS ) );
+        this.response = this.cswClient.submitPostRequest( endpoint, request );
+        assertEquals( this.response.getStatus(), 200, ErrorMessage.format( UNEXPECTED_STATUS ) );
+
+        this.responseDocument = this.response.getEntity( Document.class );
+        assertXPath( "//csw:GetRecordsResponse", this.responseDocument,
+                     NamespaceBindings.withStandardBindings().getAllBindings(), "Response is not a GetRecordsResponse" );
+        assertSchemaValid( this.cswValidator, new DOMSource( this.responseDocument ) );
     }
 
     private String findIdentifier() {
