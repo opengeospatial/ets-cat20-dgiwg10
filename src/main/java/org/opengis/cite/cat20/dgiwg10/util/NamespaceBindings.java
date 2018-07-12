@@ -94,6 +94,10 @@ public class NamespaceBindings implements NamespaceContext {
      * {@value org.opengis.cite.cat20.dgiwg10.Namespaces#XLINK}</li>
      * <li>{@value org.opengis.cite.cat20.dgiwg10.Namespaces#CSW_PREFIX}:
      * {@value org.opengis.cite.cat20.dgiwg10.Namespaces#CSW}</li>
+     * <li>{@value org.opengis.cite.cat20.dgiwg10.Namespaces#DC_PREFIX}:
+     * {@value org.opengis.cite.cat20.dgiwg10.Namespaces#DC}</li>
+     * <li>{@value org.opengis.cite.cat20.dgiwg10.Namespaces#OGC_PREFIX}:
+     * {@value org.opengis.cite.cat20.dgiwg10.Namespaces#OGC}</li>
      * </ul>
      * 
      * @return A NamespaceBindings object.
