@@ -1,7 +1,7 @@
+# Release Notes DGIWG CAT 2.0.2
 
-# Release Notes
-
-## ${project.version} (YYYY-MM-DD)
-The initial release implements the following test requirements:
-
-- all mandatory conformance classes (Class A, Class B)
+## 0.1 (2018-07-12)
+- [#13](https://github.com/opengeospatial/ets-cat20-dgiwg10/pull/13): Implement first GetRecords tests
+- [#4](https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/4): Implement A.1.1 GetCapabilities for DGIWG Basic CSW
+- [#10](https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/10): Introduce Dockerfile and Maven Docker plugin
+- [#9](https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/9): Prepare ETS
