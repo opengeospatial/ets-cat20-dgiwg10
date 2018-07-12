@@ -8,7 +8,9 @@ import static org.opengis.cite.cat20.dgiwg10.Namespaces.XSD;
 import static org.opengis.cite.cat20.dgiwg10.ProtocolBinding.POST;
 import static org.opengis.cite.cat20.dgiwg10.util.ElementSetName.FULL;
 import static org.opengis.cite.cat20.dgiwg10.util.OutputSchema.DC;
+import static org.opengis.cite.cat20.dgiwg10.util.OutputSchema.ISO19193;
 import static org.opengis.cite.cat20.dgiwg10.util.ServiceMetadataUtils.getOperationEndpoint;
+import static org.opengis.cite.cat20.dgiwg10.util.ValidationUtils.createSchemaResolver;
 import static org.testng.Assert.assertEquals;
 
 import java.net.URI;
@@ -37,7 +39,6 @@ import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.ls.LSResourceResolver;
 
 /**
  *
@@ -76,19 +77,32 @@ public class GetRecords extends CommonFixture {
 
     private Validator cswValidator;
 
+    private Validator isoValidator;
+
     @BeforeClass
     public void retrieveDataSampler( ITestContext testContext ) {
         this.dataSampler = (DataSampler) testContext.getSuite().getAttribute( SuiteAttribute.DATA_SAMPLER.getName() );
     }
 
     @BeforeClass
-    public void buildValidator() {
+    public void buildValidators() {
+        URL cswSchemaUrl = getClass().getResource( "/org/opengis/cite/cat20/dgiwg10/xsd/csw/2.0.2/csw.xsd" );
         try {
-            URL schemaUrl = getClass().getResource( "/org/opengis/cite/cat20/dgiwg10/xsd/csw/2.0.2/csw.xsd" );
-            Schema schema = ValidationUtils.createSchema( schemaUrl.toURI() );
-            this.cswValidator = schema.newValidator();
-            LSResourceResolver resolver = ValidationUtils.createSchemaResolver( XSD );
-            this.cswValidator.setResourceResolver( resolver );
+            Schema cswSchema = ValidationUtils.createSchema( cswSchemaUrl.toURI() );
+            this.cswValidator = cswSchema.newValidator();
+            this.cswValidator.setResourceResolver( createSchemaResolver( XSD ) );
+        } catch ( URISyntaxException e ) {
+            // very unlikely to occur with no schema to process
+            TestSuiteLogger.log( Level.WARNING, "Failed to build XML Schema Validator for csw.xsd.", e );
+        }
+
+        try {
+            URL metadatEntitySchemaUrl = getClass().getResource( "/org/opengis/cite/cat20/dgiwg10/xsd/iso/19139/20070417/gmd/metadataEntity.xsd" );
+            URL srvSchemaUrl = getClass().getResource( "/org/opengis/cite/cat20/dgiwg10/xsd/iso/19139/20070417/srv/1.0/serviceMetadata.xsd" );
+            Schema schema = ValidationUtils.createSchema( metadatEntitySchemaUrl.toURI(), srvSchemaUrl.toURI(),
+                                                          cswSchemaUrl.toURI() );
+            this.isoValidator = schema.newValidator();
+            this.isoValidator.setResourceResolver( createSchemaResolver( XSD ) );
         } catch ( URISyntaxException e ) {
             // very unlikely to occur with no schema to process
             TestSuiteLogger.log( Level.WARNING, "Failed to build XML Schema Validator for csw.xsd.", e );
@@ -117,6 +131,30 @@ public class GetRecords extends CommonFixture {
         assertXPath( "//csw:GetRecordsResponse", this.responseDocument,
                      NamespaceBindings.withStandardBindings().getAllBindings(), "Response is not a GetRecordsResponse" );
         assertSchemaValid( this.cswValidator, new DOMSource( this.responseDocument ) );
+    }
+
+    /**
+     * Issue an HTTP GET capabilities request with gmd:MD_Metadata and Queryable 'Identifier'.
+     */
+    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'gmd:MD_Metadata'/'Identifier'")
+    public void issueGetCapabilities_identifier_Iso() {
+        URI endpoint = getOperationEndpoint( this.capabilitiesDoc, GETRECORDS, POST );
+        if ( endpoint == null )
+            throw new SkipException( "No POST binding available for GetRecords request." );
+
+        String identifier = findIdentifier();
+        if ( identifier == null )
+            throw new SkipException( "No identifier for available." );
+        Element identifierFilter = filterCreator.createIdentifierFilter( ISO19193, identifier );
+        this.requestDocument = requestCreator.createGetRecordsRequest( ISO19193, FULL, identifierFilter );
+
+        this.response = this.cswClient.submitPostRequest( endpoint, this.requestDocument );
+        assertEquals( this.response.getStatus(), 200, ErrorMessage.format( UNEXPECTED_STATUS ) );
+
+        this.responseDocument = this.response.getEntity( Document.class );
+        assertXPath( "//csw:GetRecordsResponse", this.responseDocument,
+                     NamespaceBindings.withStandardBindings().getAllBindings(), "Response is not a GetRecordsResponse" );
+        assertSchemaValid( this.isoValidator, new DOMSource( this.responseDocument ) );
     }
 
     private String findIdentifier() {

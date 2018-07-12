@@ -143,19 +143,22 @@ public class ValidationUtils {
     }
 
     /**
-     * Creates a single Schema object available from the passed schemaUrl.
+     * Creates a single Schema object available from the passed schemaUrls.
      *
-     * @param schemaUrl
+     * @param schemaUrls
      *            the URL of the xsd file, never <code>null</code>
      * @return an immutable Schema object, or <code>null</code> if one cannot be constructed.
      */
-    public static Schema createSchema( URI schemaUrl ) {
+    public static Schema createSchema( URI... schemaUrls ) {
         URL entityCatalog = ValidationUtils.class.getResource( "/org/opengis/cite/cat20/dgiwg10/schema-catalog.xml" );
         XmlSchemaCompiler xsdCompiler = new XmlSchemaCompiler( entityCatalog );
         Schema cswSchema = null;
         try {
-            Source xsdSource = new StreamSource( schemaUrl.toString() );
-            cswSchema = xsdCompiler.compileXmlSchema( new Source[] { xsdSource } );
+            Source[] xsdSources = new Source[schemaUrls.length];
+            for ( int i = 0; i < schemaUrls.length; i++ ) {
+                xsdSources[i] = new StreamSource( schemaUrls[i].toString() );
+            }
+            cswSchema = xsdCompiler.compileXmlSchema( xsdSources );
         } catch ( SAXException e ) {
             TestSuiteLogger.log( Level.WARNING, "Failed to create CSW Schema object.", e );
         }

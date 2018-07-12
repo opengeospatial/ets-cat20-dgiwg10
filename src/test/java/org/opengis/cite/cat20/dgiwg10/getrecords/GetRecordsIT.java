@@ -4,6 +4,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.InputStream;
+import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -11,7 +12,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.opengis.cite.cat20.dgiwg10.SuiteAttribute;
-import org.opengis.cite.cat20.dgiwg10.getcapabilities.GetCapabilitiesIT;
 import org.opengis.cite.cat20.dgiwg10.util.DataSampler;
 import org.testng.ISuite;
 import org.testng.ITestContext;
@@ -38,7 +38,8 @@ public class GetRecordsIT {
         dbf.setNamespaceAware( true );
         docBuilder = dbf.newDocumentBuilder();
 
-        InputStream docAsStream = GetCapabilitiesIT.class.getResourceAsStream( "GetCapabilities-response.xml" );
+        InputStream docAsStream = new URL( "http://gptogc.esri.com/geoportal/csw?request=GetCapabilities&service=CSW&AcceptVersions=2.0.2" ).openStream();
+        //InputStream docAsStream = GetRecordsIT.class.getResourceAsStream( "GetCapabilities-response.xml" );
         Document capabilitiesDoc = docBuilder.parse( docAsStream );
         when( suite.getAttribute( SuiteAttribute.TEST_SUBJECT.getName() ) ).thenReturn( capabilitiesDoc );
 
@@ -52,8 +53,10 @@ public class GetRecordsIT {
         GetRecords getRecords = new GetRecords();
         getRecords.initCommonFixture( testContext );
         getRecords.retrieveDataSampler( testContext );
-        getRecords.buildValidator();
-        getRecords.issueGetCapabilities_identifier_DublinCore();
+        getRecords.buildValidators();
+        //getRecords.issueGetCapabilities_identifier_DublinCore();
+        getRecords.issueGetCapabilities_identifier_Iso();
+        // service does not support gmd:MD_Metadata getRecords.issueGetCapabilities_identifier_Iso();
     }
 
 }
