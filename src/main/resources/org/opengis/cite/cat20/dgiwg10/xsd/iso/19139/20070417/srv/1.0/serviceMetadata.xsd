@@ -20,8 +20,8 @@ xmlns:gmd="http://www.isotc211.org/2005/gmd"
 		<xs:documentation>2006-10-13 This file was generated from ISO TC/211 UML class diagrams. It is based on document 211n1977 (Text of ISO 19119:2005 Amd. 1, Geographic information - Services, Amendment 1), as sent to ISO for further processing. This includes the creation of 2 types (SV_CouplingType and SV_CoupledResource), the addition of 3 properties for SV_ServiceIdentification (extent, couplingType and coupledResource) and the removal of the type SV_ServiceProvider.</xs:documentation>
 	</xs:annotation>
 	<!-- ================================== Imports ================================== -->
-	<xs:import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gmd/gmd.xsd"/>
-	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/gco/gco.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="../../gmd/gmd.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="../../gco/gco.xsd"/>
 	<xs:include schemaLocation="serviceModel.xsd"/>
 	<xs:include schemaLocation="srv.xsd"/>
 	<!-- ########################################################################### -->
