@@ -13,6 +13,10 @@
         <local-name>ets-${ets-code}-${version}</local-name>
         <title>DGIWG Catalogue Service for the Web 2.0 Test Suite</title>
         <description>Checks DGIWG CSW 2.0 implementations for conformance.</description>
+        <BasicConformanceClasses>
+          <conformanceClass>Preconditions</conformanceClass>
+          <conformanceClass>DGIWG_Basic_CSW</conformanceClass>
+        </BasicConformanceClasses>
       </suite>
       <revision>
         <name>${version}</name>

@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
 
 import org.w3c.dom.Document;
 
@@ -82,10 +84,24 @@ public class CSWClient {
             }
         }
         URI requestURI = uriBuilder.build();
-        System.out.println( "REQUEST URI: " + requestURI );
         LOG.log( Level.FINE, String.format( "Request URI: %s", requestURI ) );
         WebResource resource = client.resource( requestURI );
         return resource.get( ClientResponse.class );
+    }
+
+    /**
+     * Submits an HTTP request message. For POST requests the XML request entity is added as request entity.
+     *
+     * @param endpoint
+     *            The service endpoint.
+     * @param request
+     *            the request to send, never <code>null</code>
+     * @return A ClientResponse object representing the response message.
+     */
+    public ClientResponse submitPostRequest( URI endpoint, Document request ) {
+        WebResource resource = client.resource( endpoint );
+        Source requestBody = new DOMSource( request );
+        return resource.entity( requestBody ).post( ClientResponse.class );
     }
 
     /**

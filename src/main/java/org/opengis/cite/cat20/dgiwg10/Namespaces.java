@@ -34,4 +34,14 @@ public class Namespaces {
 
     public static final String CSW_PREFIX = "csw";
 
+    /** OGC 04-095, (FES 1.1) */
+    public static final String OGC = "http://www.opengis.net/ogc";
+
+    public static final String OGC_PREFIX = "ogc";
+
+    /** Dublin Core */
+    public static final String DC = "http://purl.org/dc/elements/1.1/";
+
+    public static final String DC_PREFIX = "dc";
+
 }
