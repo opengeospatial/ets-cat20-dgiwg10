@@ -18,6 +18,7 @@
     <packages>
       <package name="org.opengis.cite.cat20.dgiwg10.getcapabilities" />
       <package name="org.opengis.cite.cat20.dgiwg10.getrecords" />
+      <package name="org.opengis.cite.cat20.dgiwg10.getrecordbyid" />
     </packages>
   </test>
 
