@@ -16,12 +16,17 @@ import static org.testng.Assert.assertEquals;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
 
 import org.opengis.cite.cat20.dgiwg10.CommonFixture;
 import org.opengis.cite.cat20.dgiwg10.ErrorMessage;
@@ -30,11 +35,13 @@ import org.opengis.cite.cat20.dgiwg10.util.DataSampler;
 import org.opengis.cite.cat20.dgiwg10.util.NamespaceBindings;
 import org.opengis.cite.cat20.dgiwg10.util.TestSuiteLogger;
 import org.opengis.cite.cat20.dgiwg10.util.ValidationUtils;
+import org.opengis.cite.cat20.dgiwg10.util.XMLUtils;
 import org.opengis.cite.cat20.dgiwg10.xml.FilterCreator;
 import org.opengis.cite.cat20.dgiwg10.xml.RequestCreator;
 import org.testng.ITestContext;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -79,6 +86,10 @@ public class GetRecords extends CommonFixture {
 
     private Validator isoValidator;
 
+    /**
+     * @param testContext
+     *            the test context
+     */
     @BeforeClass
     public void retrieveDataSampler( ITestContext testContext ) {
         this.dataSampler = (DataSampler) testContext.getSuite().getAttribute( SuiteAttribute.DATA_SAMPLER.getName() );
@@ -109,21 +120,32 @@ public class GetRecords extends CommonFixture {
         }
     }
 
+    @DataProvider(name = "queryableAndFilter")
+    public Iterator<Object[]> queryableAndFilter() {
+        List<Object[]> collectionsData = new ArrayList<>();
+        collectionsData.add( new Object[] { "Identifier", createIdentifierFilter() } );
+        collectionsData.add( new Object[] { "Title", createTitleFilter() } );
+        return collectionsData.iterator();
+    }
+
     /**
-     * Issue an HTTP GET capabilities request with csw:Record and Queryable 'Identifier'.
+     * Issue an HTTP GetRecords request with csw:Record.
+     *
+     * @param queryable
+     *            the queryable to test
+     * @param filter
+     *            the filter used in the request
      */
-    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'csw:Record'/'Identifier'")
-    public void issueGetCapabilities_identifier_DublinCore() {
+    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'csw:Record'", dataProvider = "queryableAndFilter")
+    public void issueGetRecords_DublinCore( String queryable, Element filter ) {
         URI endpoint = getOperationEndpoint( this.capabilitiesDoc, GETRECORDS, POST );
         if ( endpoint == null )
             throw new SkipException( "No POST binding available for GetRecords request." );
 
-        String identifier = findIdentifier();
-        if ( identifier == null )
-            throw new SkipException( "No identifier for available." );
-        Element identifierFilter = filterCreator.createIdentifierFilter( DC, identifier );
-        this.requestDocument = requestCreator.createGetRecordsRequest( DC, FULL, identifierFilter );
+        if ( filter == null )
+            throw new SkipException( "No value available for Queryable '" + queryable + "'." );
 
+        this.requestDocument = requestCreator.createGetRecordsRequest( DC, FULL, filter );
         this.response = this.cswClient.submitPostRequest( endpoint, this.requestDocument );
         assertEquals( this.response.getStatus(), 200, ErrorMessage.format( UNEXPECTED_STATUS ) );
 
@@ -134,20 +156,23 @@ public class GetRecords extends CommonFixture {
     }
 
     /**
-     * Issue an HTTP GET capabilities request with gmd:MD_Metadata and Queryable 'Identifier'.
+     * Issue an HTTP GetRecords request with gmd:MD_Metadata.
+     *
+     * @param queryable
+     *            the queryable to test
+     * @param filter
+     *            the filter used in the request
      */
-    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'gmd:MD_Metadata'/'Identifier'")
-    public void issueGetCapabilities_identifier_Iso() {
+    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'gmd:MD_Metadata'", dataProvider = "queryableAndFilter")
+    public void issueGetRecords_Iso( String queryable, Element filter ) {
         URI endpoint = getOperationEndpoint( this.capabilitiesDoc, GETRECORDS, POST );
         if ( endpoint == null )
             throw new SkipException( "No POST binding available for GetRecords request." );
 
-        String identifier = findIdentifier();
-        if ( identifier == null )
-            throw new SkipException( "No identifier for available." );
-        Element identifierFilter = filterCreator.createIdentifierFilter( ISO19193, identifier );
-        this.requestDocument = requestCreator.createGetRecordsRequest( ISO19193, FULL, identifierFilter );
+        if ( filter == null )
+            throw new SkipException( "No value available for Queryable '" + queryable + "'." );
 
+        this.requestDocument = requestCreator.createGetRecordsRequest( ISO19193, FULL, filter );
         this.response = this.cswClient.submitPostRequest( endpoint, this.requestDocument );
         assertEquals( this.response.getStatus(), 200, ErrorMessage.format( UNEXPECTED_STATUS ) );
 
@@ -157,13 +182,31 @@ public class GetRecords extends CommonFixture {
         assertSchemaValid( this.isoValidator, new DOMSource( this.responseDocument ) );
     }
 
-    private String findIdentifier() {
+    private Element createIdentifierFilter() {
         Map<String, Node> records = dataSampler.getRecords();
-        for ( String key : records.keySet() ) {
-            if ( key != null )
-                return key;
+        for ( String identifier : records.keySet() ) {
+            if ( identifier != null )
+                return filterCreator.createIdentifierFilter( ISO19193, identifier );
         }
         return null;
     }
 
+    private Element createTitleFilter() {
+        Map<String, Node> records = dataSampler.getRecords();
+        for ( Node record : records.values() ) {
+            String title = findTitle( record );
+            if ( title != null )
+                return filterCreator.createTitleFilter( DC, title );
+        }
+        return null;
+    }
+
+    private String findTitle( Node record ) {
+        try {
+            return (String) XMLUtils.evaluateXPath( record, "//dc:title", null, XPathConstants.STRING );
+        } catch ( XPathExpressionException e ) {
+            // XPath is fine
+        }
+        return null;
+    }
 }
