@@ -125,6 +125,7 @@ public class GetRecords extends CommonFixture {
         List<Object[]> collectionsData = new ArrayList<>();
         collectionsData.add( new Object[] { "Identifier", createIdentifierFilter() } );
         collectionsData.add( new Object[] { "Title", createTitleFilter() } );
+        collectionsData.add( new Object[] { "AnyText", createAnyTextFilter() } );
         return collectionsData.iterator();
     }
 
@@ -191,12 +192,23 @@ public class GetRecords extends CommonFixture {
         return null;
     }
 
+
     private Element createTitleFilter() {
         Map<String, Node> records = dataSampler.getRecords();
         for ( Node record : records.values() ) {
             String title = findTitle( record );
             if ( title != null )
                 return filterCreator.createTitleFilter( DC, title );
+        }
+        return null;
+    }
+
+    private Object createAnyTextFilter() {
+        Map<String, Node> records = dataSampler.getRecords();
+        for ( Node record : records.values() ) {
+            String title = findTitle( record );
+            if ( title != null )
+                return filterCreator.createAnyTextFilter( DC, title );
         }
         return null;
     }
