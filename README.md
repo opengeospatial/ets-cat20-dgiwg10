@@ -43,6 +43,11 @@ suite in a command shell:
 
 `java -jar ets-cat20-dgiwg10-0.1-SNAPSHOT-aio.jar [-o|--outputDir $TMPDIR] [test-run-props.xml]`
 
+You may want to run the class, letting maven to collect all the dependencies you need:
+```
+ mvn -X exec:java -Dexec.mainClass=org.opengis.cite.cat20.dgiwg10.TestNGController -Dexec.args="./src/main/resources/test-run-props.xml"
+```
+
 #### 3. OGC test harness
 
 Use [TEAM Engine](https://github.com/opengeospatial/teamengine), the official OGC test harness.
