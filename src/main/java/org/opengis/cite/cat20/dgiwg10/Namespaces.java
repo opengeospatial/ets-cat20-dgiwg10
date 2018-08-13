@@ -44,4 +44,9 @@ public class Namespaces {
 
     public static final String DC_PREFIX = "dc";
 
+    /** ISO 19139 */
+    public static final String GMD = "http://www.isotc211.org/2005/gmd";
+
+    public static final String GMD_PREFIX = "gmd";
+
 }

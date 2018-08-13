@@ -1,27 +1,37 @@
 package org.opengis.cite.cat20.dgiwg10.getrecords;
 
+import static javax.xml.xpath.XPathConstants.NODE;
 import static org.opengis.cite.cat20.dgiwg10.DGIWG1CAT2.GETRECORDS;
 import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertSchemaValid;
 import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertXPath;
 import static org.opengis.cite.cat20.dgiwg10.ErrorMessageKeys.UNEXPECTED_STATUS;
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.XSD;
 import static org.opengis.cite.cat20.dgiwg10.ProtocolBinding.POST;
+import static org.opengis.cite.cat20.dgiwg10.returnables.Returnables.assertReturnablesDublinCore;
+import static org.opengis.cite.cat20.dgiwg10.returnables.Returnables.assertReturnablesIso;
 import static org.opengis.cite.cat20.dgiwg10.util.ElementSetName.FULL;
 import static org.opengis.cite.cat20.dgiwg10.util.OutputSchema.DC;
 import static org.opengis.cite.cat20.dgiwg10.util.OutputSchema.ISO19193;
 import static org.opengis.cite.cat20.dgiwg10.util.ServiceMetadataUtils.getOperationEndpoint;
 import static org.opengis.cite.cat20.dgiwg10.util.ValidationUtils.createSchemaResolver;
+import static org.opengis.cite.cat20.dgiwg10.util.XMLUtils.evaluateXPath;
 import static org.testng.Assert.assertEquals;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
 
 import org.opengis.cite.cat20.dgiwg10.CommonFixture;
 import org.opengis.cite.cat20.dgiwg10.ErrorMessage;
@@ -35,6 +45,7 @@ import org.opengis.cite.cat20.dgiwg10.xml.RequestCreator;
 import org.testng.ITestContext;
 import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -79,6 +90,14 @@ public class GetRecords extends CommonFixture {
 
     private Validator isoValidator;
 
+    private Map<String, Document> queryableToResponseDublinCore = new HashMap<>();
+
+    private Map<String, Document> queryableToResponseIso = new HashMap<>();
+
+    /**
+     * @param testContext
+     *            the test context
+     */
     @BeforeClass
     public void retrieveDataSampler( ITestContext testContext ) {
         this.dataSampler = (DataSampler) testContext.getSuite().getAttribute( SuiteAttribute.DATA_SAMPLER.getName() );
@@ -109,59 +128,152 @@ public class GetRecords extends CommonFixture {
         }
     }
 
+    @DataProvider(name = "queryables")
+    public Iterator<Object[]> queryables() {
+        List<Object[]> collectionsData = new ArrayList<>();
+        collectionsData.add( new Object[] { "Identifier" } );
+        collectionsData.add( new Object[] { "Title" } );
+        collectionsData.add( new Object[] { "AnyText" } );
+        return collectionsData.iterator();
+    }
+
+    @DataProvider(name = "queryableAndFilter")
+    public Iterator<Object[]> queryableAndFilter() {
+        List<Object[]> collectionsData = new ArrayList<>();
+        collectionsData.add( new Object[] { "Identifier", createIdentifierFilter() } );
+        collectionsData.add( new Object[] { "Title", createTitleFilter() } );
+        collectionsData.add( new Object[] { "AnyText", createAnyTextFilter() } );
+        return collectionsData.iterator();
+    }
+
     /**
-     * Issue an HTTP GET capabilities request with csw:Record and Queryable 'Identifier'.
+     * Issue an HTTP GetRecords request with csw:Record.
+     *
+     * @param queryable
+     *            the queryable to test
+     * @param filter
+     *            the filter used in the request
      */
-    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'csw:Record'/'Identifier'")
-    public void issueGetCapabilities_identifier_DublinCore() {
+    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'csw:Record'", dataProvider = "queryableAndFilter")
+    public void issueGetRecords_DublinCore( String queryable, Element filter ) {
         URI endpoint = getOperationEndpoint( this.capabilitiesDoc, GETRECORDS, POST );
         if ( endpoint == null )
             throw new SkipException( "No POST binding available for GetRecords request." );
 
-        String identifier = findIdentifier();
-        if ( identifier == null )
-            throw new SkipException( "No identifier for available." );
-        Element identifierFilter = filterCreator.createIdentifierFilter( DC, identifier );
-        this.requestDocument = requestCreator.createGetRecordsRequest( DC, FULL, identifierFilter );
+        if ( filter == null )
+            throw new SkipException( "No value available for Queryable '" + queryable + "'." );
 
+        this.requestDocument = requestCreator.createGetRecordsRequest( DC, FULL, filter );
         this.response = this.cswClient.submitPostRequest( endpoint, this.requestDocument );
         assertEquals( this.response.getStatus(), 200, ErrorMessage.format( UNEXPECTED_STATUS ) );
 
         this.responseDocument = this.response.getEntity( Document.class );
         assertXPath( "//csw:GetRecordsResponse", this.responseDocument,
                      NamespaceBindings.withStandardBindings().getAllBindings(), "Response is not a GetRecordsResponse" );
+        this.queryableToResponseDublinCore.put( queryable, this.responseDocument );
         assertSchemaValid( this.cswValidator, new DOMSource( this.responseDocument ) );
     }
 
     /**
-     * Issue an HTTP GET capabilities request with gmd:MD_Metadata and Queryable 'Identifier'.
+     * Issue an HTTP GetRecords request with gmd:MD_Metadata.
+     *
+     * @param queryable
+     *            the queryable to test
+     * @param filter
+     *            the filter used in the request
      */
-    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'gmd:MD_Metadata'/'Identifier'")
-    public void issueGetCapabilities_identifier_Iso() {
+    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'gmd:MD_Metadata'", dataProvider = "queryableAndFilter")
+    public void issueGetRecords_Iso( String queryable, Element filter ) {
         URI endpoint = getOperationEndpoint( this.capabilitiesDoc, GETRECORDS, POST );
         if ( endpoint == null )
             throw new SkipException( "No POST binding available for GetRecords request." );
 
-        String identifier = findIdentifier();
-        if ( identifier == null )
-            throw new SkipException( "No identifier for available." );
-        Element identifierFilter = filterCreator.createIdentifierFilter( ISO19193, identifier );
-        this.requestDocument = requestCreator.createGetRecordsRequest( ISO19193, FULL, identifierFilter );
+        if ( filter == null )
+            throw new SkipException( "No value available for Queryable '" + queryable + "'." );
 
+        this.requestDocument = requestCreator.createGetRecordsRequest( ISO19193, FULL, filter );
         this.response = this.cswClient.submitPostRequest( endpoint, this.requestDocument );
         assertEquals( this.response.getStatus(), 200, ErrorMessage.format( UNEXPECTED_STATUS ) );
 
         this.responseDocument = this.response.getEntity( Document.class );
         assertXPath( "//csw:GetRecordsResponse", this.responseDocument,
                      NamespaceBindings.withStandardBindings().getAllBindings(), "Response is not a GetRecordsResponse" );
+        this.queryableToResponseIso.put( queryable, this.responseDocument );
         assertSchemaValid( this.isoValidator, new DOMSource( this.responseDocument ) );
     }
 
-    private String findIdentifier() {
+    /**
+     * Verify that all metadata returnables are present in the result (csw:Record).
+     *
+     * @param queryable
+     *            the queryable to test
+     */
+    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'csw:Record', returnables, Requirement 8", dependsOnMethods = "issueGetRecords_DublinCore", alwaysRun = true, dataProvider = "queryables")
+    public void issueGetRecords_Returnables_DublinCore( String queryable )
+                            throws XPathExpressionException {
+        Document response = this.queryableToResponseDublinCore.get( queryable );
+        if ( response == null )
+            throw new SkipException( "No response available for queryable " + queryable );
+
+        Node record = (Node) evaluateXPath( response, "//csw:Record[1]", null, NODE );
+        if ( record == null )
+            throw new AssertionError( "No csw:Record record available" );
+        assertReturnablesDublinCore( record );
+    }
+
+    /**
+     * Verify that all metadata returnables are present in the result (gmd:MD_Metadata).
+     *
+     * @param queryable
+     *            the queryable to test
+     */
+    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'gmd:MD_Metadata', returnables, Requirement 8", dependsOnMethods = "issueGetRecords_Iso", alwaysRun = true, dataProvider = "queryables")
+    public void issueGetRecords_Returnables_Iso( String queryable )
+                            throws XPathExpressionException {
+        Document response = this.queryableToResponseIso.get( queryable );
+        if ( response == null )
+            throw new SkipException( "No response available for queryable " + queryable );
+
+        Node record = (Node) evaluateXPath( response, "//gmd:MD_Metadata[1]", null, NODE );
+        if ( record == null )
+            throw new AssertionError( "No gmd:MD_Metadata record available" );
+        assertReturnablesIso( record );
+    }
+
+    private Element createIdentifierFilter() {
         Map<String, Node> records = dataSampler.getRecords();
-        for ( String key : records.keySet() ) {
-            if ( key != null )
-                return key;
+        for ( String identifier : records.keySet() ) {
+            if ( identifier != null )
+                return filterCreator.createIdentifierFilter( ISO19193, identifier );
+        }
+        return null;
+    }
+
+    private Element createTitleFilter() {
+        Map<String, Node> records = dataSampler.getRecords();
+        for ( Node record : records.values() ) {
+            String title = findTitle( record );
+            if ( title != null )
+                return filterCreator.createTitleFilter( DC, title );
+        }
+        return null;
+    }
+
+    private Object createAnyTextFilter() {
+        Map<String, Node> records = dataSampler.getRecords();
+        for ( Node record : records.values() ) {
+            String title = findTitle( record );
+            if ( title != null )
+                return filterCreator.createAnyTextFilter( DC, title );
+        }
+        return null;
+    }
+
+    private String findTitle( Node record ) {
+        try {
+            return (String) evaluateXPath( record, "//dc:title", null, XPathConstants.STRING );
+        } catch ( XPathExpressionException e ) {
+            // XPath is fine
         }
         return null;
     }
