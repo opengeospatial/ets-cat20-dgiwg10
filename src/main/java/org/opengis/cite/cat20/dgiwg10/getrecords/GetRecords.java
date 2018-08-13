@@ -154,7 +154,7 @@ public class GetRecords extends CommonFixture {
      * @param filter
      *            the filter used in the request
      */
-    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'csw:Record'", dataProvider = "queryableAndFilter")
+    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'csw:Record' (Requirement 6, 7)", dataProvider = "queryableAndFilter")
     public void issueGetRecords_DublinCore( String queryable, Element filter ) {
         URI endpoint = getOperationEndpoint( this.capabilitiesDoc, GETRECORDS, POST );
         if ( endpoint == null )
@@ -182,7 +182,7 @@ public class GetRecords extends CommonFixture {
      * @param filter
      *            the filter used in the request
      */
-    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'gmd:MD_Metadata'", dataProvider = "queryableAndFilter")
+    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'gmd:MD_Metadata' (Requirement 6, 7)", dataProvider = "queryableAndFilter")
     public void issueGetRecords_Iso( String queryable, Element filter ) {
         URI endpoint = getOperationEndpoint( this.capabilitiesDoc, GETRECORDS, POST );
         if ( endpoint == null )
@@ -208,7 +208,7 @@ public class GetRecords extends CommonFixture {
      * @param queryable
      *            the queryable to test
      */
-    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'csw:Record', returnables, Requirement 8", dependsOnMethods = "issueGetRecords_DublinCore", alwaysRun = true, dataProvider = "queryables")
+    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'csw:Record', returnables (Requirement 8)", dependsOnMethods = "issueGetRecords_DublinCore", alwaysRun = true, dataProvider = "queryables")
     public void issueGetRecords_Returnables_DublinCore( String queryable )
                             throws XPathExpressionException {
         Document response = this.queryableToResponseDublinCore.get( queryable );
@@ -227,7 +227,7 @@ public class GetRecords extends CommonFixture {
      * @param queryable
      *            the queryable to test
      */
-    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'gmd:MD_Metadata', returnables, Requirement 8", dependsOnMethods = "issueGetRecords_Iso", alwaysRun = true, dataProvider = "queryables")
+    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'gmd:MD_Metadata', returnables (Requirement 8)", dependsOnMethods = "issueGetRecords_Iso", alwaysRun = true, dataProvider = "queryables")
     public void issueGetRecords_Returnables_Iso( String queryable )
                             throws XPathExpressionException {
         Document response = this.queryableToResponseIso.get( queryable );
