@@ -4,6 +4,8 @@ import static org.opengis.cite.cat20.dgiwg10.Namespaces.CSW;
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.CSW_PREFIX;
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.DC;
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.DC_PREFIX;
+import static org.opengis.cite.cat20.dgiwg10.Namespaces.GMD;
+import static org.opengis.cite.cat20.dgiwg10.Namespaces.GMD_PREFIX;
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.OGC;
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.OGC_PREFIX;
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.OWS;
@@ -98,6 +100,8 @@ public class NamespaceBindings implements NamespaceContext {
      * {@value org.opengis.cite.cat20.dgiwg10.Namespaces#DC}</li>
      * <li>{@value org.opengis.cite.cat20.dgiwg10.Namespaces#OGC_PREFIX}:
      * {@value org.opengis.cite.cat20.dgiwg10.Namespaces#OGC}</li>
+     * <li>{@value org.opengis.cite.cat20.dgiwg10.Namespaces#GMD_PREFIX}:
+     * {@value org.opengis.cite.cat20.dgiwg10.Namespaces#GMD}</li>
      * </ul>
      * 
      * @return A NamespaceBindings object.
@@ -109,6 +113,7 @@ public class NamespaceBindings implements NamespaceContext {
         nsBindings.addNamespaceBinding( CSW, CSW_PREFIX );
         nsBindings.addNamespaceBinding( DC, DC_PREFIX );
         nsBindings.addNamespaceBinding( OGC, OGC_PREFIX );
+        nsBindings.addNamespaceBinding( GMD, GMD_PREFIX );
         return nsBindings;
     }
 
