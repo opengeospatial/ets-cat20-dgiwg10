@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<csw:GetRecordsResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/"
+                        xmlns:dct="http://purl.org/dc/terms/" xmlns:ows="http://www.opengis.net/ows">
+    <csw:SearchStatus timestamp="2018-08-10T04:51:25-07:00"/>
+    <csw:SearchResults elementSet="full" nextRecord="11" numberOfRecordsMatched="42536" numberOfRecordsReturned="10"
+                       recordSchema="http://www.opengis.net/cat/csw/2.0.2">
+        <csw:Record>
+            <dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:FileID">
+                https://landscape.blm.gov/geoportal/csw?request=GetCapabilities&amp;service=CSW&amp;version=2.0.2
+            </dc:identifier>
+            <dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:DocID">
+                {CDB722BB-3FAD-4289-935B-9CBDE579C8B4}
+            </dc:identifier>
+            <dc:title>BLM Landscape</dc:title>
+            <dc:type scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType">CSW</dc:type>
+            <dc:type scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType">text/xml</dc:type>
+            <dc:type scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType">application/xml</dc:type>
+            <dc:subject>CSW</dc:subject>
+            <dc:subject>keyword1</dc:subject>
+            <dc:subject>keyword2</dc:subject>
+            <dc:description>TEST</dc:description>
+            <dct:modified>2018-07-31T08:47:55-07:00</dct:modified>
+            <dct:abstract>A catalogue service that conforms to the HTTP protocol binding of the OpenGIS Catalogue
+                Service ISO Metadata Application Profile specification (version 2.0.2)
+            </dct:abstract>
+            <dc:format>iamge/jpg</dc:format>
+            <dc:language>en</dc:language>
+            <dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Server">
+                https://landscape.blm.gov/geoportal/csw?request=GetCapabilities&amp;service=CSW&amp;version=2.0.2
+            </dct:references>
+            <dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Server">
+                https://landscape.blm.gov/geoportal/csw
+            </dct:references>
+            <dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Server">
+                https://landscape.blm.gov/geoportal/csw
+            </dct:references>
+            <dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Document">
+                https://gptogc.esri.com/geoportal/csw?getxml=%7BCDB722BB-3FAD-4289-935B-9CBDE579C8B4%7D
+            </dct:references>
+        </csw:Record>
+        <csw:Record>
+            <dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:FileID">
+                http://www.tnccmaps.org:80/arcgis/services/Salmon/Shelter_Rating/MapServer/8
+            </dc:identifier>
+            <dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:DocID">
+                {2B22E752-5B86-4760-A637-87E11B68077D}
+            </dc:identifier>
+            <dc:title>By Chinook Stratum</dc:title>
+            <dc:type scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType">liveData</dc:type>
+            <dct:modified>2018-07-13T12:36:13-07:00</dct:modified>
+            <dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Server">
+                http://www.tnccmaps.org:80/arcgis/services/Salmon/Shelter_Rating/MapServer/8
+            </dct:references>
+            <dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Document">
+                https://gptogc.esri.com/geoportal/csw?getxml=%7B2B22E752-5B86-4760-A637-87E11B68077D%7D
+            </dct:references>
+            <ows:WGS84BoundingBox>
+                <ows:LowerCorner>-124.58192143061201 36.79220698585366</ows:LowerCorner>
+                <ows:UpperCorner>-121.37359423386667 43.145590741377404</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <ows:BoundingBox>
+                <ows:LowerCorner>-124.58192143061201 36.79220698585366</ows:LowerCorner>
+                <ows:UpperCorner>-121.37359423386667 43.145590741377404</ows:UpperCorner>
+            </ows:BoundingBox>
+        </csw:Record>
+        <csw:Record>
+            <dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:FileID">
+                http://www.tnccmaps.org:80/arcgis/services/Salmon/Shelter_Rating/MapServer/5
+            </dc:identifier>
+            <dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:DocID">
+                {FFF84E6C-FAE7-480E-BF79-45223E7F5408}
+            </dc:identifier>
+            <dc:title>By HA</dc:title>
+            <dc:type scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType">liveData</dc:type>
+            <dct:modified>2018-07-13T12:36:10-07:00</dct:modified>
+            <dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Server">
+                http://www.tnccmaps.org:80/arcgis/services/Salmon/Shelter_Rating/MapServer/5
+            </dct:references>
+            <dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Document">
+                https://gptogc.esri.com/geoportal/csw?getxml=%7BFFF84E6C-FAE7-480E-BF79-45223E7F5408%7D
+            </dct:references>
+            <ows:WGS84BoundingBox>
+                <ows:LowerCorner>-124.58192143061201 36.79220698585366</ows:LowerCorner>
+                <ows:UpperCorner>-121.37359423386667 43.145590741377404</ows:UpperCorner>
+            </ows:WGS84BoundingBox>
+            <ows:BoundingBox>
+                <ows:LowerCorner>-124.58192143061201 36.79220698585366</ows:LowerCorner>
+                <ows:UpperCorner>-121.37359423386667 43.145590741377404</ows:UpperCorner>
+            </ows:BoundingBox>
+        </csw:Record>
+        <csw:Record>
+            <dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:FileID">
+                http://www.gdngeoservices.nl/arcgis/rest/services/thermogis/ThermoGIS2/MapServer
+            </dc:identifier>
+            <dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:DocID">
+                {2685AD69-2A3A-4A30-861D-B1239E460B7E}
+            </dc:identifier>
+            <dc:title>thermogis/ThermoGIS2</dc:title>
+            <dc:type scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType">liveData</dc:type>
+            <dc:subject>MapServer</dc:subject>
+            <dc:subject>liveData</dc:subject>
+            <dc:subject>service</dc:subject>
+            <dct:modified>2018-07-13T12:35:44-07:00</dct:modified>
+            <dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Server">
+                http://www.gdngeoservices.nl/arcgis/rest/services/thermogis/ThermoGIS2/MapServer
+            </dct:references>
+            <dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Server">
+                http://www.gdngeoservices.nl/arcgis/rest/services/thermogis/ThermoGIS2/MapServer/export?size=256,256&amp;f=image
+            </dct:references>
+            <dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Document">
+                https://gptogc.esri.com/geoportal/csw?getxml=%7B2685AD69-2A3A-4A30-861D-B1239E460B7E%7D
+            </dct:references>
+        </csw:Record>
+        <csw:Record>
+            <dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:FileID">
+                http://www.tnccmaps.org:80/arcgis/services/Salmon/Percent_Flat_Water/MapServer/0
+            </dc:identifier>
+            <dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:DocID">
+                {4A0BD968-E029-488A-8019-AB25C10B7B72}
+            </dc:identifier>
+            <dc:title>By Coho Population</dc:title>
+            <dc:type scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType">liveData</dc:type>
+            <dct:modified>2018-07-13T12:35:29-07:00</dct:modified>
+            <dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Server">
+                http://www.tnccmaps.org:80/arcgis/services/Salmon/Percent_Flat_Water/MapServer/0
+            </dct:references>
+            <dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Document">
+                https://gptogc.esri.com/geoportal/csw?getxml=%7B4A0BD968-E029-488A-8019-AB25C10B7B72%7D
+            </dct:references>
+        </csw:Record>
+        <csw:Record>
+            <dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:FileID">
+                http://www.gdngeoservices.nl/arcgis/rest/services/subcoast/dk/MapServer
+            </dc:identifier>
+            <dc:identifier scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:DocID">
+                {11130F26-3946-4F6D-A177-60C313391F3E}
+            </dc:identifier>
+            <dc:title>subcoast/dk</dc:title>
+            <dc:type scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:ContentType">liveData</dc:type>
+            <dc:subject>MapServer</dc:subject>
+            <dc:subject>liveData</dc:subject>
+            <dc:subject>service</dc:subject>
+            <dct:modified>2018-07-13T12:35:26-07:00</dct:modified>
+            <dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Server">
+                http://www.gdngeoservices.nl/arcgis/rest/services/subcoast/dk/MapServer
+            </dct:references>
+            <dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Server">
+                http://www.gdngeoservices.nl/arcgis/rest/services/subcoast/dk/MapServer/export?size=256,256&amp;f=image
+            </dct:references>
+            <dct:references scheme="urn:x-esri:specification:ServiceType:ArcIMS:Metadata:Document">
+                https://gptogc.esri.com/geoportal/csw?getxml=%7B11130F26-3946-4F6D-A177-60C313391F3E%7D
+            </dct:references>
+        </csw:Record>
+    </csw:SearchResults>
+</csw:GetRecordsResponse>

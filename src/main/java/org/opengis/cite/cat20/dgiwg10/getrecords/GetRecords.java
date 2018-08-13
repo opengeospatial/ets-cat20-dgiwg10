@@ -1,22 +1,27 @@
 package org.opengis.cite.cat20.dgiwg10.getrecords;
 
+import static javax.xml.xpath.XPathConstants.NODE;
 import static org.opengis.cite.cat20.dgiwg10.DGIWG1CAT2.GETRECORDS;
 import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertSchemaValid;
 import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertXPath;
 import static org.opengis.cite.cat20.dgiwg10.ErrorMessageKeys.UNEXPECTED_STATUS;
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.XSD;
 import static org.opengis.cite.cat20.dgiwg10.ProtocolBinding.POST;
+import static org.opengis.cite.cat20.dgiwg10.returnables.Returnables.assertReturnablesDublinCore;
+import static org.opengis.cite.cat20.dgiwg10.returnables.Returnables.assertReturnablesIso;
 import static org.opengis.cite.cat20.dgiwg10.util.ElementSetName.FULL;
 import static org.opengis.cite.cat20.dgiwg10.util.OutputSchema.DC;
 import static org.opengis.cite.cat20.dgiwg10.util.OutputSchema.ISO19193;
 import static org.opengis.cite.cat20.dgiwg10.util.ServiceMetadataUtils.getOperationEndpoint;
 import static org.opengis.cite.cat20.dgiwg10.util.ValidationUtils.createSchemaResolver;
+import static org.opengis.cite.cat20.dgiwg10.util.XMLUtils.evaluateXPath;
 import static org.testng.Assert.assertEquals;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +40,6 @@ import org.opengis.cite.cat20.dgiwg10.util.DataSampler;
 import org.opengis.cite.cat20.dgiwg10.util.NamespaceBindings;
 import org.opengis.cite.cat20.dgiwg10.util.TestSuiteLogger;
 import org.opengis.cite.cat20.dgiwg10.util.ValidationUtils;
-import org.opengis.cite.cat20.dgiwg10.util.XMLUtils;
 import org.opengis.cite.cat20.dgiwg10.xml.FilterCreator;
 import org.opengis.cite.cat20.dgiwg10.xml.RequestCreator;
 import org.testng.ITestContext;
@@ -86,6 +90,10 @@ public class GetRecords extends CommonFixture {
 
     private Validator isoValidator;
 
+    private Map<String, Document> queryableToResponseDublinCore = new HashMap<>();
+
+    private Map<String, Document> queryableToResponseIso = new HashMap<>();
+
     /**
      * @param testContext
      *            the test context
@@ -118,6 +126,15 @@ public class GetRecords extends CommonFixture {
             // very unlikely to occur with no schema to process
             TestSuiteLogger.log( Level.WARNING, "Failed to build XML Schema Validator for csw.xsd.", e );
         }
+    }
+
+    @DataProvider(name = "queryables")
+    public Iterator<Object[]> queryables() {
+        List<Object[]> collectionsData = new ArrayList<>();
+        collectionsData.add( new Object[] { "Identifier" } );
+        collectionsData.add( new Object[] { "Title" } );
+        collectionsData.add( new Object[] { "AnyText" } );
+        return collectionsData.iterator();
     }
 
     @DataProvider(name = "queryableAndFilter")
@@ -153,6 +170,7 @@ public class GetRecords extends CommonFixture {
         this.responseDocument = this.response.getEntity( Document.class );
         assertXPath( "//csw:GetRecordsResponse", this.responseDocument,
                      NamespaceBindings.withStandardBindings().getAllBindings(), "Response is not a GetRecordsResponse" );
+        this.queryableToResponseDublinCore.put( queryable, this.responseDocument );
         assertSchemaValid( this.cswValidator, new DOMSource( this.responseDocument ) );
     }
 
@@ -180,7 +198,46 @@ public class GetRecords extends CommonFixture {
         this.responseDocument = this.response.getEntity( Document.class );
         assertXPath( "//csw:GetRecordsResponse", this.responseDocument,
                      NamespaceBindings.withStandardBindings().getAllBindings(), "Response is not a GetRecordsResponse" );
+        this.queryableToResponseIso.put( queryable, this.responseDocument );
         assertSchemaValid( this.isoValidator, new DOMSource( this.responseDocument ) );
+    }
+
+    /**
+     * Verify that all metadata returnables are present in the result (csw:Record).
+     *
+     * @param queryable
+     *            the queryable to test
+     */
+    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'csw:Record', returnables, Requirement 8", dependsOnMethods = "issueGetRecords_DublinCore", alwaysRun = true, dataProvider = "queryables")
+    public void issueGetRecords_Returnables_DublinCore( String queryable )
+                            throws XPathExpressionException {
+        Document response = this.queryableToResponseDublinCore.get( queryable );
+        if ( response == null )
+            throw new SkipException( "No response available for queryable " + queryable );
+
+        Node record = (Node) evaluateXPath( response, "//csw:Record[1]", null, NODE );
+        if ( record == null )
+            throw new AssertionError( "No csw:Record record available" );
+        assertReturnablesDublinCore( record );
+    }
+
+    /**
+     * Verify that all metadata returnables are present in the result (gmd:MD_Metadata).
+     *
+     * @param queryable
+     *            the queryable to test
+     */
+    @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'gmd:MD_Metadata', returnables, Requirement 8", dependsOnMethods = "issueGetRecords_Iso", alwaysRun = true, dataProvider = "queryables")
+    public void issueGetRecords_Returnables_Iso( String queryable )
+                            throws XPathExpressionException {
+        Document response = this.queryableToResponseIso.get( queryable );
+        if ( response == null )
+            throw new SkipException( "No response available for queryable " + queryable );
+
+        Node record = (Node) evaluateXPath( response, "//gmd:MD_Metadata[1]", null, NODE );
+        if ( record == null )
+            throw new AssertionError( "No gmd:MD_Metadata record available" );
+        assertReturnablesIso( record );
     }
 
     private Element createIdentifierFilter() {
@@ -191,7 +248,6 @@ public class GetRecords extends CommonFixture {
         }
         return null;
     }
-
 
     private Element createTitleFilter() {
         Map<String, Node> records = dataSampler.getRecords();
@@ -215,10 +271,11 @@ public class GetRecords extends CommonFixture {
 
     private String findTitle( Node record ) {
         try {
-            return (String) XMLUtils.evaluateXPath( record, "//dc:title", null, XPathConstants.STRING );
+            return (String) evaluateXPath( record, "//dc:title", null, XPathConstants.STRING );
         } catch ( XPathExpressionException e ) {
             // XPath is fine
         }
         return null;
     }
+
 }
