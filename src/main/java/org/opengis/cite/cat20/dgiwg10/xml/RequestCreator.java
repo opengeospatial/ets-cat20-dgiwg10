@@ -84,6 +84,35 @@ public class RequestCreator {
         return request;
     }
 
+    /**
+     * @param outputSchema
+     *            the outputSchema to use in the request, never <code>null</code>
+     * @param elementSetName
+     *            the elementSetName to use in the request, never <code>null</code>
+     * @param identifier
+     *            the id to append, never <code>null</code>
+     * @return the request, never <code>null</code>
+     * @throws IllegalArgumentException
+     *             if no POST endpoint for operation GetRecordById could be found in the capabilities
+     */
+    public Document createGetRecordById( OutputSchema outputSchema, ElementSetName elementSetName, String identifier ) {
+        Document request;
+        try {
+            InputStream requestAsStream = getClass().getResourceAsStream( "/org/opengis/cite/cat20/dgiwg10/getrecordbyid/GetRecordById-request.xml" );
+            request = docBuilder.parse( requestAsStream );
+        } catch ( IOException | SAXException e ) {
+            LOG.log( Level.SEVERE, "GetRecords request could not be created", e );
+            throw new IllegalArgumentException( "GetRecords request could not be created" );
+        }
+        Element getRecordById = request.getDocumentElement();
+        getRecordById.setAttribute( "outputSchema", outputSchema.getOutputSchema() );
+        Element id = (Element) getRecordById.getElementsByTagNameNS( CSW, "Id" ).item( 0 );
+        id.setTextContent( identifier );
+        Element elementSetNameElement = (Element) getRecordById.getElementsByTagNameNS( CSW, "ElementSetName" ).item( 0 );
+        elementSetNameElement.setTextContent( elementSetName.name().toLowerCase() );
+        return request;
+    }
+
     private void appendFilter( Document request, Element query, Node filter ) {
         if ( filter == null )
             return;

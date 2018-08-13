@@ -51,7 +51,7 @@ public class DataSampler {
             throw new IllegalArgumentException( "No POST binding available for GetRecords request." );
         }
         RequestCreator requestCreator = new RequestCreator();
-        Document request = requestCreator.createGetRecordsRequest( DC, FULL);
+        Document request = requestCreator.createGetRecordsRequest( DC, FULL );
 
         CSWClient cswClient = new CSWClient( this.capabilitiesDocument );
         ClientResponse getRecordsResponse = cswClient.submitPostRequest( endpoint, request );
@@ -83,6 +83,18 @@ public class DataSampler {
      */
     public Map<String, Node> getRecords() {
         return records;
+    }
+
+    /**
+     * @return an existing identifier if available, <code>null</code> if no identifier is available
+     */
+    public String findSampleIdentifier() {
+        Map<String, Node> records = getRecords();
+        for ( String identifier : records.keySet() ) {
+            if ( identifier != null )
+                return identifier;
+        }
+        return null;
     }
 
 }
