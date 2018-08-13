@@ -95,7 +95,7 @@ public class GetRecordById extends CommonFixture {
     /**
      * Issue an HTTP GetRecordById request with csw:Record.
      */
-    @Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'csw:Record'")
+    @Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'csw:Record' (Requirement 10)")
     public void issueGetRecordById_DublinCore() {
         URI endpoint = getOperationEndpoint( this.capabilitiesDoc, GETRECORDS, POST );
         if ( endpoint == null )
@@ -121,7 +121,7 @@ public class GetRecordById extends CommonFixture {
     /**
      * Issue an HTTP GetRecordById request with gmd:MD_Metadata.
      */
-    @Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'gmd:MD_Metadata'")
+    @Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'gmd:MD_Metadata' (Requirement 10)")
     public void issueGetRecordById_Iso() {
         URI endpoint = getOperationEndpoint( this.capabilitiesDoc, GETRECORDS, POST );
         if ( endpoint == null )
@@ -147,7 +147,7 @@ public class GetRecordById extends CommonFixture {
     /**
      * Verify that all metadata returnables are present in the result (csw:Record).
      */
-    @Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'csw:Record', returnables, Requirement 13", dependsOnMethods = "issueGetRecordById_DublinCore")
+    @Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'csw:Record', returnables (Requirement 13)", dependsOnMethods = "issueGetRecordById_DublinCore")
     public void issueGetRecordById_Returnables_DublinCore()
                             throws XPathExpressionException {
         Node record = (Node) evaluateXPath( this.dublinCoreResponse, "//csw:Record[1]", null, NODE );
@@ -159,7 +159,7 @@ public class GetRecordById extends CommonFixture {
     /**
      * Verify that all metadata returnables are present in the result (gmd:MD_Metadata).
      */
-    @Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'gmd:MD_Metadata', returnables, Requirement 13", dependsOnMethods = "issueGetRecordById_Iso")
+    @Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'gmd:MD_Metadata', returnables (Requirement 13)", dependsOnMethods = "issueGetRecordById_Iso")
     public void issueGetRecordById_Returnables_Iso()
                             throws XPathExpressionException {
         Node record = (Node) evaluateXPath( this.isoResponse, "//gmd:MD_Metadata[1]", null, NODE );
