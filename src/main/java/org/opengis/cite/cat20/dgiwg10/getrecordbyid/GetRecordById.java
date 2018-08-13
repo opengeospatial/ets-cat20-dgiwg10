@@ -1,26 +1,30 @@
 package org.opengis.cite.cat20.dgiwg10.getrecordbyid;
 
+import static javax.xml.xpath.XPathConstants.NODE;
 import static org.opengis.cite.cat20.dgiwg10.DGIWG1CAT2.GETRECORDS;
 import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertSchemaValid;
 import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertXPath;
 import static org.opengis.cite.cat20.dgiwg10.ErrorMessageKeys.UNEXPECTED_STATUS;
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.XSD;
 import static org.opengis.cite.cat20.dgiwg10.ProtocolBinding.POST;
+import static org.opengis.cite.cat20.dgiwg10.returnables.Returnables.assertReturnablesDublinCore;
+import static org.opengis.cite.cat20.dgiwg10.returnables.Returnables.assertReturnablesIso;
 import static org.opengis.cite.cat20.dgiwg10.util.ElementSetName.FULL;
 import static org.opengis.cite.cat20.dgiwg10.util.OutputSchema.ISO19193;
 import static org.opengis.cite.cat20.dgiwg10.util.ServiceMetadataUtils.getOperationEndpoint;
 import static org.opengis.cite.cat20.dgiwg10.util.ValidationUtils.createSchemaResolver;
+import static org.opengis.cite.cat20.dgiwg10.util.XMLUtils.evaluateXPath;
 import static org.testng.Assert.assertEquals;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Map;
 import java.util.logging.Level;
 
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
+import javax.xml.xpath.XPathExpressionException;
 
 import org.opengis.cite.cat20.dgiwg10.CommonFixture;
 import org.opengis.cite.cat20.dgiwg10.ErrorMessage;
@@ -49,6 +53,10 @@ public class GetRecordById extends CommonFixture {
     private Validator cswValidator;
 
     private Validator isoValidator;
+
+    private Document dublinCoreResponse;
+
+    private Document isoResponse;
 
     /**
      * @param testContext
@@ -93,7 +101,7 @@ public class GetRecordById extends CommonFixture {
         if ( endpoint == null )
             throw new SkipException( "No POST binding available for GetRecords request." );
 
-        String identifier = findIdentifier();
+        String identifier = dataSampler.findSampleIdentifier();
         if ( identifier == null )
             throw new SkipException( "No identifier available." );
 
@@ -106,6 +114,8 @@ public class GetRecordById extends CommonFixture {
                      NamespaceBindings.withStandardBindings().getAllBindings(),
                      "Response is not a GetRecordByIdResponse" );
         assertSchemaValid( this.cswValidator, new DOMSource( this.responseDocument ) );
+
+        this.dublinCoreResponse = this.responseDocument;
     }
 
     /**
@@ -117,7 +127,7 @@ public class GetRecordById extends CommonFixture {
         if ( endpoint == null )
             throw new SkipException( "No POST binding available for GetRecords request." );
 
-        String identifier = findIdentifier();
+        String identifier = dataSampler.findSampleIdentifier();
         if ( identifier == null )
             throw new SkipException( "No identifier available." );
 
@@ -130,15 +140,32 @@ public class GetRecordById extends CommonFixture {
                      NamespaceBindings.withStandardBindings().getAllBindings(),
                      "Response is not a GetRecordByIdResponse" );
         assertSchemaValid( this.isoValidator, new DOMSource( this.responseDocument ) );
+
+        this.isoResponse = this.responseDocument;
     }
 
-    private String findIdentifier() {
-        Map<String, Node> records = dataSampler.getRecords();
-        for ( String identifier : records.keySet() ) {
-            if ( identifier != null )
-                return identifier;
-        }
-        return null;
+    /**
+     * Verify that all metadata returnables are present in the result (csw:Record).
+     */
+    @Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'csw:Record', returnables, Requirement 13", dependsOnMethods = "issueGetRecordById_DublinCore")
+    public void issueGetRecordById_Returnables_DublinCore()
+                            throws XPathExpressionException {
+        Node record = (Node) evaluateXPath( this.dublinCoreResponse, "//csw:Record[1]", null, NODE );
+        if ( record == null )
+            throw new AssertionError( "No csw:Record record available" );
+        assertReturnablesDublinCore( record );
+    }
+
+    /**
+     * Verify that all metadata returnables are present in the result (gmd:MD_Metadata).
+     */
+    @Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'gmd:MD_Metadata', returnables, Requirement 13", dependsOnMethods = "issueGetRecordById_Iso")
+    public void issueGetRecordById_Returnables_Iso()
+                            throws XPathExpressionException {
+        Node record = (Node) evaluateXPath( this.isoResponse, "//gmd:MD_Metadata[1]", null, NODE );
+        if ( record == null )
+            throw new AssertionError( "No gmd:MD_Metadata record available" );
+        assertReturnablesIso( record );
     }
 
 }
