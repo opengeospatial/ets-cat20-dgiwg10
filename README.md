@@ -15,7 +15,7 @@ for running the suite are summarized below.
 
 Use a Java IDE such as Eclipse, NetBeans, or IntelliJ. Clone the repository and build the project.
 
-Set the main class to run: `org.opengis.cite.cat20-dgiwg10.TestNGController`
+Set the main class to run: `org.opengis.cite.cat20.dgiwg10.TestNGController`
 
 Arguments: The first argument must refer to an XML properties file containing the 
 required test run arguments. If not specified, the default location at `$
@@ -28,7 +28,7 @@ You can modify the sample file in `src/main/config/test-run-props.xml`
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties version="1.0">
   <comment>Test run arguments</comment>
-  <entry key="iut">http://schemas.opengis.net/gml/3.2.1/gml.xsd</entry>
+  <entry key="iut">http://localhost:8080/cat</entry>
 </properties>
 ```
 
@@ -41,20 +41,24 @@ One of the build artifacts is an "all-in-one" JAR file that includes the test
 suite and all of its dependencies; this makes it very easy to execute the test 
 suite in a command shell:
 
-`java -jar ets-cat20-dgiwg10-0.1-SNAPSHOT-aio.jar [-o|--outputDir $TMPDIR] [test-run-props.xml]`
+`java -jar ets-cat20-dgiwg10-${version}-aio.jar [-o|--outputDir $TMPDIR] [test-run-props.xml]`
 
 You may want to run the class, letting maven to collect all the dependencies you need:
 ```
  mvn -X exec:java -Dexec.mainClass=org.opengis.cite.cat20.dgiwg10.TestNGController -Dexec.args="./src/main/resources/test-run-props.xml"
 ```
 
-#### 3. OGC test harness
+#### 3. Docker
+
+This test suite comes with a Dockerfile which can be used to easily setup the OGC test harness with
+the test suite. Details can be found on [How to create Docker Images of test suites](https://github.com/opengeospatial/cite/wiki/How-to-create-Docker-Images-of-test-suites).
+
+#### 4. OGC test harness
 
 Use [TEAM Engine](https://github.com/opengeospatial/teamengine), the official OGC test harness.
 The latest test suite release are usually available at the [beta testing facility](http://cite.opengeospatial.org/te2/). 
 You can also [build and deploy](https://github.com/opengeospatial/teamengine) the test 
 harness yourself and use a local installation.
-
 
 ### How to contribute
 
