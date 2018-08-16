@@ -63,8 +63,8 @@
     <ows:Operation name="GetCapabilities">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost:8080/csw" />
-          <ows:Post xlink:type="simple" xlink:href="http://localhost:8080/csw" />
+          <ows:Get xlink:type="simple" xlink:href="http://localhost:8090/csw" />
+          <ows:Post xlink:type="simple" xlink:href="http://localhost:8090/csw" />
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="sections">
@@ -77,8 +77,8 @@
     <ows:Operation name="DescribeRecord">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost:8080/csw" />
-          <ows:Post xlink:type="simple" xlink:href="http://localhost:8080/csw" />
+          <ows:Get xlink:type="simple" xlink:href="http://localhost:8090/csw" />
+          <ows:Post xlink:type="simple" xlink:href="http://localhost:8090/csw" />
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="outputFormat">
@@ -97,8 +97,8 @@
     <ows:Operation name="GetDomain">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost:8080/csw" />
-          <ows:Post xlink:type="simple" xlink:href="http://localhost:8080/csw" />
+          <ows:Get xlink:type="simple" xlink:href="http://localhost:8090/csw" />
+          <ows:Post xlink:type="simple" xlink:href="http://localhost:8090/csw" />
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="ParameterName">
@@ -122,8 +122,8 @@
     <ows:Operation name="GetRecords">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost:8080/csw" />
-          <ows:Post xlink:type="simple" xlink:href="http://localhost:8080/csw" />
+          <ows:Get xlink:type="simple" xlink:href="http://localhost:8090/csw" />
+          <ows:Post xlink:type="simple" xlink:href="http://localhost:8090/csw" />
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="CONSTRAINTLANGUAGE">
@@ -215,8 +215,8 @@
     <ows:Operation name="GetRecordById">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost:8080/csw" />
-          <ows:Post xlink:type="simple" xlink:href="http://localhost:8080/csw" />
+          <ows:Get xlink:type="simple" xlink:href="http://localhost:8090/csw" />
+          <ows:Post xlink:type="simple" xlink:href="http://localhost:8090/csw" />
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="ElementSetName">
@@ -280,14 +280,14 @@
     <ows:Operation name="GetRepositoryItem">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Get xlink:type="simple" xlink:href="http://localhost:8080/csw" />
+          <ows:Get xlink:type="simple" xlink:href="http://localhost:8090/csw" />
         </ows:HTTP>
       </ows:DCP>
     </ows:Operation>
     <ows:Operation name="Transaction">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost:8080/csw" />
+          <ows:Post xlink:type="simple" xlink:href="http://localhost:8090/csw" />
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="TransactionSchemas">
@@ -308,7 +308,7 @@
     <ows:Operation name="Harvest">
       <ows:DCP>
         <ows:HTTP>
-          <ows:Post xlink:type="simple" xlink:href="http://localhost:8080/csw" />
+          <ows:Post xlink:type="simple" xlink:href="http://localhost:8090/csw" />
         </ows:HTTP>
       </ows:DCP>
       <ows:Parameter name="ResourceType">

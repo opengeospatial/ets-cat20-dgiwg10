@@ -55,7 +55,7 @@ public class GetRecordsTest {
 
     @Before
     public void setUp() {
-        initJadlerListeningOn( 8080 );
+        initJadlerListeningOn( 8090 );
     }
 
     @After
