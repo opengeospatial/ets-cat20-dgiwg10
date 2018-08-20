@@ -179,21 +179,6 @@ public class GetCapabilities extends CommonFixture {
                      "Return types csw:Record and/or gmd:MD_Metadata for the GetRecordById operation are not supported." );
     }
 
-    /**
-     * Verify that the reported queriables and returnables for the GetRecordById operation. At least include those
-     * defined in section s 7.1.1 and 7.1.3. (Requirement 10).
-     *
-     * Requirement 5 is tested here for queryables.
-     */
-    @Test(description = "Implements A.1.1 GetCapabilities for DGIWG Basic CSW (Requirement 5, 10, GetRecordById)", dependsOnMethods = "verifyNoError")
-    public void verifyGetRecordByIdQueryables() {
-        setCurrentResponse();
-        assertResponseDocument();
-        List<String> unsupportedQuerables = collectUnsupportedQueryables( "GetRecordById" );
-        assertTrue( unsupportedQuerables.isEmpty(), "Missing queryables for GetRecordById operation: "
-                                                    + unsupportedQuerables );
-    }
-
     private void setCurrentResponse() {
         this.response = this.capabilitiesResponse;
         this.responseDocument = this.capabilitiesDocument;
