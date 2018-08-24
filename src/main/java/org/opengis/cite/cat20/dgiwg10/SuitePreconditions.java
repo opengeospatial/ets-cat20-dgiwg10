@@ -66,6 +66,7 @@ public class SuitePreconditions {
         ISuite suite = testContext.getSuite();
         Document capabilitiesDocument = (Document) suite.getAttribute( SuiteAttribute.TEST_SUBJECT.getName() );
         DataSampler sampler = new DataSampler( capabilitiesDocument );
+        suite.setAttribute( SuiteAttribute.DATA_SAMPLER.getName(), sampler );
         try {
             sampler.acquireRecords();
         } catch ( RuntimeException rx ) {
@@ -77,11 +78,10 @@ public class SuitePreconditions {
         Map<String, Node> records = sampler.getRecords();
         boolean sutHasData = !records.isEmpty();
         if ( !sutHasData ) {
-            String msg = ErrorMessage.get( "No test data available. Service must provide at least one record for testing" );
+            String msg = "No test data available. Service must provide at least one record for testing";
             LOGR.warning( msg );
             throw new AssertionError( msg );
         }
-        suite.setAttribute( SuiteAttribute.DATA_SAMPLER.getName(), sampler );
     }
 
 }
