@@ -10,6 +10,7 @@ import static org.opengis.cite.cat20.dgiwg10.ProtocolBinding.POST;
 import static org.opengis.cite.cat20.dgiwg10.returnables.Returnables.assertReturnablesDublinCore;
 import static org.opengis.cite.cat20.dgiwg10.returnables.Returnables.assertReturnablesIso;
 import static org.opengis.cite.cat20.dgiwg10.util.ElementSetName.FULL;
+import static org.opengis.cite.cat20.dgiwg10.util.OutputSchema.DC;
 import static org.opengis.cite.cat20.dgiwg10.util.OutputSchema.ISO19193;
 import static org.opengis.cite.cat20.dgiwg10.util.ServiceMetadataUtils.getOperationEndpoint;
 import static org.opengis.cite.cat20.dgiwg10.util.ValidationUtils.createSchemaResolver;
@@ -105,7 +106,7 @@ public class GetRecordById extends CommonFixture {
         if ( identifier == null )
             throw new SkipException( "No identifier available." );
 
-        this.requestDocument = requestCreator.createGetRecordById( ISO19193, FULL, identifier );
+        this.requestDocument = requestCreator.createGetRecordById( DC, FULL, identifier );
         this.response = this.cswClient.submitPostRequest( endpoint, this.requestDocument );
         assertEquals( this.response.getStatus(), 200, ErrorMessage.format( UNEXPECTED_STATUS ) );
 
