@@ -165,20 +165,6 @@ public class GetCapabilities extends CommonFixture {
                                                     + unsupportedQuerables );
     }
 
-    /**
-     * Verify that the XML response indicates support for csw:Record and gmd:MD_Metadata return types for the
-     * GetRecordById operation. (Requirement 11).
-     */
-    @Test(description = "Implements A.1.1 GetCapabilities for DGIWG Basic CSW (Requirement 11)", dependsOnMethods = "verifyNoError")
-    public void verifySupportGetRecordByIdReturnType() {
-        setCurrentResponse();
-        assertResponseDocument();
-        String xpath = "//ows:OperationsMetadata/ows:Operation[@name='GetRecordById']/ows:Parameter[@name='typeNames']/ows:Value [text() = 'csw:Record' ] and "
-                       + "//ows:OperationsMetadata/ows:Operation[@name='GetRecordById']/ows:Parameter[@name='typeNames']/ows:Value[text() = 'gmd:MD_Metadata' ]";
-        assertXPath( xpath, capabilitiesDocument, withStandardBindings().getAllBindings(),
-                     "Return types csw:Record and/or gmd:MD_Metadata for the GetRecordById operation are not supported." );
-    }
-
     private void setCurrentResponse() {
         this.response = this.capabilitiesResponse;
         this.responseDocument = this.capabilitiesDocument;
