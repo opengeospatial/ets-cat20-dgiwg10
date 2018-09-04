@@ -98,26 +98,6 @@ public class GetCapabilitiesTest {
         getCapabilities.verifyGetRecordsQueryables();
     }
 
-    @Test
-    public void testVerifySupportGetRecordByIdReturnType()
-                            throws Exception {
-        Document capabilitiesDocument = parseCapabilitiesDocument( "GetCapabilities-DGIWG-response.xml" );
-
-        GetCapabilities getCapabilities = new GetCapabilities();
-        getCapabilities.setResponseDocument( capabilitiesDocument );
-        getCapabilities.verifySupportGetRecordByIdReturnType();
-    }
-
-    @Test(expected = AssertionError.class)
-    public void testVerifySupportGetRecordByIdReturnType_invalid()
-                            throws Exception {
-        Document capabilitiesDocument = parseCapabilitiesDocument( "GetCapabilities-response.xml" );
-
-        GetCapabilities getCapabilities = new GetCapabilities();
-        getCapabilities.setResponseDocument( capabilitiesDocument );
-        getCapabilities.verifySupportGetRecordByIdReturnType();
-    }
-
     private Document parseCapabilitiesDocument( String resource )
                             throws SAXException, IOException {
         InputStream is = getClass().getResourceAsStream( resource );
