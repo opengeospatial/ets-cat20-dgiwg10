@@ -56,8 +56,7 @@ public class RequestCreatorTest {
     }
 
     @Test
-    public void testCreateGetRecordsRequest()
-                            throws Exception {
+    public void testCreateGetRecordsRequest() {
         OutputSchema outputSchema = ISO19193;
         ElementSetName elementSetName = FULL;
         Document getRecordsRequest = requestCreator.createGetRecordsRequest( outputSchema, elementSetName );
@@ -96,8 +95,7 @@ public class RequestCreatorTest {
     }
 
     @Test
-    public void testCreateGetRecordByIdRequestWithFilter()
-                            throws Exception {
+    public void testCreateGetRecordByIdRequestWithFilter() {
         String id = "abc";
         OutputSchema outputSchema = DC;
         ElementSetName elementSetName = FULL;
@@ -113,6 +111,26 @@ public class RequestCreatorTest {
         assertThat( the( getRecordsRequest ),
                     hasXPath( "//csw:GetRecordById/csw:ElementSetName", is( elementSetName.name().toLowerCase() ),
                               withStandardBindings() ) );
+    }
+
+    @Test
+    public void testCreateInsert() {
+        requestCreator.createInsertRequest();
+    }
+
+    @Test
+    public void testCreateUpdate() {
+        requestCreator.createUpdateRequest();
+    }
+
+    @Test
+    public void testCreateDelete() {
+        String id = "67654-gjz57g-hz5";
+        Document deleteRequest = requestCreator.createDeleteRequest( id );
+
+        assertThat( the( deleteRequest ), conformsTo( cswSchema ) );
+
+        assertThat( the( deleteRequest ), hasXPath( "//ogc:Literal", is( id ), withStandardBindings() ) );
     }
 
     private Node parseFilter( String filterResource )
