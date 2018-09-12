@@ -62,7 +62,7 @@ public class VerifyETSAssert {
         Map<String, String> nsBindings = new HashMap<String, String>();
         nsBindings.put( WADL_NS, "ns1" );
         String xpath = "//ns1:resources";
-        ETSAssert.assertXPath( xpath, doc, nsBindings );
+        ETSAssert.assertXPath( doc, xpath, nsBindings );
     }
 
     @Test
@@ -73,7 +73,7 @@ public class VerifyETSAssert {
         Document doc = docBuilder.parse( this.getClass().getResourceAsStream( "/capabilities-simple.xml" ) );
         // using built-in namespace binding
         String xpath = "//ows:OperationsMetadata/ows:Constraint[@name='XMLEncoding']/ows:DefaultValue = 'TRUE'";
-        ETSAssert.assertXPath( xpath, doc, null );
+        ETSAssert.assertXPath( doc, xpath );
     }
 
     @Test
@@ -84,7 +84,7 @@ public class VerifyETSAssert {
         Document doc = docBuilder.parse( this.getClass().getResourceAsStream( "/capabilities-simple.xml" ) );
         // using built-in namespace binding
         String xpath = "//ows:OperationsMetadata/ows:Constraint[@name='XMLEncoding']/ows:DefaultValue = 'TRUE'";
-        ETSAssert.assertXPath( xpath, doc, null, "FAILED" );
+        ETSAssert.assertXPath( doc, xpath, null, "FAILED" );
     }
 
 }

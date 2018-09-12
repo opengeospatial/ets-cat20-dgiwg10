@@ -1,7 +1,7 @@
 package org.opengis.cite.cat20.dgiwg10;
 
-import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertXPath;
-import static org.opengis.cite.cat20.dgiwg10.util.NamespaceBindings.withStandardBindings;
+import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertQualifiedName;
+import static org.opengis.cite.cat20.dgiwg10.Namespaces.CSW;
 
 import java.util.Map;
 import java.util.logging.Level;
@@ -52,7 +52,7 @@ public class SuitePreconditions {
     @Test(description = "Test subject is WFS 2.0 service")
     public void verifyCapabilities( ITestContext testContext ) {
         Document capabilitiesDocument = (Document) testContext.getSuite().getAttribute( SuiteAttribute.TEST_SUBJECT.getName() );
-        assertXPath( "//csw:Capabilities", capabilitiesDocument, withStandardBindings().getAllBindings() );
+        assertQualifiedName( capabilitiesDocument, CSW, "Capabilities" );
     }
 
     /**

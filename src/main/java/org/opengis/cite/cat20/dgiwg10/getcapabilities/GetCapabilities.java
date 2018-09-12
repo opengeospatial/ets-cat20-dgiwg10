@@ -7,12 +7,15 @@ import static org.opengis.cite.cat20.dgiwg10.DGIWG1CAT2.REQUEST_PARAM;
 import static org.opengis.cite.cat20.dgiwg10.DGIWG1CAT2.SERVICE_PARAM;
 import static org.opengis.cite.cat20.dgiwg10.DGIWG1CAT2.SERVICE_TYPE;
 import static org.opengis.cite.cat20.dgiwg10.DGIWG1CAT2.SERVICE_VERSION;
+import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertQualifiedName;
+import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertStatusCode;
+import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertTrue;
 import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertXPath;
+import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertXmlContentType;
+import static org.opengis.cite.cat20.dgiwg10.Namespaces.CSW;
 import static org.opengis.cite.cat20.dgiwg10.ProtocolBinding.GET;
 import static org.opengis.cite.cat20.dgiwg10.util.NamespaceBindings.withStandardBindings;
 import static org.opengis.cite.cat20.dgiwg10.util.ServiceMetadataUtils.getOperationEndpoint;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -115,12 +118,12 @@ public class GetCapabilities extends CommonFixture {
     @Test(description = "Implements A.1.1 GetCapabilities for DGIWG Basic CSW (Requirement 1, 3)", dependsOnMethods = "issueGetCapabilities")
     public void verifyNoError() {
         setCurrentResponse();
-        int status = this.capabilitiesResponse.getStatus();
-        assertEquals( status, 200, String.format( "Expected status code 200 but received %d.", status ) );
+        assertStatusCode( this.response.getStatus(), 200 );
+        assertXmlContentType( this.response.getHeaders() );
 
         this.capabilitiesDocument = this.response.getEntity( Document.class );
         this.responseDocument = this.capabilitiesDocument;
-        assertXPath( "//csw:Capabilities", capabilitiesDocument, withStandardBindings().getAllBindings() );
+        assertQualifiedName( responseDocument, CSW, "Capabilities" );
     }
 
     /**
@@ -132,7 +135,7 @@ public class GetCapabilities extends CommonFixture {
         assertResponseDocument();
         String xpath = "contains(normalize-space(//csw:Capabilities/ows:ServiceIdentification/ows:Abstract), '"
                        + ABSTRACT_TEXT + "')";
-        assertXPath( xpath, capabilitiesDocument, withStandardBindings().getAllBindings(),
+        assertXPath( capabilitiesDocument, xpath, withStandardBindings().getAllBindings(),
                      "Abstract does not contain the expected text '" + ABSTRACT_TEXT + "'." );
     }
 
@@ -146,7 +149,7 @@ public class GetCapabilities extends CommonFixture {
         assertResponseDocument();
         String xpath = "//ows:OperationsMetadata/ows:Operation[@name='GetRecords']/ows:Parameter[@name='typeNames']/ows:Value [text() = 'csw:Record' ] and "
                        + "//ows:OperationsMetadata/ows:Operation[@name='GetRecords']/ows:Parameter[@name='typeNames']/ows:Value[text() = 'gmd:MD_Metadata' ]";
-        assertXPath( xpath, capabilitiesDocument, withStandardBindings().getAllBindings(),
+        assertXPath( capabilitiesDocument, xpath, withStandardBindings().getAllBindings(),
                      "Return types csw:Record and/or gmd:MD_Metadata for the GetRecords operation are not supported." );
     }
 

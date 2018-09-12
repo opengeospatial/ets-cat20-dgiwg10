@@ -1,17 +1,18 @@
 package org.opengis.cite.cat20.dgiwg10.transaction;
 
+import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertQualifiedName;
 import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertSchemaValid;
+import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertStatusCode;
+import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertTrue;
 import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertXPath;
-import static org.opengis.cite.cat20.dgiwg10.ErrorMessageKeys.UNEXPECTED_MEDIA_TYPE;
-import static org.opengis.cite.cat20.dgiwg10.ErrorMessageKeys.UNEXPECTED_STATUS;
+import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertXmlContentType;
+import static org.opengis.cite.cat20.dgiwg10.Namespaces.CSW;
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.XSD;
 import static org.opengis.cite.cat20.dgiwg10.util.ElementSetName.FULL;
 import static org.opengis.cite.cat20.dgiwg10.util.NamespaceBindings.withStandardBindings;
 import static org.opengis.cite.cat20.dgiwg10.util.OutputSchema.DC;
 import static org.opengis.cite.cat20.dgiwg10.util.ValidationUtils.createSchemaResolver;
 import static org.opengis.cite.cat20.dgiwg10.util.XMLUtils.evaluateXPath;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -25,7 +26,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.opengis.cite.cat20.dgiwg10.CommonFixture;
-import org.opengis.cite.cat20.dgiwg10.ErrorMessage;
 import org.opengis.cite.cat20.dgiwg10.ProtocolBinding;
 import org.opengis.cite.cat20.dgiwg10.util.ServiceMetadataUtils;
 import org.opengis.cite.cat20.dgiwg10.util.TestSuiteLogger;
@@ -100,7 +100,7 @@ public class Transaction extends CommonFixture {
     public void verifyAbstract() {
         String xpath = "contains(normalize-space(//csw:Capabilities/ows:ServiceIdentification/ows:Abstract), '"
                        + ABSTRACT_TEXT_19 + "')";
-        assertXPath( xpath, capabilitiesDoc, withStandardBindings().getAllBindings(),
+        assertXPath( capabilitiesDoc, xpath, withStandardBindings().getAllBindings(),
                      "Abstract does not contain the expected text '" + ABSTRACT_TEXT_19 + "'." );
     }
 
@@ -113,11 +113,11 @@ public class Transaction extends CommonFixture {
     public void issueInsertOperation() {
         this.requestDocument = requestCreator.createInsertRequest();
         this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument );
-        assertEquals( this.response.getStatus(), 200, ErrorMessage.format( UNEXPECTED_STATUS ) );
-        assertTrue( this.response.getHeaders().get( "Content-Type" ).contains( "xml" ),
-                    ErrorMessage.format( UNEXPECTED_MEDIA_TYPE ) );
+        assertStatusCode( this.response.getStatus(), 200 );
+        assertXmlContentType( this.response.getHeaders() );
         this.responseDocument = this.response.getEntity( Document.class );
-        assertXPath( "/csw:TransactionResponse", responseDocument, null );
+
+        assertQualifiedName( responseDocument, CSW, "TransactionResponse" );
         assertSchemaValid( cswValidator, new DOMSource( this.responseDocument ) );
 
         int totalInserted = parseTotalInserted();
@@ -134,13 +134,12 @@ public class Transaction extends CommonFixture {
     public void issueGetRecords_EnsureInsert() {
         this.requestDocument = requestCreator.createGetRecordById( DC, FULL, this.insertedId );
         this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument );
-        assertEquals( this.response.getStatus(), 200, ErrorMessage.format( UNEXPECTED_STATUS ) );
-        assertTrue( this.response.getHeaders().get( "Content-Type" ).contains( "xml" ),
-                    ErrorMessage.format( UNEXPECTED_MEDIA_TYPE ) );
+        assertStatusCode( this.response.getStatus(), 200 );
+        assertXmlContentType( this.response.getHeaders() );
         this.responseDocument = this.response.getEntity( Document.class );
 
         String xpath = String.format( "//csw:Record[dc:identifier = %s]", this.insertedId );
-        assertXPath( xpath, this.responseDocument, null );
+        assertXPath( this.responseDocument, xpath );
     }
 
     /**
@@ -150,11 +149,11 @@ public class Transaction extends CommonFixture {
     public void issueUpdateOperation() {
         this.requestDocument = requestCreator.createUpdateRequest();
         this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument );
-        assertEquals( this.response.getStatus(), 200, ErrorMessage.format( UNEXPECTED_STATUS ) );
-        assertTrue( this.response.getHeaders().get( "Content-Type" ).contains( "xml" ),
-                    ErrorMessage.format( UNEXPECTED_MEDIA_TYPE ) );
+        assertStatusCode( this.response.getStatus(), 200 );
+        assertXmlContentType( this.response.getHeaders() );
         this.responseDocument = this.response.getEntity( Document.class );
-        assertXPath( "/csw:TransactionResponse", responseDocument, null );
+
+        assertQualifiedName( responseDocument, CSW, "TransactionResponse" );
         assertSchemaValid( cswValidator, new DOMSource( this.responseDocument ) );
 
         int totalUpdated = parseTotalUpdated();
@@ -168,13 +167,12 @@ public class Transaction extends CommonFixture {
     public void issueGetRecords_EnsureUpdate() {
         this.requestDocument = requestCreator.createGetRecordById( DC, FULL, this.insertedId );
         this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument );
-        assertEquals( this.response.getStatus(), 200, ErrorMessage.format( UNEXPECTED_STATUS ) );
-        assertTrue( this.response.getHeaders().get( "Content-Type" ).contains( "xml" ),
-                    ErrorMessage.format( UNEXPECTED_MEDIA_TYPE ) );
+        assertStatusCode( this.response.getStatus(), 200 );
+        assertXmlContentType( this.response.getHeaders() );
         this.responseDocument = this.response.getEntity( Document.class );
 
         String xpath = String.format( "//csw:Record[dc:identifier = %s]", this.insertedId );
-        assertXPath( xpath, this.responseDocument, null );
+        assertXPath( this.responseDocument, xpath );
 
         // TODO: ensure update
     }
@@ -186,11 +184,11 @@ public class Transaction extends CommonFixture {
     public void issueDeleteOperation() {
         this.requestDocument = requestCreator.createDeleteRequest( this.insertedId );
         this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument );
-        assertEquals( this.response.getStatus(), 200, ErrorMessage.format( UNEXPECTED_STATUS ) );
-        assertTrue( this.response.getHeaders().get( "Content-Type" ).contains( "xml" ),
-                    ErrorMessage.format( UNEXPECTED_MEDIA_TYPE ) );
+        assertStatusCode( this.response.getStatus(), 200 );
+        assertXmlContentType( this.response.getHeaders() );
         this.responseDocument = this.response.getEntity( Document.class );
-        assertXPath( "/csw:TransactionResponse", responseDocument, null );
+
+        assertQualifiedName( responseDocument, CSW, "TransactionResponse" );
         assertSchemaValid( cswValidator, new DOMSource( this.responseDocument ) );
 
         int totalDeleted = parseTotalDeleted();
@@ -204,13 +202,12 @@ public class Transaction extends CommonFixture {
     public void issueGetRecords_EnsureDelete() {
         this.requestDocument = requestCreator.createGetRecordById( DC, FULL, this.insertedId );
         this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument );
-        assertEquals( this.response.getStatus(), 200, ErrorMessage.format( UNEXPECTED_STATUS ) );
-        assertTrue( this.response.getHeaders().get( "Content-Type" ).contains( "xml" ),
-                    ErrorMessage.format( UNEXPECTED_MEDIA_TYPE ) );
+        assertStatusCode( this.response.getStatus(), 200 );
+        assertXmlContentType( this.response.getHeaders() );
         this.responseDocument = this.response.getEntity( Document.class );
 
         String xpath = String.format( "not(//csw:Record[dc:identifier = %s])", this.insertedId );
-        assertXPath( xpath, this.responseDocument, null );
+        assertXPath( this.responseDocument, xpath );
     }
 
     private String parseIdentifier() {

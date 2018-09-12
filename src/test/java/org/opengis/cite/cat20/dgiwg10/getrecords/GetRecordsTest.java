@@ -94,7 +94,7 @@ public class GetRecordsTest {
 
     private void prepareJadler( String s ) {
         InputStream responseEntity = getClass().getResourceAsStream( s );
-        onRequest().respond().withStatus( 200 ).withBody( responseEntity );
+        onRequest().respond().withStatus( 200 ).withBody( responseEntity ).withContentType( "application/xml" );
     }
 
 }

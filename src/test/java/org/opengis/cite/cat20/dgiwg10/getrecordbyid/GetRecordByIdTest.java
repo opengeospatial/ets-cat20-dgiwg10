@@ -93,7 +93,7 @@ public class GetRecordByIdTest {
 
     private void prepareJadler( String resource ) {
         InputStream responseEntity = getClass().getResourceAsStream( resource );
-        onRequest().respond().withBody( responseEntity );
+        onRequest().respond().withBody( responseEntity ).withContentType( "application/xml" );
     }
 
 }

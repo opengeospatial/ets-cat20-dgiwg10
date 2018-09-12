@@ -1,13 +1,18 @@
 package org.opengis.cite.cat20.dgiwg10;
 
+import static org.opengis.cite.cat20.dgiwg10.ErrorMessageKeys.LOCAL_NAME;
+import static org.opengis.cite.cat20.dgiwg10.ErrorMessageKeys.NAMESPACE_NAME;
+import static org.opengis.cite.cat20.dgiwg10.ErrorMessageKeys.UNEXPECTED_MEDIA_TYPE;
+import static org.opengis.cite.cat20.dgiwg10.ErrorMessageKeys.UNEXPECTED_STATUS;
 import static org.opengis.cite.cat20.dgiwg10.ErrorMessageKeys.XPATH_RESULT;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
 
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.namespace.QName;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.transform.Source;
 import javax.xml.validation.Validator;
 import javax.xml.xpath.XPath;
@@ -16,15 +21,11 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.opengis.cite.cat20.dgiwg10.util.NamespaceBindings;
-import org.opengis.cite.cat20.dgiwg10.util.XMLUtils;
 import org.opengis.cite.validation.ValidationErrorHandler;
 import org.testng.Assert;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import com.sun.jersey.api.client.ClientResponse;
 
 /**
  * Provides a set of custom assertion methods.
@@ -37,68 +38,111 @@ public class ETSAssert {
     }
 
     /**
-     * Asserts that the qualified name of a DOM Node matches the expected value.
+     * Asserts that the status code matches the expected status code.
      * 
+     * @param statusCode
+     *            the status code
+     * @param expectedStatusCode
+     *            the expected status code
+     */
+    public static void assertStatusCode( int statusCode, int expectedStatusCode ) {
+        if ( statusCode != expectedStatusCode )
+            throw new AssertionError( ErrorMessage.format( UNEXPECTED_STATUS ) );
+    }
+
+    /**
+     * Asserts that the header "Content-Type" contains a value with 'xml'.
+     *
+     * @param headers
+     *            the available headers
+     */
+    public static void assertXmlContentType( MultivaluedMap<String, String> headers ) {
+        List<String> contentType = headers.get( "Content-Type" );
+        boolean hasContentTypeXml = hasContentTypeXml( contentType );
+        if ( !hasContentTypeXml )
+            throw new AssertionError( UNEXPECTED_MEDIA_TYPE );
+    }
+
+    /**
+     * @param valueToAssert
+     *            the boolean to assert to be <code>true</code>
+     * @param failureMsg
+     *            the message to throw in case of a failure, should not be <code>null</code>
+     */
+    public static void assertTrue( boolean valueToAssert, String failureMsg ) {
+        if ( !valueToAssert )
+            throw new AssertionError( failureMsg );
+    }
+
+    /**
+     * Asserts that the qualified name of a Document root node matches the expected value.
+     *
+     * @param document
+     *            The document to check the root node.
+     * @param namespaceUri
+     *            the expected namespace uri.
+     * @param localName
+     *            the expected local name.
+     */
+    public static void assertQualifiedName( Document document, String namespaceUri, String localName ) {
+        assertQualifiedName( document.getDocumentElement(), namespaceUri, localName );
+    }
+
+    /**
+     * Asserts that the qualified name of a DOM Node matches the expected value.
+     *
      * @param node
      *            The Node to check.
-     * @param qName
-     *            A QName object containing a namespace name (URI) and a local part.
+     * @param namespaceUri
+     *            the expected namespace uri.
+     * @param localName
+     *            the expected local name.
      */
-    public static void assertQualifiedName( Node node, QName qName ) {
-        Assert.assertEquals( node.getLocalName(), qName.getLocalPart(), ErrorMessage.get( ErrorMessageKeys.LOCAL_NAME ) );
-        Assert.assertEquals( node.getNamespaceURI(), qName.getNamespaceURI(),
-                             ErrorMessage.get( ErrorMessageKeys.NAMESPACE_NAME ) );
+    public static void assertQualifiedName( Node node, String namespaceUri, String localName ) {
+        assertEquals( node.getLocalName(), localName, ErrorMessage.get( LOCAL_NAME ) );
+        assertEquals( node.getNamespaceURI(), namespaceUri, ErrorMessage.get( NAMESPACE_NAME ) );
     }
 
     /**
-     * Asserts that an XPath 1.0 expression holds true for the given evaluation context. The following standard
-     * namespace bindings do not need to be explicitly declared:
+     * Asserts that an XPath 1.0 expression holds true for the given evaluation context. The standard namespace bindings
+     * from NamespaceBindings.withStandardBindings() are used.
      *
-     * <ul>
-     * <li>{@value org.opengis.cite.cat20.dgiwg10.Namespaces#OWS_PREFIX}:
-     * {@value org.opengis.cite.cat20.dgiwg10.Namespaces#OWS}</li>
-     * <li>{@value org.opengis.cite.cat20.dgiwg10.Namespaces#XLINK_PREFIX}:
-     * {@value org.opengis.cite.cat20.dgiwg10.Namespaces#XLINK}</li>
-     * <li>{@value org.opengis.cite.cat20.dgiwg10.Namespaces#CSW_PREFIX}:
-     * {@value org.opengis.cite.cat20.dgiwg10.Namespaces#CSW}</li>
-     * </ul>
-     * 
-     * @param expr
-     *            A valid XPath 1.0 expression.
      * @param context
      *            The context node.
-     * @param namespaceBindings
-     *            A collection of namespace bindings for the XPath expression, where each entry maps a namespace URI
-     *            (key) to a prefix (value). It may be {@code null}.
+     * @param expr
+     *            A valid XPath 1.0 expression.
      */
-    public static void assertXPath( String expr, Node context, Map<String, String> namespaceBindings ) {
-        assertXPath( expr, context, namespaceBindings, null );
+    public static void assertXPath( Node context, String expr ) {
+        assertXPath( context, expr, null, null );
     }
 
     /**
-     * Asserts that an XPath 1.0 expression holds true for the given evaluation context. The following standard
-     * namespace bindings do not need to be explicitly declared:
+     * Asserts that an XPath 1.0 expression holds true for the given evaluation context. The standard namespace bindings
+     * from NamespaceBindings.withStandardBindings() must not be declared.
      *
-     * <ul>
-     * <li>{@value org.opengis.cite.cat20.dgiwg10.Namespaces#OWS_PREFIX}:
-     * {@value org.opengis.cite.cat20.dgiwg10.Namespaces#OWS}</li>
-     * <li>{@value org.opengis.cite.cat20.dgiwg10.Namespaces#XLINK_PREFIX}:
-     * {@value org.opengis.cite.cat20.dgiwg10.Namespaces#XLINK}</li>
-     * <li>{@value org.opengis.cite.cat20.dgiwg10.Namespaces#CSW_PREFIX}:
-     * {@value org.opengis.cite.cat20.dgiwg10.Namespaces#CSW}</li>
-     * </ul>
-     *
-     * @param expr
-     *            A valid XPath 1.0 expression.
      * @param context
      *            The context node.
+     * @param expr
+     *            A valid XPath 1.0 expression.
+     */
+    public static void assertXPath( Node context, String expr, Map<String, String> namespaceBindings ) {
+        assertXPath( context, expr, namespaceBindings, null );
+    }
+
+    /**
+     * Asserts that an XPath 1.0 expression holds true for the given evaluation context. The standard namespace bindings
+     * from NamespaceBindings.withStandardBindings() must not be declared.
+     *
+     * @param context
+     *            The context node.
+     * @param expr
+     *            A valid XPath 1.0 expression.
      * @param namespaceBindings
      *            A collection of namespace bindings for the XPath expression, where each entry maps a namespace URI
      *            (key) to a prefix (value). It may be {@code null}.
      * @param assertionErrorMessage
-     *            an optional message thrown if the assertion fails, if <code>null</code> the default message is used
      */
-    public static void assertXPath( String expr, Node context, Map<String, String> namespaceBindings,
+    public static void assertXPath( Node context, String expr, Map<String, String> namespaceBindings,
                                     String assertionErrorMessage ) {
         if ( null == context ) {
             throw new NullPointerException( "Context node is null." );
@@ -129,7 +173,7 @@ public class ETSAssert {
 
     /**
      * Asserts that an XML resource is schema-valid.
-     * 
+     *
      * @param validator
      *            The Validator to use.
      * @param source
@@ -148,56 +192,11 @@ public class ETSAssert {
                                                                               errHandler.toString() ) );
     }
 
-    /**
-     * Asserts that the given XML entity contains the expected number of descendant elements having the specified name.
-     * 
-     * @param xmlEntity
-     *            A Document representing an XML entity.
-     * @param elementName
-     *            The qualified name of the element.
-     * @param expectedCount
-     *            The expected number of occurrences.
-     */
-    public static void assertDescendantElementCount( Document xmlEntity, QName elementName, int expectedCount ) {
-        NodeList features = xmlEntity.getElementsByTagNameNS( elementName.getNamespaceURI(), elementName.getLocalPart() );
-        Assert.assertEquals( features.getLength(), expectedCount,
-                             String.format( "Unexpected number of %s descendant elements.", elementName ) );
+    private static boolean hasContentTypeXml( List<String> contentType ) {
+        for ( String ct : contentType )
+            if ( ct.contains( "xml" ) )
+                return true;
+        return false;
     }
 
-    /**
-     * Asserts that the given response message contains an OGC exception report. The message body must contain an XML
-     * document that has a document element with the following properties:
-     *
-     * <ul>
-     * <li>[local name] = "ExceptionReport"</li>
-     * <li>[namespace name] = "http://www.opengis.net/ows/2.0"</li>
-     * </ul>
-     *
-     * @param rsp
-     *            A ClientResponse object representing an HTTP response message.
-     * @param exceptionCode
-     *            The expected OGC exception code.
-     * @param locator
-     *            A case-insensitive string value expected to occur in the locator attribute (e.g. a parameter name);
-     *            the attribute value will be ignored if the argument is null or empty.
-     */
-    public static void assertExceptionReport( ClientResponse rsp, String exceptionCode, String locator ) {
-        Assert.assertEquals( rsp.getStatus(), ClientResponse.Status.BAD_REQUEST.getStatusCode(),
-                             ErrorMessage.get( ErrorMessageKeys.UNEXPECTED_STATUS ) );
-        Document doc = rsp.getEntity( Document.class );
-        String expr = String.format( "//ows:Exception[@exceptionCode = '%s']", exceptionCode );
-        NodeList nodeList = null;
-        try {
-            nodeList = XMLUtils.evaluateXPath( doc, expr, null );
-        } catch ( XPathExpressionException xpe ) {
-            // won't happen
-        }
-        assertTrue( nodeList.getLength() > 0, "Exception not found in response: " + expr );
-        if ( null != locator && !locator.isEmpty() ) {
-            Element exception = (Element) nodeList.item( 0 );
-            String locatorValue = exception.getAttribute( "locator" ).toLowerCase();
-            assertTrue( locatorValue.contains( locator.toLowerCase() ),
-                        String.format( "Expected locator attribute to contain '%s']", locator ) );
-        }
-    }
 }
