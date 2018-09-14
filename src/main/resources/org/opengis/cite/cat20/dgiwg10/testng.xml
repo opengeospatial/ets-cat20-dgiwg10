@@ -21,7 +21,7 @@
       <package name="org.opengis.cite.cat20.dgiwg10.getrecordbyid" />
     </packages>
   </test>
-  <test name="DGIWG_Transactional_CSW">
+  <test name="DGIWG_CSWT">
     <packages>
       <package name="org.opengis.cite.cat20.dgiwg10.transaction" />
     </packages>
