@@ -2,9 +2,11 @@ package org.opengis.cite.cat20.dgiwg10.getrecordbyid;
 
 import static javax.xml.xpath.XPathConstants.NODE;
 import static org.opengis.cite.cat20.dgiwg10.DGIWG1CAT2.GETRECORDS;
+import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertQualifiedName;
 import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertSchemaValid;
-import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertXPath;
-import static org.opengis.cite.cat20.dgiwg10.ErrorMessageKeys.UNEXPECTED_STATUS;
+import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertStatusCode;
+import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertXmlContentType;
+import static org.opengis.cite.cat20.dgiwg10.Namespaces.CSW;
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.XSD;
 import static org.opengis.cite.cat20.dgiwg10.ProtocolBinding.POST;
 import static org.opengis.cite.cat20.dgiwg10.returnables.Returnables.assertReturnablesDublinCore;
@@ -15,7 +17,6 @@ import static org.opengis.cite.cat20.dgiwg10.util.OutputSchema.ISO19193;
 import static org.opengis.cite.cat20.dgiwg10.util.ServiceMetadataUtils.getOperationEndpoint;
 import static org.opengis.cite.cat20.dgiwg10.util.ValidationUtils.createSchemaResolver;
 import static org.opengis.cite.cat20.dgiwg10.util.XMLUtils.evaluateXPath;
-import static org.testng.Assert.assertEquals;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,10 +29,8 @@ import javax.xml.validation.Validator;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.opengis.cite.cat20.dgiwg10.CommonFixture;
-import org.opengis.cite.cat20.dgiwg10.ErrorMessage;
 import org.opengis.cite.cat20.dgiwg10.SuiteAttribute;
 import org.opengis.cite.cat20.dgiwg10.util.DataSampler;
-import org.opengis.cite.cat20.dgiwg10.util.NamespaceBindings;
 import org.opengis.cite.cat20.dgiwg10.util.TestSuiteLogger;
 import org.opengis.cite.cat20.dgiwg10.util.ValidationUtils;
 import org.opengis.cite.cat20.dgiwg10.xml.RequestCreator;
@@ -108,14 +107,13 @@ public class GetRecordById extends CommonFixture {
 
         this.requestDocument = requestCreator.createGetRecordById( DC, FULL, identifier );
         this.response = this.cswClient.submitPostRequest( endpoint, this.requestDocument );
-        assertEquals( this.response.getStatus(), 200, ErrorMessage.format( UNEXPECTED_STATUS ) );
+        assertStatusCode( this.response.getStatus(), 200 );
+        assertXmlContentType( this.response.getHeaders() );
 
         this.responseDocument = this.response.getEntity( Document.class );
-        assertXPath( "//csw:GetRecordByIdResponse", this.responseDocument,
-                     NamespaceBindings.withStandardBindings().getAllBindings(),
-                     "Response is not a GetRecordByIdResponse" );
-        assertSchemaValid( this.cswValidator, new DOMSource( this.responseDocument ) );
+        assertQualifiedName( responseDocument, CSW, "GetRecordByIdResponse" );
 
+        assertSchemaValid( this.cswValidator, new DOMSource( this.responseDocument ) );
         this.dublinCoreResponse = this.responseDocument;
     }
 
@@ -134,14 +132,13 @@ public class GetRecordById extends CommonFixture {
 
         this.requestDocument = requestCreator.createGetRecordById( ISO19193, FULL, identifier );
         this.response = this.cswClient.submitPostRequest( endpoint, this.requestDocument );
-        assertEquals( this.response.getStatus(), 200, ErrorMessage.format( UNEXPECTED_STATUS ) );
+        assertStatusCode( this.response.getStatus(), 200 );
+        assertXmlContentType( this.response.getHeaders() );
 
         this.responseDocument = this.response.getEntity( Document.class );
-        assertXPath( "//csw:GetRecordByIdResponse", this.responseDocument,
-                     NamespaceBindings.withStandardBindings().getAllBindings(),
-                     "Response is not a GetRecordByIdResponse" );
-        assertSchemaValid( this.isoValidator, new DOMSource( this.responseDocument ) );
+        assertQualifiedName( responseDocument, CSW, "GetRecordByIdResponse" );
 
+        assertSchemaValid( this.isoValidator, new DOMSource( this.responseDocument ) );
         this.isoResponse = this.responseDocument;
     }
 

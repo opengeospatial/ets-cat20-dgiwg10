@@ -1,6 +1,7 @@
 package org.opengis.cite.cat20.dgiwg10.xml;
 
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.CSW;
+import static org.opengis.cite.cat20.dgiwg10.Namespaces.OGC;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -111,6 +112,62 @@ public class RequestCreator {
         Element elementSetNameElement = (Element) getRecordById.getElementsByTagNameNS( CSW, "ElementSetName" ).item( 0 );
         elementSetNameElement.setTextContent( elementSetName.name().toLowerCase() );
         return request;
+    }
+
+    /**
+     * @return an CSW insert request, never <code>null</code>
+     * @throws IllegalArgumentException
+     *             if the request could not be created
+     */
+    public Document createInsertRequest() {
+        try {
+            InputStream requestAsStream = getClass().getResourceAsStream( "/org/opengis/cite/cat20/dgiwg10/transaction/insert-DMFMetadata-request.xml" );
+            return docBuilder.parse( requestAsStream );
+        } catch ( IOException | SAXException e ) {
+            LOG.log( Level.SEVERE, "Insert request could not be created", e );
+            throw new IllegalArgumentException( "Insert request could not be created" );
+        }
+    }
+
+    /**
+     * @return an CSW update request, never <code>null</code>
+     * @throws IllegalArgumentException
+     *             if the request could not be created
+     */
+    public Document createUpdateRequest() {
+        try {
+            InputStream requestAsStream = getClass().getResourceAsStream( "/org/opengis/cite/cat20/dgiwg10/transaction/update-DMFMetadata-request.xml" );
+            return docBuilder.parse( requestAsStream );
+        } catch ( IOException | SAXException e ) {
+            LOG.log( Level.SEVERE, "Update request could not be created", e );
+            throw new IllegalArgumentException( "Update request could not be created" );
+        }
+    }
+
+    /**
+     * @param identifier
+     *            the identifier of the record to delete, never <code>null</code>
+     * @return an CSW delete request, never <code>null</code>
+     * @throws IllegalArgumentException
+     *             if the request could not be created
+     */
+    public Document createDeleteRequest( String identifier ) {
+        Document document;
+        try {
+            InputStream requestAsStream = getClass().getResourceAsStream( "/org/opengis/cite/cat20/dgiwg10/transaction/delete-request.xml" );
+            document = docBuilder.parse( requestAsStream );
+        } catch ( IOException | SAXException e ) {
+            LOG.log( Level.SEVERE, "Delete request could not be created", e );
+            throw new IllegalArgumentException( "Delete request could not be created" );
+        }
+        Element transaction = document.getDocumentElement();
+        Element delete = (Element) transaction.getElementsByTagNameNS( CSW, "Delete" ).item( 0 );
+        Element constraint = (Element) delete.getElementsByTagNameNS( CSW, "Constraint" ).item( 0 );
+        Element filter = (Element) constraint.getElementsByTagNameNS( OGC, "Filter" ).item( 0 );
+        Element propertyIsEqualTo = (Element) filter.getElementsByTagNameNS( OGC, "PropertyIsEqualTo" ).item( 0 );
+        Element literal = (Element) propertyIsEqualTo.getElementsByTagNameNS( OGC, "Literal" ).item( 0 );
+        literal.setTextContent( identifier );
+        return document;
     }
 
     private void appendFilter( Document request, Element query, Node filter ) {
