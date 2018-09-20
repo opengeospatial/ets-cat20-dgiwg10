@@ -1,13 +1,16 @@
 package org.opengis.cite.cat20.dgiwg10.util;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.xpath.XPathExpressionException;
+
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XdmValue;
 import net.sf.saxon.trans.XPathException;
@@ -21,13 +24,18 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 /**
  * Verifies the behavior of the XMLUtils class.
  */
 public class VerifyXMLUtils {
 
     private static final String ATOM_NS = "http://www.w3.org/2005/Atom";
+
     private static final String EX_NS = "http://example.org/ns1";
+
     private static DocumentBuilder docBuilder;
 
     public VerifyXMLUtils() {
@@ -144,4 +152,15 @@ public class VerifyXMLUtils {
         Assert.assertEquals("Expected result to contain character é (U+00E9)",
                 "Montréal", result);
     }
+
+    @Test
+    public void testParseAsNumber()
+                            throws Exception {
+        InputStream resourceAsStream = this.getClass().getResourceAsStream( "insertResponse.xml" );
+        Document doc = docBuilder.parse( resourceAsStream );
+        String xpath = "//csw:TransactionResponse/csw:TransactionSummary/csw:totalInserted";
+        int totalInserted = XMLUtils.parseAsInteger( doc, xpath );
+        assertThat( totalInserted, is( 1 ) );
+    }
+    
 }
