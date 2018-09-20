@@ -180,7 +180,7 @@ public class Transaction extends CommonFixture {
     /**
      * Issue a HTTP POST Delete Operation with a revised DMF Compliant metadata file.
      */
-    @Test(description = "Implements A.1.4 DGIWG Transactional CSW - Update (Requirement 18)", dependsOnMethods = "issueGetRecords_EnsureInsert")
+    @Test(description = "Implements A.1.4 DGIWG Transactional CSW - Update (Requirement 18)", dependsOnMethods = "issueGetRecords_EnsureUpdate")
     public void issueDeleteOperation() {
         this.requestDocument = requestCreator.createDeleteRequest( this.insertedId );
         this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument );
