@@ -221,23 +221,23 @@ public class Transaction extends CommonFixture {
     }
 
     private int parseTotalInserted() {
-        return parseAsNumber( "//csw:TransactionResponse/csw:TransactionSummary/csw:totalInserted" );
+        return parseAsInteger( "//csw:TransactionResponse/csw:TransactionSummary/csw:totalInserted" );
     }
 
     private int parseTotalUpdated() {
-        return parseAsNumber( "//csw:TransactionResponse/csw:TransactionSummary/csw:totalUpdated" );
+        return parseAsInteger( "//csw:TransactionResponse/csw:TransactionSummary/csw:totalUpdated" );
     }
 
     private int parseTotalDeleted() {
-        return parseAsNumber( "//csw:TransactionResponse/csw:TransactionSummary/csw:totalDeleted" );
+        return parseAsInteger( "//csw:TransactionResponse/csw:TransactionSummary/csw:totalDeleted" );
     }
 
-    private int parseAsNumber( String xpath ) {
+    private int parseAsInteger( String s ) {
         try {
-            return (int) XMLUtils.evaluateXPath( responseDocument, xpath, null, XPathConstants.NUMBER );
+            return XMLUtils.parseAsInteger( responseDocument, s );
         } catch ( XPathExpressionException e ) {
-            // XPath is correct
+            return -1;
         }
-        return -1;
     }
+
 }
