@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<csw:TransactionResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <csw:TransactionSummary>
+    <csw:totalInserted>1</csw:totalInserted>
+    <csw:totalUpdated>0</csw:totalUpdated>
+    <csw:totalDeleted>0</csw:totalDeleted>
+  </csw:TransactionSummary>
+  <csw:InsertResult handleRef="handleRefValue">
+    <csw:BriefRecord>
+      <dc:identifier>C3B4172C-E280-0001-4B22-1B911020BEB0</dc:identifier>
+      <dc:title>Arbeitslosenquote</dc:title>
+    </csw:BriefRecord>
+  </csw:InsertResult>
+</csw:TransactionResponse>
