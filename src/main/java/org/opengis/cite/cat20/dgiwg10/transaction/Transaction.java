@@ -163,7 +163,7 @@ public class Transaction extends CommonFixture {
     /**
      * Issue a HTTP POST GetRecords Request to confirm the item was updated (Requirement 18).
      */
-    @Test(description = "Implements A.1.4 DGIWG Transactional CSW - Ensure Update (Requirement 18)", dependsOnMethods = "issueInsertOperation")
+    @Test(description = "Implements A.1.4 DGIWG Transactional CSW - Ensure Update (Requirement 18)", dependsOnMethods = "issueUpdateOperation")
     public void issueGetRecords_EnsureUpdate() {
         this.requestDocument = requestCreator.createGetRecordById( DC, FULL, this.insertedId );
         this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument );
@@ -198,7 +198,7 @@ public class Transaction extends CommonFixture {
     /**
      * Issue a HTTP POST GetRecords Request to confirm the item was deleted. (Requirement 18).
      */
-    @Test(description = "Implements A.1.4 DGIWG Transactional CSW - Ensure Update (Requirement 18)", dependsOnMethods = "issueInsertOperation")
+    @Test(description = "Implements A.1.4 DGIWG Transactional CSW - Ensure Update (Requirement 18)", dependsOnMethods = "issueDeleteOperation")
     public void issueGetRecords_EnsureDelete() {
         this.requestDocument = requestCreator.createGetRecordById( DC, FULL, this.insertedId );
         this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument );
