@@ -171,7 +171,7 @@ public class Transaction extends CommonFixture {
         assertXmlContentType( this.response.getHeaders() );
         this.responseDocument = this.response.getEntity( Document.class );
 
-        String xpath = String.format( "//csw:Record[dc:identifier = %s]", this.insertedId );
+        String xpath = String.format( "//csw:Record[dc:identifier = '%s']", this.insertedId );
         assertXPath( this.responseDocument, xpath );
 
         // TODO: ensure update
@@ -206,7 +206,7 @@ public class Transaction extends CommonFixture {
         assertXmlContentType( this.response.getHeaders() );
         this.responseDocument = this.response.getEntity( Document.class );
 
-        String xpath = String.format( "not(//csw:Record[dc:identifier = %s])", this.insertedId );
+        String xpath = String.format( "not(//csw:Record[dc:identifier = '%s'])", this.insertedId );
         assertXPath( this.responseDocument, xpath );
     }
 
