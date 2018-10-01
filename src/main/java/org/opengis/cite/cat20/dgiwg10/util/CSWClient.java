@@ -23,6 +23,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
@@ -43,9 +44,21 @@ public class CSWClient {
      * may be logged to a default JDK logger (in the namespace "com.sun.jersey.api.client").
      */
     public CSWClient() {
+        client = createClient();
+    }
+
+    private Client createClient() {
         ClientConfig config = new DefaultClientConfig();
-        this.client = Client.create( config );
-        this.client.addFilter( new LoggingFilter() );
+        Client client = Client.create( config );
+        client.addFilter( new LoggingFilter() );
+        return client;
+    }
+
+    private Client createClient(String username, String pw) {
+
+        Client client = createClient();
+        client.addFilter(new HTTPBasicAuthFilter(username, pw));
+        return client;
     }
 
     /**
@@ -99,6 +112,15 @@ public class CSWClient {
      * @return A ClientResponse object representing the response message.
      */
     public ClientResponse submitPostRequest( URI endpoint, Document request ) {
+        return submitPostRequest(this.client, endpoint, request);
+    }
+
+    public ClientResponse submitPostRequest( URI endpoint, Document request, String user, String pw ) {
+        Client client = (user != null && pw != null) ? createClient(user, pw) : this.client;
+        return submitPostRequest(client, endpoint, request);
+    }
+
+    protected ClientResponse submitPostRequest(Client client, URI endpoint, Document request ) {
         WebResource resource = client.resource( endpoint );
         Source requestBody = new DOMSource( request );
         return resource.entity( requestBody ).post( ClientResponse.class );
