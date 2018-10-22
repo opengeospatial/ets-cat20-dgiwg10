@@ -33,6 +33,7 @@ import org.opengis.cite.cat20.dgiwg10.util.ValidationUtils;
 import org.opengis.cite.cat20.dgiwg10.util.XMLUtils;
 import org.opengis.cite.cat20.dgiwg10.xml.RequestCreator;
 import org.testng.SkipException;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
@@ -54,8 +55,9 @@ public class Transaction extends CommonFixture {
 
     private String insertedId;
 
-    private final static String TRANSACTION_USERNAME = System.getProperty("trn.user");
-    private final static String TRANSACTION_PASSWORD = System.getProperty("trn.pw");
+    private final static String TRANSACTION_USERNAME = System.getProperty( "trn.user" );
+
+    private final static String TRANSACTION_PASSWORD = System.getProperty( "trn.pw" );
 
     @BeforeClass
     public void buildValidators() {
@@ -67,6 +69,15 @@ public class Transaction extends CommonFixture {
         } catch ( URISyntaxException e ) {
             // very unlikely to occur with no schema to process
             TestSuiteLogger.log( Level.WARNING, "Failed to build XML Schema Validator for csw.xsd.", e );
+        }
+    }
+
+    @AfterClass
+    public void removeInsertedRecords() {
+        if ( insertedId != null ) {
+            this.requestDocument = requestCreator.createDeleteRequest( this.insertedId );
+            this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument,
+                                                              TRANSACTION_USERNAME, TRANSACTION_PASSWORD );
         }
     }
 
@@ -115,7 +126,8 @@ public class Transaction extends CommonFixture {
                                                                                                                   "hasTransactionPostUrl" })
     public void issueInsertOperation() {
         this.requestDocument = requestCreator.createInsertRequest();
-        this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument, TRANSACTION_USERNAME, TRANSACTION_PASSWORD );
+        this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument, TRANSACTION_USERNAME,
+                                                          TRANSACTION_PASSWORD );
         assertStatusCode( this.response.getStatus(), 200 );
         assertXmlContentType( this.response.getHeaders() );
         this.responseDocument = this.response.getEntity( Document.class );
@@ -136,7 +148,8 @@ public class Transaction extends CommonFixture {
     @Test(description = "Implements A.1.4 DGIWG Transactional CSW - Ensure Insert (Requirement 18)", dependsOnMethods = "issueInsertOperation")
     public void issueGetRecords_EnsureInsert() {
         this.requestDocument = requestCreator.createGetRecordById( DC, FULL, this.insertedId );
-        this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument, TRANSACTION_USERNAME, TRANSACTION_PASSWORD );
+        this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument, TRANSACTION_USERNAME,
+                                                          TRANSACTION_PASSWORD );
         assertStatusCode( this.response.getStatus(), 200 );
         assertXmlContentType( this.response.getHeaders() );
         this.responseDocument = this.response.getEntity( Document.class );
@@ -151,7 +164,8 @@ public class Transaction extends CommonFixture {
     @Test(description = "Implements A.1.4 DGIWG Transactional CSW - Update (Requirement 18)", dependsOnMethods = "issueGetRecords_EnsureInsert")
     public void issueUpdateOperation() {
         this.requestDocument = requestCreator.createUpdateRequest();
-        this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument, TRANSACTION_USERNAME, TRANSACTION_PASSWORD );
+        this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument, TRANSACTION_USERNAME,
+                                                          TRANSACTION_PASSWORD );
         assertStatusCode( this.response.getStatus(), 200 );
         assertXmlContentType( this.response.getHeaders() );
         this.responseDocument = this.response.getEntity( Document.class );
@@ -169,7 +183,8 @@ public class Transaction extends CommonFixture {
     @Test(description = "Implements A.1.4 DGIWG Transactional CSW - Ensure Update (Requirement 18)", dependsOnMethods = "issueUpdateOperation")
     public void issueGetRecords_EnsureUpdate() {
         this.requestDocument = requestCreator.createGetRecordById( DC, FULL, this.insertedId );
-        this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument, TRANSACTION_USERNAME, TRANSACTION_PASSWORD );
+        this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument, TRANSACTION_USERNAME,
+                                                          TRANSACTION_PASSWORD );
         assertStatusCode( this.response.getStatus(), 200 );
         assertXmlContentType( this.response.getHeaders() );
         this.responseDocument = this.response.getEntity( Document.class );
@@ -186,7 +201,8 @@ public class Transaction extends CommonFixture {
     @Test(description = "Implements A.1.4 DGIWG Transactional CSW - Update (Requirement 18)", dependsOnMethods = "issueGetRecords_EnsureUpdate")
     public void issueDeleteOperation() {
         this.requestDocument = requestCreator.createDeleteRequest( this.insertedId );
-        this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument, TRANSACTION_USERNAME, TRANSACTION_PASSWORD );
+        this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument, TRANSACTION_USERNAME,
+                                                          TRANSACTION_PASSWORD );
         assertStatusCode( this.response.getStatus(), 200 );
         assertXmlContentType( this.response.getHeaders() );
         this.responseDocument = this.response.getEntity( Document.class );
@@ -196,6 +212,7 @@ public class Transaction extends CommonFixture {
 
         int totalDeleted = parseTotalDeleted();
         assertTrue( totalDeleted == 1, "Expected totalDeleted 1 but was " + totalDeleted );
+        this.insertedId = null;
     }
 
     /**
@@ -204,7 +221,8 @@ public class Transaction extends CommonFixture {
     @Test(description = "Implements A.1.4 DGIWG Transactional CSW - Ensure Update (Requirement 18)", dependsOnMethods = "issueDeleteOperation")
     public void issueGetRecords_EnsureDelete() {
         this.requestDocument = requestCreator.createGetRecordById( DC, FULL, this.insertedId );
-        this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument, TRANSACTION_USERNAME, TRANSACTION_PASSWORD );
+        this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument, TRANSACTION_USERNAME,
+                                                          TRANSACTION_PASSWORD );
         assertStatusCode( this.response.getStatus(), 200 );
         assertXmlContentType( this.response.getHeaders() );
         this.responseDocument = this.response.getEntity( Document.class );
