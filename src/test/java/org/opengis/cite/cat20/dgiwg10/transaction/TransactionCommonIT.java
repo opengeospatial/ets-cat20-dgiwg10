@@ -21,7 +21,7 @@ import org.w3c.dom.Document;
  * @author <a href="mailto:goltz@lat-lon.de">Lyn Goltz </a>
  */
 @Ignore
-public class TransactionIT {
+public class TransactionCommonIT {
 
     private static final String SERVICE_UNDER_TEST = "http://dgiwg.geo-solutions.it/geonetwork/srv/eng/csw?REQUEST=GetCapabilities&SERVICE=CSW";
 
@@ -49,13 +49,12 @@ public class TransactionIT {
     @Test
     public void testTransaction_noError()
                             throws Exception {
-        Transaction transaction = new Transaction();
+        TransactionCommon transaction = new TransactionCommon();
         transaction.initCommonFixture( testContext );
 
         transaction.isTransactionalCsw();
         transaction.hasTransactionPostUrl();
         transaction.verifyAbstract();
-        transaction.issueInsertOperation();
     }
 
 }
