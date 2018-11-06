@@ -6,6 +6,8 @@ import static org.opengis.cite.cat20.dgiwg10.util.ElementSetName.FULL;
 import static org.opengis.cite.cat20.dgiwg10.util.NamespaceBindings.withStandardBindings;
 import static org.opengis.cite.cat20.dgiwg10.util.OutputSchema.DC;
 import static org.opengis.cite.cat20.dgiwg10.util.OutputSchema.ISO19193;
+import static org.opengis.cite.cat20.dgiwg10.xml.RequestCreator.RECORDTYPE.DATASET;
+import static org.opengis.cite.cat20.dgiwg10.xml.RequestCreator.RECORDTYPE.SERVICE;
 import static org.xmlmatchers.XmlMatchers.conformsTo;
 import static org.xmlmatchers.XmlMatchers.hasXPath;
 import static org.xmlmatchers.transform.XmlConverters.the;
@@ -114,23 +116,40 @@ public class RequestCreatorTest {
     }
 
     @Test
-    public void testCreateInsert() {
-        requestCreator.createInsertRequest();
+    public void testCreateInsert_Dataset() {
+        requestCreator.createInsertRequest( DATASET );
     }
 
     @Test
-    public void testCreateUpdate() {
-        requestCreator.createUpdateRequest();
+    public void testCreateUpdate_Dataset() {
+        requestCreator.createUpdateRequest( DATASET );
+    }
+
+    @Test
+    public void testCreateInsert_Service() {
+        requestCreator.createInsertRequest( SERVICE );
+    }
+
+    @Test
+    public void testCreateUpdate_Service() {
+        requestCreator.createUpdateRequest( SERVICE );
     }
 
     @Test
     public void testCreateDelete() {
         String id = "67654-gjz57g-hz5";
         Document deleteRequest = requestCreator.createDeleteRequest( id );
+        assertThat( the( deleteRequest ), conformsTo( cswSchema ) );
+        assertThat( the( deleteRequest ), hasXPath( "//ogc:Literal", is( id ), withStandardBindings() ) );
+    }
+
+    @Test
+    public void testHarvest() {
+        String source = "http://localhost:8080/testrecord.xml";
+        Document deleteRequest = requestCreator.createHarvest( source );
 
         assertThat( the( deleteRequest ), conformsTo( cswSchema ) );
-
-        assertThat( the( deleteRequest ), hasXPath( "//ogc:Literal", is( id ), withStandardBindings() ) );
+        assertThat( the( deleteRequest ), hasXPath( "/csw:Harvest/csw:Source", is( source ), withStandardBindings() ) );
     }
 
     private Node parseFilter( String filterResource )

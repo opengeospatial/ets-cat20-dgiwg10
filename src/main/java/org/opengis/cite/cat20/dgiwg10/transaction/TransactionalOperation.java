@@ -26,8 +26,7 @@ import org.testng.annotations.BeforeClass;
 /**
  * @author <a href="mailto:goltz@lat-lon.de">Lyn Goltz </a>
  */
-public abstract class AbstractTransaction extends CommonFixture {
-
+public abstract class TransactionalOperation extends CommonFixture {
 
     protected final RequestCreator requestCreator = new RequestCreator();
 
@@ -35,7 +34,7 @@ public abstract class AbstractTransaction extends CommonFixture {
 
     protected Validator cswValidator;
 
-    protected String insertedId;
+    protected String id;
 
     protected final static String TRANSACTION_USERNAME = System.getProperty( "trn.user" );
 
@@ -56,18 +55,20 @@ public abstract class AbstractTransaction extends CommonFixture {
 
     @BeforeClass
     public void setTransactionPostUrl() {
-        transactionUrl = ServiceMetadataUtils.getOperationEndpoint( capabilitiesDoc, "Transaction",
+        transactionUrl = ServiceMetadataUtils.getOperationEndpoint( capabilitiesDoc, getOperationName(),
                                                                     ProtocolBinding.POST );
     }
 
     @AfterClass
     public void removeInsertedRecords() {
-        if ( insertedId != null ) {
-            this.requestDocument = requestCreator.createDeleteRequest( this.insertedId );
+        if ( id != null ) {
+            this.requestDocument = requestCreator.createDeleteRequest( this.id );
             this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument,
                                                               TRANSACTION_USERNAME, TRANSACTION_PASSWORD );
         }
     }
+
+    abstract String getOperationName();
 
     protected String parseIdentifier() {
         try {
