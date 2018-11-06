@@ -64,11 +64,10 @@
         <gco:Date xmlns:gco="http://www.isotc211.org/2005/gco">2016-10-04</gco:Date>
       </gmd:dateStamp>
       <gmd:metadataStandardName>
-        <gco:CharacterString xmlns:gco="http://www.isotc211.org/2005/gco">INSPIRE Metadata Implementing Rules: Technical Guidelines based on EN ISO 19115 and EN ISO 19119
-        </gco:CharacterString>
+        <gco:CharacterString xmlns:gco="http://www.isotc211.org/2005/gco">urn:dgiwg:metadata:dmf:2.0:profile:core</gco:CharacterString>
       </gmd:metadataStandardName>
       <gmd:metadataStandardVersion>
-        <gco:CharacterString xmlns:gco="http://www.isotc211.org/2005/gco">V. 1.2</gco:CharacterString>
+        <gco:CharacterString xmlns:gco="http://www.isotc211.org/2005/gco">2.0</gco:CharacterString>
       </gmd:metadataStandardVersion>
       <gmd:locale>
         <gmd:PT_Locale id="locale-ger">

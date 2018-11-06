@@ -73,10 +73,10 @@
     <ns2:DateTime>2017-12-13T11:56:12.402</ns2:DateTime>
   </ns4:dateStamp>
   <ns4:metadataStandardName>
-    <ns2:CharacterString>ISO 19115</ns2:CharacterString>
+    <ns2:CharacterString>urn:dgiwg:metadata:dmf:2.0:profile:core</ns2:CharacterString>
   </ns4:metadataStandardName>
   <ns4:metadataStandardVersion>
-    <ns2:CharacterString>2003/Cor.1:2006</ns2:CharacterString>
+    <ns2:CharacterString>2.0</ns2:CharacterString>
   </ns4:metadataStandardVersion>
   <ns4:referenceSystemInfo>
     <ns4:MD_ReferenceSystem>
