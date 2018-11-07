@@ -11,7 +11,7 @@
   <version>0.3-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>Test suite: ets-cat20-dgiwg10</name>
+  <name>DGIWG Catalogue Service for the Web 2.0 Conformance Test Suite</name>
   <description>Describe purpose of test suite.</description>
   <url>http://opengeospatial.github.io/ets-cat20-dgiwg10/</url>
   <licenses>
@@ -37,9 +37,12 @@
   </issueManagement>
   <developers>
     <developer>
-      <name>Alpha Beta</name>
-      <url>https://github.com/</url>
-      <timezone>UTC</timezone>
+      <name>Lyn Goltz</name>
+      <url>https://github.com/lgoltz</url>
+    </developer>
+    <developer>
+      <name>Dirk Stenger</name>
+      <url>https://github.com/dstenger</url>
     </developer>
   </developers>
 
