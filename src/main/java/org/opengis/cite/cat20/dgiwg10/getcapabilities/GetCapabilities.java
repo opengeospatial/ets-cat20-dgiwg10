@@ -76,18 +76,16 @@ public class GetCapabilities extends CommonFixture {
     private static final String ABSTRACT_TEXT = "This service implements the DGIWG Catalogue Service for the Web ISO Profile version 1.0, DGIWG Basic CSW conformance class (http://www.dgiwg.org/std/csw/1.0/conf/basic)";
 
     private static List<String> QUERYABLES = Arrays.asList( "AnyText", "Title", "Abstract", "Identifier", "Modified",
-                                                            "Type", "WestBoundLongitude", "SouthBoundLatitude",
-                                                            "EastBoundLongitude", "NorthBoundLatitude", "Authority",
-                                                            "ID", "Version", "RevisionDate", "AlternateTitle",
-                                                            "CreationDate", "PublicationDate", "OrganisationName",
-                                                            "HasSecurityConstraints", "ResourceIdentifier",
-                                                            "ParentIdentifier", "KeywordType", "TopicCategory",
-                                                            "ResourceLanguage", "GeographicDescriptionCode",
-                                                            "Denominator", "DistanceValue", "DistanceUOM",
-                                                            "ServiceType", "ServiceTypeVersion",
-                                                            "GeographicDescriptionCode", "OperatesOn",
-                                                            "OperatesOnIdentifier", "OperatesOnName", "CouplingType",
-                                                            "Operation" );
+                                                            "Type", "BoundingBox", "CRS", "RevisionDate",
+                                                            "AlternateTitle", "CreationDate", "PublicationDate",
+                                                            "OrganisationName", "HasSecurityConstraints",
+                                                            "ResourceIdentifier", "ParentIdentifier", "KeywordType",
+                                                            "TopicCategory", "ResourceLanguage",
+                                                            "GeographicDescriptionCode", "Denominator",
+                                                            "DistanceValue", "DistanceUOM", "ServiceType",
+                                                            "ServiceTypeVersion", "GeographicDescriptionCode",
+                                                            "OperatesOn", "OperatesOnIdentifier", "OperatesOnName",
+                                                            "CouplingType", "Operation" );
 
     private ClientResponse capabilitiesResponse;
 
