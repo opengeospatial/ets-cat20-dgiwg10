@@ -124,7 +124,7 @@ public class TransactionDataset extends TransactionalOperation {
     /**
      * Issue a HTTP POST GetRecords Request to confirm the item was deleted. (Requirement 18).
      */
-    @Test(description = "Implements A.1.4 DGIWG Transactional CSW - Ensure Update (Requirement 18)", dependsOnMethods = "issueDeleteOperation_Dataset")
+    @Test(description = "Implements A.1.4 DGIWG Transactional CSW - Ensure Delete (Requirement 18)", dependsOnMethods = "issueDeleteOperation_Dataset")
     public void issueGetRecords_EnsureDelete_Dataset() {
         this.requestDocument = requestCreator.createGetRecordById( DC, FULL, this.id );
         this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument, TRANSACTION_USERNAME,

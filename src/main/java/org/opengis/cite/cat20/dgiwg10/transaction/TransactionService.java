@@ -126,7 +126,7 @@ public class TransactionService extends TransactionalOperation {
     /**
      * Issue a HTTP POST GetRecords Request to confirm the item was deleted. (Requirement 17).
      */
-    @Test(description = "Implements A.1.4 DGIWG Transactional CSW - Ensure Update (Requirement 17)", dependsOnMethods = "issueDeleteOperation_Service")
+    @Test(description = "Implements A.1.4 DGIWG Transactional CSW - Ensure Delete (Requirement 17)", dependsOnMethods = "issueDeleteOperation_Service")
     public void issueGetRecords_EnsureDelete_Service() {
         this.requestDocument = requestCreator.createGetRecordById( DC, FULL, this.id );
         this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument, TRANSACTION_USERNAME,
