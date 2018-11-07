@@ -141,6 +141,9 @@ public class GetRecordById extends CommonFixture {
 
     /**
      * Verify that all metadata returnables are present in the result (csw:Record).
+     * 
+     * @throws XPathExpressionException
+     *             should never happen
      */
     @Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'csw:Record', returnables (Requirement 13)", dependsOnMethods = "issueGetRecordById_DublinCore")
     public void issueGetRecordById_Returnables_DublinCore()
@@ -153,6 +156,9 @@ public class GetRecordById extends CommonFixture {
 
     /**
      * Verify that all metadata returnables are present in the result (gmd:MD_Metadata).
+     * 
+     * @throws XPathExpressionException
+     *             should never happen
      */
     @Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'gmd:MD_Metadata', returnables (Requirement 13)", dependsOnMethods = "issueGetRecordById_Iso")
     public void issueGetRecordById_Returnables_Iso()

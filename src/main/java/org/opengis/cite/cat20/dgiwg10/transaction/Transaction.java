@@ -80,6 +80,9 @@ public class Transaction extends CommonFixture {
 
     /**
      * Verify that the Abstract present in the service metadata includes basic identifier.
+     *
+     * @throws XPathExpressionException
+     *             should never happen
      */
     @Test(description = "Implements A.1.4 DGIWG Transactional CSW")
     public void isTransactionalCsw()

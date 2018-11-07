@@ -124,6 +124,9 @@ public class ETSAssert {
      *            The context node.
      * @param expr
      *            A valid XPath 1.0 expression.
+     * @param namespaceBindings
+     *            A collection of namespace bindings for the XPath expression, where each entry maps a namespace URI
+     *            (key) to a prefix (value). It may be {@code null}.
      */
     public static void assertXPath( Node context, String expr, Map<String, String> namespaceBindings ) {
         assertXPath( context, expr, namespaceBindings, null );
@@ -141,6 +144,7 @@ public class ETSAssert {
      *            A collection of namespace bindings for the XPath expression, where each entry maps a namespace URI
      *            (key) to a prefix (value). It may be {@code null}.
      * @param assertionErrorMessage
+     *            message to throw if assertion failed, should not be <code>null</code>
      */
     public static void assertXPath( Node context, String expr, Map<String, String> namespaceBindings,
                                     String assertionErrorMessage ) {
