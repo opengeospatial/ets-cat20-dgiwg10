@@ -1,8 +1,5 @@
 package org.opengis.cite.cat20.dgiwg10.transaction;
 
-import static org.opengis.cite.cat20.dgiwg10.Namespaces.XSD;
-import static org.opengis.cite.cat20.dgiwg10.util.ValidationUtils.createSchemaResolver;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -46,7 +43,6 @@ public abstract class TransactionalOperation extends CommonFixture {
         try {
             Schema cswSchema = ValidationUtils.createSchema( cswSchemaUrl.toURI() );
             this.cswValidator = cswSchema.newValidator();
-            this.cswValidator.setResourceResolver( createSchemaResolver( XSD ) );
         } catch ( URISyntaxException e ) {
             // very unlikely to occur with no schema to process
             TestSuiteLogger.log( Level.WARNING, "Failed to build XML Schema Validator for csw.xsd.", e );
