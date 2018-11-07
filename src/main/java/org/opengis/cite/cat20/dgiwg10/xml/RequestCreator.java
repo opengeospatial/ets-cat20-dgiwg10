@@ -29,6 +29,10 @@ public class RequestCreator {
 
     private DocumentBuilder docBuilder;
 
+    public enum RECORDTYPE {
+        SERVICE, DATASET
+    };
+
     public RequestCreator() {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware( true );
@@ -116,12 +120,15 @@ public class RequestCreator {
 
     /**
      * @return an CSW insert request, never <code>null</code>
+     * @param recordType
+     *            the type of the record, never <code>null</code>
      * @throws IllegalArgumentException
      *             if the request could not be created
      */
-    public Document createInsertRequest() {
+    public Document createInsertRequest( RECORDTYPE recordType ) {
         try {
-            InputStream requestAsStream = getClass().getResourceAsStream( "/org/opengis/cite/cat20/dgiwg10/transaction/insert-DMFMetadata-request.xml" );
+            String requestResource = getInsertRequestResource( recordType );
+            InputStream requestAsStream = getClass().getResourceAsStream( requestResource );
             return docBuilder.parse( requestAsStream );
         } catch ( IOException | SAXException e ) {
             LOG.log( Level.SEVERE, "Insert request could not be created", e );
@@ -131,12 +138,15 @@ public class RequestCreator {
 
     /**
      * @return an CSW update request, never <code>null</code>
+     * @param recordType
+     *            the type of the record, never <code>null</code>
      * @throws IllegalArgumentException
      *             if the request could not be created
      */
-    public Document createUpdateRequest() {
+    public Document createUpdateRequest( RECORDTYPE recordType ) {
         try {
-            InputStream requestAsStream = getClass().getResourceAsStream( "/org/opengis/cite/cat20/dgiwg10/transaction/update-DMFMetadata-request.xml" );
+            String requestResource = getUpdateRequestResource( recordType );
+            InputStream requestAsStream = getClass().getResourceAsStream( requestResource );
             return docBuilder.parse( requestAsStream );
         } catch ( IOException | SAXException e ) {
             LOG.log( Level.SEVERE, "Update request could not be created", e );
@@ -170,6 +180,21 @@ public class RequestCreator {
         return document;
     }
 
+    public Document createHarvest( String source ) {
+        Document document;
+        try {
+            InputStream requestAsStream = getClass().getResourceAsStream( "/org/opengis/cite/cat20/dgiwg10/transaction/harvest-request.xml" );
+            document = docBuilder.parse( requestAsStream );
+        } catch ( IOException | SAXException e ) {
+            LOG.log( Level.SEVERE, "Delete request could not be created", e );
+            throw new IllegalArgumentException( "Delete request could not be created" );
+        }
+        Element harvest = document.getDocumentElement();
+        Element sourceElement = (Element) harvest.getElementsByTagNameNS( CSW, "Source" ).item( 0 );
+        sourceElement.setTextContent( source );
+        return document;
+    }
+
     private void appendFilter( Document request, Element query, Node filter ) {
         if ( filter == null )
             return;
@@ -180,6 +205,24 @@ public class RequestCreator {
         constraint.setAttribute( "version", "1.1.0" );
         constraint.appendChild( request.importNode( filter, true ) );
         query.appendChild( constraint );
+    }
+
+    private String getInsertRequestResource( RECORDTYPE recordType ) {
+        String name;
+        if ( RECORDTYPE.SERVICE.equals( recordType ) )
+            name = "/org/opengis/cite/cat20/dgiwg10/transaction/insert-DMFMetadata-service-request.xml";
+        else
+            name = "/org/opengis/cite/cat20/dgiwg10/transaction/insert-DMFMetadata-request.xml";
+        return name;
+    }
+
+    private String getUpdateRequestResource( RECORDTYPE recordType ) {
+        String name;
+        if ( RECORDTYPE.SERVICE.equals( recordType ) )
+            name = "/org/opengis/cite/cat20/dgiwg10/transaction/update-DMFMetadata-request.xml";
+        else
+            name = "/org/opengis/cite/cat20/dgiwg10/transaction/update-DMFMetadata-service-request.xml";
+        return name;
     }
 
 }
