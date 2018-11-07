@@ -2,7 +2,15 @@
 
 The options for running the test suite are summarized below.
 
-As entry point the Capabilities document of the service is expected (as refernce or file).
+As entry point the Capabilities document of the service is expected (as reference or file).
+
+If the service supports basic authentication for the Transaction and Harvest operation,
+the user name and password can be passed via system properties:
+
+----
+trn.user=[USERNAME]
+trn.pw=[PASSWORD]
+----
 
 === 1. Integrated development environment (IDE)
 
