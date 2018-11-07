@@ -208,6 +208,8 @@ public class GetRecords extends CommonFixture {
      *
      * @param queryable
      *            the queryable to test
+     * @throws XPathExpressionException
+     *             should never happen
      */
     @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'csw:Record', returnables (Requirement 8)", dependsOnMethods = "issueGetRecords_DublinCore", alwaysRun = true, dataProvider = "queryables")
     public void issueGetRecords_Returnables_DublinCore( String queryable )
@@ -227,6 +229,8 @@ public class GetRecords extends CommonFixture {
      *
      * @param queryable
      *            the queryable to test
+     * @throws XPathExpressionException
+     *             should never happen
      */
     @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'gmd:MD_Metadata', returnables (Requirement 8)", dependsOnMethods = "issueGetRecords_Iso", alwaysRun = true, dataProvider = "queryables")
     public void issueGetRecords_Returnables_Iso( String queryable )
