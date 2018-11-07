@@ -75,22 +75,17 @@ public class GetCapabilities extends CommonFixture {
 
     private static final String ABSTRACT_TEXT = "This service implements the DGIWG Catalogue Service for the Web ISO Profile version 1.0, DGIWG Basic CSW conformance class (http://www.dgiwg.org/std/csw/1.0/conf/basic)";
 
-    private static List<String> ADDITIONAL_ISO_QUERYABLES = Arrays.asList( "AnyText", "Title", "Abstract",
-                                                                           "Identifier", "Modified", "Type",
-                                                                           "BoundingBox", "Source", "Association",
-                                                                           "CRS", "RevisionDate", "AlternateTitle",
-                                                                           "CreationDate", "PublicationDate",
-                                                                           "OrganisationName",
-                                                                           "HasSecurityConstraints",
-                                                                           "ResourceIdentifier", "ParentIdentifier",
-                                                                           "KeywordType", "TopicCategory",
-                                                                           "ResourceLanguage",
-                                                                           "GeographicDescriptionCode", "Denominator",
-                                                                           "DistanceValue", "DistanceUOM",
-                                                                           "ServiceType", "ServiceTypeVersion",
-                                                                           "GeographicDescriptionCode", "OperatesOn",
-                                                                           "OperatesOnIdentifier", "OperatesOnName",
-                                                                           "CouplingType", "Operation" );
+    private static List<String> QUERYABLES = Arrays.asList( "AnyText", "Title", "Abstract", "Identifier", "Modified",
+                                                            "Type", "BoundingBox", "CRS", "RevisionDate",
+                                                            "AlternateTitle", "CreationDate", "PublicationDate",
+                                                            "OrganisationName", "HasSecurityConstraints",
+                                                            "ResourceIdentifier", "ParentIdentifier", "KeywordType",
+                                                            "TopicCategory", "ResourceLanguage",
+                                                            "GeographicDescriptionCode", "Denominator",
+                                                            "DistanceValue", "DistanceUOM", "ServiceType",
+                                                            "ServiceTypeVersion", "GeographicDescriptionCode",
+                                                            "OperatesOn", "OperatesOnIdentifier", "OperatesOnName",
+                                                            "CouplingType", "Operation" );
 
     private ClientResponse capabilitiesResponse;
 
@@ -193,7 +188,7 @@ public class GetCapabilities extends CommonFixture {
 
         XPath xpath = XPathFactory.newInstance().newXPath();
         xpath.setNamespaceContext( withStandardBindings() );
-        for ( String additionalQueryable : ADDITIONAL_ISO_QUERYABLES ) {
+        for ( String additionalQueryable : QUERYABLES ) {
             String xpathExpr = createQueryablePropertiesXPath( operation, additionalQueryable );
             try {
                 Boolean queryableExists = (Boolean) xpath.evaluate( xpathExpr, capabilitiesDocument, BOOLEAN );

@@ -4,7 +4,7 @@
 <organization>
   <name>OGC</name>
   <standard>
-    <name>DGIWG Catalogue Service for the Web 2.0 (DGIWG CSW 2.0)</name>
+    <name>DGIWG Catalogue Service for the Web 2.0 (DGIWG CSW)</name>
     <version>
       <name>${spec-version}</name>
       <suite>

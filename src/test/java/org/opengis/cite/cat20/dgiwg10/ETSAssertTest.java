@@ -1,5 +1,10 @@
 package org.opengis.cite.cat20.dgiwg10;
 
+import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertSchemaValid;
+import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertXPath;
+import static org.opengis.cite.cat20.dgiwg10.Namespaces.CSW;
+import static org.opengis.cite.cat20.dgiwg10.Namespaces.CSW_PREFIX;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -21,7 +26,7 @@ import org.junit.rules.ExpectedException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-public class VerifyETSAssert {
+public class ETSAssertTest {
 
     private static final String WADL_NS = "http://wadl.dev.java.net/2009/02";
 
@@ -31,9 +36,6 @@ public class VerifyETSAssert {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-
-    public VerifyETSAssert() {
-    }
 
     @BeforeClass
     public static void setUpClass()
@@ -52,17 +54,17 @@ public class VerifyETSAssert {
         URL url = this.getClass().getResource( "/Gamma.xml" );
         Schema schema = factory.newSchema();
         Validator validator = schema.newValidator();
-        ETSAssert.assertSchemaValid( validator, new StreamSource( url.toString() ) );
+        assertSchemaValid( validator, new StreamSource( url.toString() ) );
     }
 
     @Test
     public void assertXPathWithNamespaceBindings()
                             throws SAXException, IOException {
-        Document doc = docBuilder.parse( this.getClass().getResourceAsStream( "/capabilities-simple.xml" ) );
+        Document doc = docBuilder.parse( this.getClass().getResourceAsStream( "getcapabilities/GetCapabilities-response.xml" ) );
         Map<String, String> nsBindings = new HashMap<String, String>();
-        nsBindings.put( WADL_NS, "ns1" );
-        String xpath = "//ns1:resources";
-        ETSAssert.assertXPath( doc, xpath, nsBindings );
+        nsBindings.put( CSW, CSW_PREFIX );
+        String xpath = "//csw:Capabilities";
+        assertXPath( doc, xpath, nsBindings );
     }
 
     @Test
@@ -70,10 +72,10 @@ public class VerifyETSAssert {
                             throws SAXException, IOException {
         thrown.expect( AssertionError.class );
         thrown.expectMessage( "Unexpected result evaluating XPath expression" );
-        Document doc = docBuilder.parse( this.getClass().getResourceAsStream( "/capabilities-simple.xml" ) );
+        Document doc = docBuilder.parse( this.getClass().getResourceAsStream( "getcapabilities/GetCapabilities-response.xml" ) );
         // using built-in namespace binding
         String xpath = "//ows:OperationsMetadata/ows:Constraint[@name='XMLEncoding']/ows:DefaultValue = 'TRUE'";
-        ETSAssert.assertXPath( doc, xpath );
+        assertXPath( doc, xpath );
     }
 
     @Test
@@ -81,10 +83,10 @@ public class VerifyETSAssert {
                             throws SAXException, IOException {
         thrown.expect( AssertionError.class );
         thrown.expectMessage( "FAILED" );
-        Document doc = docBuilder.parse( this.getClass().getResourceAsStream( "/capabilities-simple.xml" ) );
+        Document doc = docBuilder.parse( this.getClass().getResourceAsStream( "getcapabilities/GetCapabilities-response.xml" ) );
         // using built-in namespace binding
         String xpath = "//ows:OperationsMetadata/ows:Constraint[@name='XMLEncoding']/ows:DefaultValue = 'TRUE'";
-        ETSAssert.assertXPath( doc, xpath, null, "FAILED" );
+        assertXPath( doc, xpath, null, "FAILED" );
     }
 
 }

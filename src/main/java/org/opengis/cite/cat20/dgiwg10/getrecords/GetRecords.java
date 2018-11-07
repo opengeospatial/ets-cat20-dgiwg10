@@ -7,7 +7,6 @@ import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertSchemaValid;
 import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertStatusCode;
 import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertXmlContentType;
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.CSW;
-import static org.opengis.cite.cat20.dgiwg10.Namespaces.XSD;
 import static org.opengis.cite.cat20.dgiwg10.ProtocolBinding.POST;
 import static org.opengis.cite.cat20.dgiwg10.returnables.Returnables.assertReturnablesDublinCore;
 import static org.opengis.cite.cat20.dgiwg10.returnables.Returnables.assertReturnablesIso;
@@ -15,7 +14,6 @@ import static org.opengis.cite.cat20.dgiwg10.util.ElementSetName.FULL;
 import static org.opengis.cite.cat20.dgiwg10.util.OutputSchema.DC;
 import static org.opengis.cite.cat20.dgiwg10.util.OutputSchema.ISO19193;
 import static org.opengis.cite.cat20.dgiwg10.util.ServiceMetadataUtils.getOperationEndpoint;
-import static org.opengis.cite.cat20.dgiwg10.util.ValidationUtils.createSchemaResolver;
 import static org.opengis.cite.cat20.dgiwg10.util.XMLUtils.evaluateXPath;
 
 import java.net.URI;
@@ -108,7 +106,6 @@ public class GetRecords extends CommonFixture {
         try {
             Schema cswSchema = ValidationUtils.createSchema( cswSchemaUrl.toURI() );
             this.cswValidator = cswSchema.newValidator();
-            this.cswValidator.setResourceResolver( createSchemaResolver( XSD ) );
         } catch ( URISyntaxException e ) {
             // very unlikely to occur with no schema to process
             TestSuiteLogger.log( Level.WARNING, "Failed to build XML Schema Validator for csw.xsd.", e );
@@ -117,10 +114,10 @@ public class GetRecords extends CommonFixture {
         try {
             URL metadatEntitySchemaUrl = getClass().getResource( "/org/opengis/cite/cat20/dgiwg10/xsd/iso/19139/20070417/gmd/metadataEntity.xsd" );
             URL srvSchemaUrl = getClass().getResource( "/org/opengis/cite/cat20/dgiwg10/xsd/iso/19139/20070417/srv/1.0/serviceMetadata.xsd" );
-            Schema schema = ValidationUtils.createSchema( metadatEntitySchemaUrl.toURI(), srvSchemaUrl.toURI(),
+            URL gmxSchemaUrl = getClass().getResource( "/org/opengis/cite/cat20/dgiwg10/xsd/iso/19139/20070417/gmx/gmx.xsd" );
+            Schema schema = ValidationUtils.createSchema( metadatEntitySchemaUrl.toURI(), srvSchemaUrl.toURI(), gmxSchemaUrl.toURI(),
                                                           cswSchemaUrl.toURI() );
             this.isoValidator = schema.newValidator();
-            this.isoValidator.setResourceResolver( createSchemaResolver( XSD ) );
         } catch ( URISyntaxException e ) {
             // very unlikely to occur with no schema to process
             TestSuiteLogger.log( Level.WARNING, "Failed to build XML Schema Validator for csw.xsd.", e );
@@ -208,6 +205,8 @@ public class GetRecords extends CommonFixture {
      *
      * @param queryable
      *            the queryable to test
+     * @throws XPathExpressionException
+     *             should never happen
      */
     @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'csw:Record', returnables (Requirement 8)", dependsOnMethods = "issueGetRecords_DublinCore", alwaysRun = true, dataProvider = "queryables")
     public void issueGetRecords_Returnables_DublinCore( String queryable )
@@ -227,6 +226,8 @@ public class GetRecords extends CommonFixture {
      *
      * @param queryable
      *            the queryable to test
+     * @throws XPathExpressionException
+     *             should never happen
      */
     @Test(description = "Implements A.1.2 GetRecord for DGIWG Basic CSW - 'gmd:MD_Metadata', returnables (Requirement 8)", dependsOnMethods = "issueGetRecords_Iso", alwaysRun = true, dataProvider = "queryables")
     public void issueGetRecords_Returnables_Iso( String queryable )
