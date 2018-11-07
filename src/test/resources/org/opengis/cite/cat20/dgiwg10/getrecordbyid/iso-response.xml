@@ -256,9 +256,7 @@
                     </gmd:LanguageCode>
                 </gmd:language>
                 <gmd:topicCategory>
-                    <gmd:MD_TopicCategoryCode>
-                        transportation
-                    </gmd:MD_TopicCategoryCode>
+                    <gmd:MD_TopicCategoryCode>transportation</gmd:MD_TopicCategoryCode>
                 </gmd:topicCategory>
                 <gmd:extent>
                     <gmd:EX_Extent>
@@ -294,8 +292,12 @@
             <gmd:MD_Distribution>
                 <gmd:distributionFormat>
                     <gmd:MD_Format>
-                        <gmd:name>image/jpg</gmd:name>
-                        <gmd:version>2000</gmd:version>
+                        <gmd:name>
+                            <gco:CharacterString>image/jpg</gco:CharacterString>
+                        </gmd:name>
+                        <gmd:version>
+                            <gco:CharacterString>2000</gco:CharacterString>
+                        </gmd:version>
                     </gmd:MD_Format>
                 </gmd:distributionFormat>
                 <gmd:transferOptions>

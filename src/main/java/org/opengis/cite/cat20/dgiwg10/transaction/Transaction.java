@@ -7,11 +7,9 @@ import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertTrue;
 import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertXPath;
 import static org.opengis.cite.cat20.dgiwg10.ETSAssert.assertXmlContentType;
 import static org.opengis.cite.cat20.dgiwg10.Namespaces.CSW;
-import static org.opengis.cite.cat20.dgiwg10.Namespaces.XSD;
 import static org.opengis.cite.cat20.dgiwg10.util.ElementSetName.FULL;
 import static org.opengis.cite.cat20.dgiwg10.util.NamespaceBindings.withStandardBindings;
 import static org.opengis.cite.cat20.dgiwg10.util.OutputSchema.DC;
-import static org.opengis.cite.cat20.dgiwg10.util.ValidationUtils.createSchemaResolver;
 import static org.opengis.cite.cat20.dgiwg10.util.XMLUtils.evaluateXPath;
 
 import java.net.URI;
@@ -65,7 +63,6 @@ public class Transaction extends CommonFixture {
         try {
             Schema cswSchema = ValidationUtils.createSchema( cswSchemaUrl.toURI() );
             this.cswValidator = cswSchema.newValidator();
-            this.cswValidator.setResourceResolver( createSchemaResolver( XSD ) );
         } catch ( URISyntaxException e ) {
             // very unlikely to occur with no schema to process
             TestSuiteLogger.log( Level.WARNING, "Failed to build XML Schema Validator for csw.xsd.", e );
