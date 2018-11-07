@@ -120,6 +120,8 @@ public class RequestCreator {
 
     /**
      * @return an CSW insert request, never <code>null</code>
+     * @param recordType
+     *            the type of the record, never <code>null</code>
      * @throws IllegalArgumentException
      *             if the request could not be created
      */
@@ -136,6 +138,8 @@ public class RequestCreator {
 
     /**
      * @return an CSW update request, never <code>null</code>
+     * @param recordType
+     *            the type of the record, never <code>null</code>
      * @throws IllegalArgumentException
      *             if the request could not be created
      */

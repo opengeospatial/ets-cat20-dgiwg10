@@ -28,15 +28,18 @@ public class TransactionCommon extends CommonFixture {
      * Verify that the Abstract present in the service metadata includes basic identifier.
      */
     @Test(description = "Implements A.1.4 DGIWG Transactional CSW", groups = "isTransactional")
-    public void isTransactionalCsw()
-                            throws XPathExpressionException {
+    public void isTransactionalCsw() {
         String xpath = "contains(//csw:Capabilities/ows:ServiceIdentification/ows:Abstract, '%s')";
         String xpathWithIdentifier = String.format( xpath, CSWT_IDENTIFIER );
-        boolean isCswT = (boolean) evaluateXPath( capabilitiesDoc, xpathWithIdentifier,
-                                                  withStandardBindings().getAllBindings(), XPathConstants.BOOLEAN );
-        if ( !isCswT )
-            throw new SkipException( "CSW is not transactional (missing identifier '" + CSWT_IDENTIFIER
-                                     + "' in the abstract of the capabilities)." );
+        try {
+            boolean isCswT = (boolean) evaluateXPath( capabilitiesDoc, xpathWithIdentifier,
+                                                      withStandardBindings().getAllBindings(), XPathConstants.BOOLEAN );
+            if ( !isCswT )
+                throw new SkipException( "CSW is not transactional (missing identifier '" + CSWT_IDENTIFIER
+                                         + "' in the abstract of the capabilities)." );
+        } catch ( XPathExpressionException e ) {
+            // should never happen
+        }
     }
 
     /**
