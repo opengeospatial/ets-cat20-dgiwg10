@@ -21,7 +21,7 @@ import org.w3c.dom.Document;
  */
 public class Harvest extends TransactionalOperation {
 
-    private static final String RECORD_TO_HARVEST = "https://gist.githubusercontent.com/lgoltz/57f0c19715f47fd9163f20261a2b1342/raw/6642528cc920277f9d731f139ec5a2e137651cb9/DMFMetadataRecord.xml";
+    private static final String RECORD_TO_HARVEST = "http://dgiwg.geo-solutions.it/test/metadata/DMFMetadataRecord.xml";
 
     @Override
     String getOperationName() {
