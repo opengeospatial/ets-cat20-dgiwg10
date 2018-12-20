@@ -3,5 +3,6 @@ org.opengis.cite.cat20.dgiwg10.getcapabilities
 org.opengis.cite.cat20.dgiwg10.getrecordbyid
 org.opengis.cite.cat20.dgiwg10.getrecords
 org.opengis.cite.cat20.dgiwg10.returnables
+org.opengis.cite.cat20.dgiwg10.transaction
 org.opengis.cite.cat20.dgiwg10.util
 org.opengis.cite.cat20.dgiwg10.xml
