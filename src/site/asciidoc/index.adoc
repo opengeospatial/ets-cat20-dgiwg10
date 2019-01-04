@@ -72,3 +72,9 @@ The _Obligation_ descriptor can have the following values: M (mandatory), O (opt
 |A URI that refers to the implementation under test or metadata about it. Ampersand ('&amp;') characters must be percent-encoded as '%26'.
 
 |===
+
+== Used by ETS
+
+The following record is required for the test issueHarvestRequest triggers a request harvesting this metadata record.
+
+link:DMFMetadataRecord.xml[DMFMetadataRecord]
