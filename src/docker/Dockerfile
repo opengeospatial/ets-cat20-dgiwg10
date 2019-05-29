@@ -16,7 +16,7 @@ ADD maven/dependency/teamengine-console-*-base.zip /root/
 RUN cd /root/ && unzip -q teamengine-console-*-base.zip -d /root/te_base
 
 # set TE_BASE
-ENV JAVA_OPTS="-Xms1024m -Xmx2048m -DTE_BASE=/root/te_base"
+ENV JAVA_OPTS="-Xms1024m -Xmx2048m -DTE_BASE=/root/te_base -Dtrn.user=legoltz -Dtrn.pw=leg.l4t.l0n"
 
 # add ETS for CSW 2.0.2 DGIWG 1.0
 ADD maven/ets-cat20-dgiwg10-*-ctl.zip /root/
