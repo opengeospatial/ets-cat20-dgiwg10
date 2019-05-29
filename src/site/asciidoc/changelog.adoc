@@ -1,5 +1,20 @@
 = Release Notes DGIWG CAT 2.0.2
 
+== 0.3 (2019-05-29)
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/49[#49]: Improve mechanism to provide record used for harvest operation
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/44[#44]: Clean Up ETS
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/36[#36]: Transaction/Insert test does not clean the catalog
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/29[#29]: Allow testing of CSW-T with basic authentication
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/26[#26]: Bad outputSchema requested in test issueGetRecordById_DublinCore
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/25[#25]: GetRecordById: typenames
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/22[#22]: Remove test GetCapabilities.verifyGetRecordByIdQueryables()
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/21[#21]: Improve test GetCapabilities.verifyGetRecordsQueryables()
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/19[#19]: Fix NPE if no data are available
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/18[#18]: Update README.md regarding test execution (especially IDE mode)
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/8[#8]: Implement A.1.5 DGIWG Transactional CSW
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/7[#7]: Implement A.1.4 DGIWG Transactional CSW enhancement
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/3[#3]: Create documentation of test suite
+
 == 0.2 (2018-08-16)
 - https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/6[#6]: Implement A.1.3 GetRecordById for DGIWG Basic CSW
 - https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/5[#5]: Implement A.1.2 GetRecords for DGIWG Basic CSW
