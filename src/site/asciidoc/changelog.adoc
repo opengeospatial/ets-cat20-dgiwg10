@@ -1,5 +1,12 @@
 = Release Notes DGIWG CAT 2.0.2
 
+== 0.4 (2022-08-19)
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/pull/61[#61]: Set teamengine-spi to v5.5
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/56[#56]: Cleanup dependencies
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/54[#54]: Update Docker configuration to enable push to Docker Hub
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/58[#58]: Add template to get an XML/JSON response via rest endpoint
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/pull/60[#60]: Set Docker TEAM Engine version to 5.4.1
+
 == 0.3 (2019-05-29)
 - https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/49[#49]: Improve mechanism to provide record used for harvest operation
 - https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/44[#44]: Clean Up ETS
