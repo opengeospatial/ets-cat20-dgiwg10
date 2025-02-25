@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import org.opengis.cite.cat20.dgiwg10.util.DataSampler;
 import org.testng.ISuite;
 import org.testng.ITestContext;
+import org.testng.Reporter;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
@@ -30,9 +31,10 @@ public class SuitePreconditions {
      *            the test context, never <code>null</code>
      */
     @BeforeSuite
-    public void verifyTestSubject( ITestContext testContext ) {
+    public void verifyTestSubject() {
+        ITestContext testContext = Reporter.getCurrentTestResult().getTestContext();
         SuiteAttribute testFileAttr = SuiteAttribute.TEST_SUBJ_FILE;
-        Object sutObj = testContext.getSuite().getAttribute( testFileAttr.getName() );
+        Object sutObj = testContext.getSuite().getAttribute(testFileAttr.getName());
         Class expectedType = testFileAttr.getType();
         if ( sutObj == null || !expectedType.isInstance( sutObj ) ) {
             String msg = String.format( "Value of test suite attribute '%s' is missing or is not an instance of %s",
