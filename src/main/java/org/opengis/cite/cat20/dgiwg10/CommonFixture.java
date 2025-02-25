@@ -3,8 +3,6 @@ package org.opengis.cite.cat20.dgiwg10;
 import java.net.URI;
 import java.util.Map;
 
-import org.glassfish.jersey.client.ClientRequest;
-import org.glassfish.jersey.client.ClientResponse;
 import org.opengis.cite.cat20.dgiwg10.util.CSWClient;
 import org.opengis.cite.cat20.dgiwg10.util.ClientUtils;
 import org.testng.ITestContext;

@@ -3,22 +3,15 @@ package org.opengis.cite.cat20.dgiwg10;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
 import java.util.Map;
 import java.util.logging.Level;
-
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
 
 import org.opengis.cite.cat20.dgiwg10.util.TestSuiteLogger;
 import org.opengis.cite.cat20.dgiwg10.util.URIUtils;
 import org.opengis.cite.cat20.dgiwg10.util.XMLUtils;
-import org.opengis.cite.validation.XmlSchemaCompiler;
 import org.testng.ISuite;
 import org.testng.ISuiteListener;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 /**
  * A listener that performs various tasks before and after a test suite is run, usually
