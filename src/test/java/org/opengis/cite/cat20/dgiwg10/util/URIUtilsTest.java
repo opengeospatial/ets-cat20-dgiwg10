@@ -18,23 +18,21 @@ import org.xml.sax.SAXException;
  */
 public class URIUtilsTest {
 
-    @Test
-    public void resolveClasspathResource()
-                            throws SAXException, IOException, URISyntaxException {
-        URL url = this.getClass().getResource( "../getcapabilities/GetCapabilities-response.xml" );
-        Document doc = URIUtils.parseURI( url.toURI() );
-        assertNotNull( doc );
-        assertEquals( "Document element has unexpected [local name].", "Capabilities",
-                      doc.getDocumentElement().getLocalName() );
-    }
+	@Test
+	public void resolveClasspathResource() throws SAXException, IOException, URISyntaxException {
+		URL url = this.getClass().getResource("../getcapabilities/GetCapabilities-response.xml");
+		Document doc = URIUtils.parseURI(url.toURI());
+		assertNotNull(doc);
+		assertEquals("Document element has unexpected [local name].", "Capabilities",
+				doc.getDocumentElement().getLocalName());
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void resolveMissingClasspathResource()
-                            throws SAXException, URISyntaxException, IOException {
-        URL url = this.getClass().getResource( "/alpha.xml" );
-        URI uri = ( null != url ) ? url.toURI() : null;
-        Document doc = URIUtils.parseURI( uri );
-        assertNull( doc );
-    }
+	@Test(expected = IllegalArgumentException.class)
+	public void resolveMissingClasspathResource() throws SAXException, URISyntaxException, IOException {
+		URL url = this.getClass().getResource("/alpha.xml");
+		URI uri = (null != url) ? url.toURI() : null;
+		Document doc = URIUtils.parseURI(uri);
+		assertNull(doc);
+	}
 
 }

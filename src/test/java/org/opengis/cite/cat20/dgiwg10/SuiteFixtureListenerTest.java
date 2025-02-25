@@ -18,35 +18,35 @@ import org.testng.xml.XmlSuite;
 
 public class SuiteFixtureListenerTest {
 
-    private static XmlSuite xmlSuite;
+	private static XmlSuite xmlSuite;
 
-    private static ISuite suite;
+	private static ISuite suite;
 
-    @BeforeClass
-    public static void setUpClass() {
-        xmlSuite = mock( XmlSuite.class );
-        suite = mock( ISuite.class );
-        when( suite.getXmlSuite() ).thenReturn( xmlSuite );
-    }
+	@BeforeClass
+	public static void setUpClass() {
+		xmlSuite = mock(XmlSuite.class);
+		suite = mock(ISuite.class);
+		when(suite.getXmlSuite()).thenReturn(xmlSuite);
+	}
 
-    @Test
-    public void onStart()
-                            throws URISyntaxException {
-        URL url = this.getClass().getResource( "getcapabilities/GetCapabilities-response.xml" );
-        Map<String, String> params = new HashMap<>();
-        params.put( TestRunArg.IUT.toString(), url.toURI().toString() );
-        when( xmlSuite.getParameters() ).thenReturn( params );
-        SuiteFixtureListener iut = new SuiteFixtureListener();
-        iut.onStart( suite );
-        verify( suite ).setAttribute( ArgumentMatchers.eq( SuiteAttribute.TEST_SUBJ_FILE.getName() ), ArgumentMatchers.isA( File.class ) );
-    }
+	@Test
+	public void onStart() throws URISyntaxException {
+		URL url = this.getClass().getResource("getcapabilities/GetCapabilities-response.xml");
+		Map<String, String> params = new HashMap<>();
+		params.put(TestRunArg.IUT.toString(), url.toURI().toString());
+		when(xmlSuite.getParameters()).thenReturn(params);
+		SuiteFixtureListener iut = new SuiteFixtureListener();
+		iut.onStart(suite);
+		verify(suite).setAttribute(ArgumentMatchers.eq(SuiteAttribute.TEST_SUBJ_FILE.getName()),
+				ArgumentMatchers.isA(File.class));
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void onStart_noSuiteParameters() {
-        Map<String, String> params = new HashMap<>();
-        when( xmlSuite.getParameters() ).thenReturn( params );
-        SuiteFixtureListener iut = new SuiteFixtureListener();
-        iut.onStart( suite );
-    }
+	@Test(expected = IllegalArgumentException.class)
+	public void onStart_noSuiteParameters() {
+		Map<String, String> params = new HashMap<>();
+		when(xmlSuite.getParameters()).thenReturn(params);
+		SuiteFixtureListener iut = new SuiteFixtureListener();
+		iut.onStart(suite);
+	}
 
 }

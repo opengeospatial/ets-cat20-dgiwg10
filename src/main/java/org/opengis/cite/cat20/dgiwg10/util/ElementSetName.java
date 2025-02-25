@@ -5,5 +5,6 @@ package org.opengis.cite.cat20.dgiwg10.util;
  */
 public enum ElementSetName {
 
-    BRIEF, SUMMARY, FULL
+	BRIEF, SUMMARY, FULL
+
 }

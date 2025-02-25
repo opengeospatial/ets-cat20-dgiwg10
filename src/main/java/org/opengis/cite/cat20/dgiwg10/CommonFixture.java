@@ -17,94 +17,88 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 /**
- * A supporting base class that sets up a common test fixture. These configuration methods are invoked before those
- * defined in a subclass.
+ * A supporting base class that sets up a common test fixture. These configuration methods
+ * are invoked before those defined in a subclass.
  */
 public class CommonFixture {
 
-    /**
-     * Root test suite package (absolute path).
-     */
-    public static final String ROOT_PKG_PATH = "/org/opengis/cite/cat20/dgiwg10/";
+	/**
+	 * Root test suite package (absolute path).
+	 */
+	public static final String ROOT_PKG_PATH = "/org/opengis/cite/cat20/dgiwg10/";
 
-    /** A DOM document containing service metadata (OGC capabilities). */
-    protected Document capabilitiesDoc;
+	/** A DOM document containing service metadata (OGC capabilities). */
+	protected Document capabilitiesDoc;
 
-    /**
-     * A client component for interacting with a WFS.
-     */
-    protected CSWClient cswClient;
+	/**
+	 * A client component for interacting with a WFS.
+	 */
+	protected CSWClient cswClient;
 
-    /**
-     * An HTTP request message.
-     */
-    protected Document requestDocument;
+	/**
+	 * An HTTP request message.
+	 */
+	protected Document requestDocument;
 
-    /**
-     * An HTTP response message.
-     */
-    protected Response response;
+	/**
+	 * An HTTP response message.
+	 */
+	protected Response response;
 
-    /**
-     * The response document parsed from the HTTP response.
-     */
-    protected Document responseDocument;
+	/**
+	 * The response document parsed from the HTTP response.
+	 */
+	protected Document responseDocument;
 
-    /**
-     * Initializes the common test fixture with a client component for interacting with HTTP endpoints.
-     *
-     * @param testContext
-     *            The test context that contains all the information for a test run, including suite attributes.
-     */
-    @BeforeClass
-    public void initCommonFixture( ITestContext testContext ) {
-        Object obj = testContext.getSuite().getAttribute( SuiteAttribute.TEST_SUBJECT.getName() );
-        if ( null == obj ) {
-            throw new SkipException( "Test subject not found in ITestContext." );
-        }
-        this.capabilitiesDoc = (Document) obj;
-        this.cswClient = new CSWClient( this.capabilitiesDoc );
-    }
+	/**
+	 * Initializes the common test fixture with a client component for interacting with
+	 * HTTP endpoints.
+	 * @param testContext The test context that contains all the information for a test
+	 * run, including suite attributes.
+	 */
+	@BeforeClass
+	public void initCommonFixture(ITestContext testContext) {
+		Object obj = testContext.getSuite().getAttribute(SuiteAttribute.TEST_SUBJECT.getName());
+		if (null == obj) {
+			throw new SkipException("Test subject not found in ITestContext.");
+		}
+		this.capabilitiesDoc = (Document) obj;
+		this.cswClient = new CSWClient(this.capabilitiesDoc);
+	}
 
-    @BeforeMethod
-    public void clearMessages() {
-        this.requestDocument = null;
-        this.response = null;
-        this.responseDocument = null;
-    }
+	@BeforeMethod
+	public void clearMessages() {
+		this.requestDocument = null;
+		this.response = null;
+		this.responseDocument = null;
+	}
 
-    /**
-     * Obtains the (XML) response entity as a DOM Document. This convenience method wraps a static method call to
-     * facilitate unit testing (Mockito workaround).
-     *
-     * @param response
-     *            A representation of an HTTP response message.
-     * @param targetURI
-     *            The target URI from which the entity was retrieved (may be null).
-     * @return A Document representing the entity.
-     *
-     * @see ClientUtils#getResponseEntityAsDocument
-     */
-    public Document getResponseEntityAsDocument(Response response, String targetURI ) {
-        return ClientUtils.getResponseEntityAsDocument( response, targetURI );
-    }
+	/**
+	 * Obtains the (XML) response entity as a DOM Document. This convenience method wraps
+	 * a static method call to facilitate unit testing (Mockito workaround).
+	 * @param response A representation of an HTTP response message.
+	 * @param targetURI The target URI from which the entity was retrieved (may be null).
+	 * @return A Document representing the entity.
+	 *
+	 * @see ClientUtils#getResponseEntityAsDocument
+	 */
+	public Document getResponseEntityAsDocument(Response response, String targetURI) {
+		return ClientUtils.getResponseEntityAsDocument(response, targetURI);
+	}
 
-    /**
-     * Builds an HTTP request message that uses the GET method. This convenience method wraps a static method call to
-     * facilitate unit testing (Mockito workaround).
-     *
-     * @param endpoint
-     *            A URI indicating the target resource.
-     * @param qryParams
-     *            A Map containing query parameters (may be null);
-     * @param mediaTypes
-     *            A list of acceptable media types; if not specified, generic XML ("application/xml") is preferred.
-     * @return A Response object.
-     *
-     * @see ClientUtils#buildGetRequest
-     */
-    public Response buildGetRequest( URI endpoint, Map<String, String> qryParams, MediaType... mediaTypes ) {
-        return ClientUtils.buildGetRequest( endpoint, qryParams, mediaTypes );
-    }
+	/**
+	 * Builds an HTTP request message that uses the GET method. This convenience method
+	 * wraps a static method call to facilitate unit testing (Mockito workaround).
+	 * @param endpoint A URI indicating the target resource.
+	 * @param qryParams A Map containing query parameters (may be null);
+	 * @param mediaTypes A list of acceptable media types; if not specified, generic XML
+	 * ("application/xml") is preferred.
+	 * @return A Response object.
+	 *
+	 * @see ClientUtils#buildGetRequest
+	 */
+	public Response buildGetRequest(URI endpoint, Map<String, String> qryParams, MediaType... mediaTypes) {
+		return ClientUtils.buildGetRequest(endpoint, qryParams, mediaTypes);
+	}
 
 }

@@ -28,72 +28,70 @@ import org.w3c.dom.Document;
  */
 public class GetRecordByIdTest {
 
-    private static ITestContext testContext;
+	private static ITestContext testContext;
 
-    private static ISuite suite;
+	private static ISuite suite;
 
-    private static DocumentBuilder docBuilder;
+	private static DocumentBuilder docBuilder;
 
-    @BeforeClass
-    public static void setUpClass()
-                            throws Exception {
-        testContext = mock( ITestContext.class );
-        suite = mock( ISuite.class );
-        when( testContext.getSuite() ).thenReturn( suite );
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setNamespaceAware( true );
-        docBuilder = dbf.newDocumentBuilder();
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		testContext = mock(ITestContext.class);
+		suite = mock(ISuite.class);
+		when(testContext.getSuite()).thenReturn(suite);
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		dbf.setNamespaceAware(true);
+		docBuilder = dbf.newDocumentBuilder();
 
-        InputStream docAsStream = GetRecordsTest.class.getResourceAsStream( "../getcapabilities/GetCapabilities-DGIWG-response.xml" );
-        Document capabilitiesDoc = docBuilder.parse( docAsStream );
-        when( suite.getAttribute( SuiteAttribute.TEST_SUBJECT.getName() ) ).thenReturn( capabilitiesDoc );
+		InputStream docAsStream = GetRecordsTest.class
+			.getResourceAsStream("../getcapabilities/GetCapabilities-DGIWG-response.xml");
+		Document capabilitiesDoc = docBuilder.parse(docAsStream);
+		when(suite.getAttribute(SuiteAttribute.TEST_SUBJECT.getName())).thenReturn(capabilitiesDoc);
 
-        DataSampler dataSampler = mock( DataSampler.class );
-        when( dataSampler.findSampleIdentifier() ).thenReturn( "ok" );
-        when( suite.getAttribute( SuiteAttribute.DATA_SAMPLER.getName() ) ).thenReturn( dataSampler );
-    }
+		DataSampler dataSampler = mock(DataSampler.class);
+		when(dataSampler.findSampleIdentifier()).thenReturn("ok");
+		when(suite.getAttribute(SuiteAttribute.DATA_SAMPLER.getName())).thenReturn(dataSampler);
+	}
 
-    @Before
-    public void setUp() {
-        initJadlerListeningOn( 8090 );
-    }
+	@Before
+	public void setUp() {
+		initJadlerListeningOn(8090);
+	}
 
-    @After
-    public void tearDown() {
-        closeJadler();
-    }
+	@After
+	public void tearDown() {
+		closeJadler();
+	}
 
-    @Test
-    public void testGetRecordById_Dc()
-                            throws XPathExpressionException {
-        prepareJadler( "dublinCore-response.xml" );
+	@Test
+	public void testGetRecordById_Dc() throws XPathExpressionException {
+		prepareJadler("dublinCore-response.xml");
 
-        GetRecordById getRecordById = new GetRecordById();
-        getRecordById.initCommonFixture( testContext );
-        getRecordById.retrieveDataSampler( testContext );
-        getRecordById.buildValidators();
+		GetRecordById getRecordById = new GetRecordById();
+		getRecordById.initCommonFixture(testContext);
+		getRecordById.retrieveDataSampler(testContext);
+		getRecordById.buildValidators();
 
-        getRecordById.issueGetRecordById_DublinCore();
-        getRecordById.issueGetRecordById_Returnables_DublinCore();
-    }
+		getRecordById.issueGetRecordById_DublinCore();
+		getRecordById.issueGetRecordById_Returnables_DublinCore();
+	}
 
-    @Test
-    public void testGetRecordById_Iso()
-                            throws XPathExpressionException {
-        prepareJadler( "iso-response.xml" );
+	@Test
+	public void testGetRecordById_Iso() throws XPathExpressionException {
+		prepareJadler("iso-response.xml");
 
-        GetRecordById getRecordById = new GetRecordById();
-        getRecordById.initCommonFixture( testContext );
-        getRecordById.retrieveDataSampler( testContext );
-        getRecordById.buildValidators();
+		GetRecordById getRecordById = new GetRecordById();
+		getRecordById.initCommonFixture(testContext);
+		getRecordById.retrieveDataSampler(testContext);
+		getRecordById.buildValidators();
 
-        getRecordById.issueGetRecordById_Iso();
-        getRecordById.issueGetRecordById_Returnables_Iso();
-    }
+		getRecordById.issueGetRecordById_Iso();
+		getRecordById.issueGetRecordById_Returnables_Iso();
+	}
 
-    private void prepareJadler( String resource ) {
-        InputStream responseEntity = getClass().getResourceAsStream( resource );
-        onRequest().respond().withBody( responseEntity ).withContentType( "application/xml" );
-    }
+	private void prepareJadler(String resource) {
+		InputStream responseEntity = getClass().getResourceAsStream(resource);
+		onRequest().respond().withBody(responseEntity).withContentType("application/xml");
+	}
 
 }

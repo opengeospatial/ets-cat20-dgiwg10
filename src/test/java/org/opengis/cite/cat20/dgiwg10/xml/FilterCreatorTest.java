@@ -27,74 +27,62 @@ import org.xmlmatchers.validation.SchemaFactory;
  */
 public class FilterCreatorTest {
 
-    private static DocumentBuilder docBuilder;
+	private static DocumentBuilder docBuilder;
 
-    private final FilterCreator filterCreator = new FilterCreator();
+	private final FilterCreator filterCreator = new FilterCreator();
 
-    @BeforeClass
-    public static void setupDocumentBuilder()
-                            throws ParserConfigurationException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setNamespaceAware( true );
-        docBuilder = factory.newDocumentBuilder();
-    }
+	@BeforeClass
+	public static void setupDocumentBuilder() throws ParserConfigurationException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setNamespaceAware(true);
+		docBuilder = factory.newDocumentBuilder();
+	}
 
-    @Test
-    public void testCreateIdentifierFilter()
-                            throws Exception {
-        String identifier = "abc";
-        Element filter = filterCreator.createIdentifierFilter( DC, identifier );
+	@Test
+	public void testCreateIdentifierFilter() throws Exception {
+		String identifier = "abc";
+		Element filter = filterCreator.createIdentifierFilter(DC, identifier);
 
-        assertThat( the( filter ),
-                    hasXPath( "exists(//ogc:Filter/ogc:PropertyIsEqualTo)", withStandardBindings(),
-                              returningABoolean(), is( true ) ) );
-        assertThat( the( filter ),
-                    hasXPath( "//ogc:Filter/ogc:PropertyIsEqualTo/ogc:PropertyName", is( "dc:identifier" ),
-                              withStandardBindings() ) );
-        assertThat( the( filter ),
-                    hasXPath( "//ogc:Filter/ogc:PropertyIsEqualTo/ogc:Literal", is( identifier ),
-                              withStandardBindings() ) );
-        assertThat( the( filter ), XmlMatchers.conformsTo( cswSchema() ) );
-    }
+		assertThat(the(filter), hasXPath("exists(//ogc:Filter/ogc:PropertyIsEqualTo)", withStandardBindings(),
+				returningABoolean(), is(true)));
+		assertThat(the(filter), hasXPath("//ogc:Filter/ogc:PropertyIsEqualTo/ogc:PropertyName", is("dc:identifier"),
+				withStandardBindings()));
+		assertThat(the(filter),
+				hasXPath("//ogc:Filter/ogc:PropertyIsEqualTo/ogc:Literal", is(identifier), withStandardBindings()));
+		assertThat(the(filter), XmlMatchers.conformsTo(cswSchema()));
+	}
 
-    @Test
-    public void testCreateTitleFilter()
-                            throws Exception {
-        String title = "xyz";
-        Element filter = filterCreator.createTitleFilter( ISO19193, title );
+	@Test
+	public void testCreateTitleFilter() throws Exception {
+		String title = "xyz";
+		Element filter = filterCreator.createTitleFilter(ISO19193, title);
 
-        assertThat( the( filter ),
-                    hasXPath( "exists(//ogc:Filter/ogc:PropertyIsEqualTo)", withStandardBindings(),
-                              returningABoolean(), is( true ) ) );
-        assertThat( the( filter ),
-                    hasXPath( "//ogc:Filter/ogc:PropertyIsEqualTo/ogc:PropertyName", is( "Title" ),
-                              withStandardBindings() ) );
-        assertThat( the( filter ),
-                    hasXPath( "//ogc:Filter/ogc:PropertyIsEqualTo/ogc:Literal", is( title ), withStandardBindings() ) );
-        assertThat( the( filter ), XmlMatchers.conformsTo( cswSchema() ) );
-    }
+		assertThat(the(filter), hasXPath("exists(//ogc:Filter/ogc:PropertyIsEqualTo)", withStandardBindings(),
+				returningABoolean(), is(true)));
+		assertThat(the(filter),
+				hasXPath("//ogc:Filter/ogc:PropertyIsEqualTo/ogc:PropertyName", is("Title"), withStandardBindings()));
+		assertThat(the(filter),
+				hasXPath("//ogc:Filter/ogc:PropertyIsEqualTo/ogc:Literal", is(title), withStandardBindings()));
+		assertThat(the(filter), XmlMatchers.conformsTo(cswSchema()));
+	}
 
-    @Test
-    public void testCreateAnyTextFilter()
-                            throws Exception {
-        String searchValue = "hij";
-        Element filter = filterCreator.createAnyTextFilter( ISO19193, searchValue );
+	@Test
+	public void testCreateAnyTextFilter() throws Exception {
+		String searchValue = "hij";
+		Element filter = filterCreator.createAnyTextFilter(ISO19193, searchValue);
 
-        assertThat( the( filter ),
-                    hasXPath( "exists(//ogc:Filter/ogc:PropertyIsLike)", withStandardBindings(), returningABoolean(),
-                              is( true ) ) );
-        assertThat( the( filter ),
-                    hasXPath( "//ogc:Filter/ogc:PropertyIsLike/ogc:PropertyName", is( "AnyText" ),
-                              withStandardBindings() ) );
-        assertThat( the( filter ),
-                    hasXPath( "//ogc:Filter/ogc:PropertyIsLike/ogc:Literal", is( searchValue ), withStandardBindings() ) );
-        assertThat( the( filter ), XmlMatchers.conformsTo( cswSchema() ) );
-    }
+		assertThat(the(filter), hasXPath("exists(//ogc:Filter/ogc:PropertyIsLike)", withStandardBindings(),
+				returningABoolean(), is(true)));
+		assertThat(the(filter),
+				hasXPath("//ogc:Filter/ogc:PropertyIsLike/ogc:PropertyName", is("AnyText"), withStandardBindings()));
+		assertThat(the(filter),
+				hasXPath("//ogc:Filter/ogc:PropertyIsLike/ogc:Literal", is(searchValue), withStandardBindings()));
+		assertThat(the(filter), XmlMatchers.conformsTo(cswSchema()));
+	}
 
-    private Schema cswSchema()
-                            throws Exception {
-        // TODO: use local schema
-        return SchemaFactory.w3cXmlSchemaFrom( new URL( "http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd" ) );
-    }
+	private Schema cswSchema() throws Exception {
+		// TODO: use local schema
+		return SchemaFactory.w3cXmlSchemaFrom(new URL("http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd"));
+	}
 
 }

@@ -23,38 +23,36 @@ import org.w3c.dom.Document;
 @Ignore
 public class TransactionCommonIT {
 
-    private static final String SERVICE_UNDER_TEST = "http://dgiwg.geo-solutions.it/geonetwork/srv/eng/csw?REQUEST=GetCapabilities&SERVICE=CSW";
+	private static final String SERVICE_UNDER_TEST = "http://dgiwg.geo-solutions.it/geonetwork/srv/eng/csw?REQUEST=GetCapabilities&SERVICE=CSW";
 
-    private static ITestContext testContext;
+	private static ITestContext testContext;
 
-    private static ISuite suite;
+	private static ISuite suite;
 
-    private static DocumentBuilder docBuilder;
+	private static DocumentBuilder docBuilder;
 
-    @BeforeClass
-    public static void setUpClass()
-                            throws Exception {
-        testContext = mock( ITestContext.class );
-        suite = mock( ISuite.class );
-        when( testContext.getSuite() ).thenReturn( suite );
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setNamespaceAware( true );
-        docBuilder = dbf.newDocumentBuilder();
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		testContext = mock(ITestContext.class);
+		suite = mock(ISuite.class);
+		when(testContext.getSuite()).thenReturn(suite);
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		dbf.setNamespaceAware(true);
+		docBuilder = dbf.newDocumentBuilder();
 
-        InputStream docAsStream = new URL( SERVICE_UNDER_TEST ).openStream();
-        Document capabilitiesDoc = docBuilder.parse( docAsStream );
-        when( suite.getAttribute( SuiteAttribute.TEST_SUBJECT.getName() ) ).thenReturn( capabilitiesDoc );
-    }
+		InputStream docAsStream = new URL(SERVICE_UNDER_TEST).openStream();
+		Document capabilitiesDoc = docBuilder.parse(docAsStream);
+		when(suite.getAttribute(SuiteAttribute.TEST_SUBJECT.getName())).thenReturn(capabilitiesDoc);
+	}
 
-    @Test
-    public void testTransaction_noError()
-                            throws Exception {
-        TransactionCommon transaction = new TransactionCommon();
-        transaction.initCommonFixture( testContext );
+	@Test
+	public void testTransaction_noError() throws Exception {
+		TransactionCommon transaction = new TransactionCommon();
+		transaction.initCommonFixture(testContext);
 
-        transaction.isTransactionalCsw();
-        transaction.hasTransactionPostUrl();
-        transaction.verifyAbstract();
-    }
+		transaction.isTransactionalCsw();
+		transaction.hasTransactionPostUrl();
+		transaction.verifyAbstract();
+	}
 
 }

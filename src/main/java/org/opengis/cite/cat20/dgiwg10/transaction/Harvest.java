@@ -21,51 +21,55 @@ import org.w3c.dom.Document;
  */
 public class Harvest extends TransactionalOperation {
 
-    private static final String RECORD_TO_HARVEST = "https://opengeospatial.github.io/ets-cat20-dgiwg10/DMFMetadataRecord.xml";
+	private static final String RECORD_TO_HARVEST = "https://opengeospatial.github.io/ets-cat20-dgiwg10/DMFMetadataRecord.xml";
 
-    @Override
-    String getOperationName() {
-        return "Harvest";
-    }
+	@Override
+	String getOperationName() {
+		return "Harvest";
+	}
 
-    @Test(description = "Precondition of A.1.4 DGIWG Transactional CSW - Harvest Request (Harvest DCP URL must be available)", dependsOnGroups = "isTransactional")
-    public void supportsHarvesting() {
-        assertNotNull( transactionUrl, "DCP URL for Operation 'Harvest' is not available" );
-    }
+	@Test(description = "Precondition of A.1.4 DGIWG Transactional CSW - Harvest Request (Harvest DCP URL must be available)",
+			dependsOnGroups = "isTransactional")
+	public void supportsHarvesting() {
+		assertNotNull(transactionUrl, "DCP URL for Operation 'Harvest' is not available");
+	}
 
-    /**
-     * Issue a HTTP POST Harvest Request and confirm that all records are returned (Requirement 18).
-     */
-    @Test(description = "Implements A.1.4 DGIWG Transactional CSW - Harvest Request (Requirement 20)", dependsOnMethods = "supportsHarvesting")
-    public void issueHarvestRequest() {
-        this.requestDocument = requestCreator.createHarvest( RECORD_TO_HARVEST );
-        this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument, TRANSACTION_USERNAME,
-                                                          TRANSACTION_PASSWORD );
-        assertStatusCode( this.response.getStatus(), 200 );
-        assertXmlContentType( this.response.getHeaders() );
-        this.responseDocument = this.response.readEntity( Document.class );
+	/**
+	 * Issue a HTTP POST Harvest Request and confirm that all records are returned
+	 * (Requirement 18).
+	 */
+	@Test(description = "Implements A.1.4 DGIWG Transactional CSW - Harvest Request (Requirement 20)",
+			dependsOnMethods = "supportsHarvesting")
+	public void issueHarvestRequest() {
+		this.requestDocument = requestCreator.createHarvest(RECORD_TO_HARVEST);
+		this.response = this.cswClient.submitPostRequest(transactionUrl, this.requestDocument, TRANSACTION_USERNAME,
+				TRANSACTION_PASSWORD);
+		assertStatusCode(this.response.getStatus(), 200);
+		assertXmlContentType(this.response.getHeaders());
+		this.responseDocument = this.response.readEntity(Document.class);
 
-        assertQualifiedName( responseDocument, CSW, "HarvestResponse" );
-        assertSchemaValid( cswValidator, new DOMSource( this.responseDocument ) );
+		assertQualifiedName(responseDocument, CSW, "HarvestResponse");
+		assertSchemaValid(cswValidator, new DOMSource(this.responseDocument));
 
-        int totalInserted = parseTotalInserted();
-        assertTrue( totalInserted == 1, "Expected totalInserted 1 but was " + totalInserted );
+		int totalInserted = parseTotalInserted();
+		assertTrue(totalInserted == 1, "Expected totalInserted 1 but was " + totalInserted);
 
-        this.id = parseIdentifier();
-        assertTrue( this.id != null, "Response does not contain the identifier of the harvested record." );
-    }
+		this.id = parseIdentifier();
+		assertTrue(this.id != null, "Response does not contain the identifier of the harvested record.");
+	}
 
-    @Test(description = "Implements A.1.4 DGIWG Transactional CSW - Ensure Harvest (Requirement 20)", dependsOnMethods = "issueHarvestRequest")
-    public void issueGetRecordById_EnsureHarvest() {
-        this.requestDocument = requestCreator.createGetRecordById( DC, FULL, this.id );
-        this.response = this.cswClient.submitPostRequest( transactionUrl, this.requestDocument, TRANSACTION_USERNAME,
-                                                          TRANSACTION_PASSWORD );
-        assertStatusCode( this.response.getStatus(), 200 );
-        assertXmlContentType( this.response.getHeaders() );
-        this.responseDocument = this.response.readEntity( Document.class );
+	@Test(description = "Implements A.1.4 DGIWG Transactional CSW - Ensure Harvest (Requirement 20)",
+			dependsOnMethods = "issueHarvestRequest")
+	public void issueGetRecordById_EnsureHarvest() {
+		this.requestDocument = requestCreator.createGetRecordById(DC, FULL, this.id);
+		this.response = this.cswClient.submitPostRequest(transactionUrl, this.requestDocument, TRANSACTION_USERNAME,
+				TRANSACTION_PASSWORD);
+		assertStatusCode(this.response.getStatus(), 200);
+		assertXmlContentType(this.response.getHeaders());
+		this.responseDocument = this.response.readEntity(Document.class);
 
-        String xpath = String.format( "//csw:Record[dc:identifier = '%s']", this.id );
-        assertXPath( this.responseDocument, xpath );
-    }
+		String xpath = String.format("//csw:Record[dc:identifier = '%s']", this.id);
+		assertXPath(this.responseDocument, xpath);
+	}
 
 }
