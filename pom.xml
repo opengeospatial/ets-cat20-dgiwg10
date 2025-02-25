@@ -115,6 +115,10 @@
       <groupId>org.glassfish.jersey.media</groupId>
       <artifactId>jersey-media-jaxb</artifactId>
     </dependency>
+    <dependency>
+      <groupId>one.gfw</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
