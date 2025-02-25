@@ -1,13 +1,12 @@
 package org.opengis.cite.cat20.dgiwg10;
 
-import javax.ws.rs.core.MediaType;
-
 import org.opengis.cite.cat20.dgiwg10.util.XMLUtils;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 import org.w3c.dom.Document;
 
-import com.sun.jersey.api.client.ClientResponse;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 /**
  * A listener that augments a test result with diagnostic information in the event that a test method failed. This
@@ -58,14 +57,14 @@ public class TestFailureListener extends TestListenerAdapter {
      *            The XML response entity.
      * @return A string containing information gleaned from the response message.
      */
-    String getResponseMessageInfo( ClientResponse rsp, Document responseDocument ) {
+    String getResponseMessageInfo(Response rsp, Document responseDocument ) {
         if ( null == rsp ) {
             return "No response message.";
         }
         StringBuilder msgInfo = new StringBuilder();
         msgInfo.append( "Status: " ).append( rsp.getStatus() ).append( '\n' );
         msgInfo.append( "Headers: " ).append( rsp.getHeaders() ).append( '\n' );
-        if ( responseDocument != null && rsp.getType().isCompatible( MediaType.APPLICATION_XML_TYPE ) ) {
+        if ( responseDocument != null && rsp.getMediaType().isCompatible( MediaType.APPLICATION_XML_TYPE ) ) {
             msgInfo.append( XMLUtils.writeNodeToString( responseDocument ) );
             msgInfo.append( '\n' );
         }

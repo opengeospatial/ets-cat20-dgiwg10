@@ -5,7 +5,7 @@ import java.io.File;
 import org.opengis.cite.cat20.dgiwg10.util.DataSampler;
 import org.w3c.dom.Document;
 
-import com.sun.jersey.api.client.Client;
+import jakarta.ws.rs.client.Client;
 
 /**
  * An enumerated type defining ISuite attributes that may be set to constitute a shared test fixture.

@@ -3,8 +3,8 @@ package org.opengis.cite.cat20.dgiwg10;
 import java.net.URI;
 import java.util.Map;
 
-import javax.ws.rs.core.MediaType;
-
+import org.glassfish.jersey.client.ClientRequest;
+import org.glassfish.jersey.client.ClientResponse;
 import org.opengis.cite.cat20.dgiwg10.util.CSWClient;
 import org.opengis.cite.cat20.dgiwg10.util.ClientUtils;
 import org.testng.ITestContext;
@@ -13,8 +13,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.w3c.dom.Document;
 
-import com.sun.jersey.api.client.ClientRequest;
-import com.sun.jersey.api.client.ClientResponse;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 /**
  * A supporting base class that sets up a common test fixture. These configuration methods are invoked before those
@@ -43,7 +43,7 @@ public class CommonFixture {
     /**
      * An HTTP response message.
      */
-    protected ClientResponse response;
+    protected Response response;
 
     /**
      * The response document parsed from the HTTP response.
@@ -85,7 +85,7 @@ public class CommonFixture {
      *
      * @see ClientUtils#getResponseEntityAsDocument
      */
-    public Document getResponseEntityAsDocument( ClientResponse response, String targetURI ) {
+    public Document getResponseEntityAsDocument(Response response, String targetURI ) {
         return ClientUtils.getResponseEntityAsDocument( response, targetURI );
     }
 
@@ -99,11 +99,11 @@ public class CommonFixture {
      *            A Map containing query parameters (may be null);
      * @param mediaTypes
      *            A list of acceptable media types; if not specified, generic XML ("application/xml") is preferred.
-     * @return A ClientRequest object.
+     * @return A Response object.
      *
      * @see ClientUtils#buildGetRequest
      */
-    public ClientRequest buildGetRequest( URI endpoint, Map<String, String> qryParams, MediaType... mediaTypes ) {
+    public Response buildGetRequest( URI endpoint, Map<String, String> qryParams, MediaType... mediaTypes ) {
         return ClientUtils.buildGetRequest( endpoint, qryParams, mediaTypes );
     }
 

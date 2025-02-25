@@ -38,7 +38,7 @@ public class TransactionService extends TransactionalOperation {
                                                           TRANSACTION_PASSWORD );
         assertStatusCode( this.response.getStatus(), 200 );
         assertXmlContentType( this.response.getHeaders() );
-        this.responseDocument = this.response.getEntity( Document.class );
+        this.responseDocument = this.response.readEntity( Document.class );
 
         assertQualifiedName( responseDocument, CSW, "TransactionResponse" );
         assertSchemaValid( cswValidator, new DOMSource( this.responseDocument ) );
@@ -60,7 +60,7 @@ public class TransactionService extends TransactionalOperation {
                                                           TRANSACTION_PASSWORD );
         assertStatusCode( this.response.getStatus(), 200 );
         assertXmlContentType( this.response.getHeaders() );
-        this.responseDocument = this.response.getEntity( Document.class );
+        this.responseDocument = this.response.readEntity( Document.class );
 
         String xpath = String.format( "//csw:Record[dc:identifier = '%s']", this.id );
         assertXPath( this.responseDocument, xpath );
@@ -76,7 +76,7 @@ public class TransactionService extends TransactionalOperation {
                                                           TRANSACTION_PASSWORD );
         assertStatusCode( this.response.getStatus(), 200 );
         assertXmlContentType( this.response.getHeaders() );
-        this.responseDocument = this.response.getEntity( Document.class );
+        this.responseDocument = this.response.readEntity( Document.class );
 
         assertQualifiedName( responseDocument, CSW, "TransactionResponse" );
         assertSchemaValid( cswValidator, new DOMSource( this.responseDocument ) );
@@ -95,7 +95,7 @@ public class TransactionService extends TransactionalOperation {
                                                           TRANSACTION_PASSWORD );
         assertStatusCode( this.response.getStatus(), 200 );
         assertXmlContentType( this.response.getHeaders() );
-        this.responseDocument = this.response.getEntity( Document.class );
+        this.responseDocument = this.response.readEntity( Document.class );
 
         String xpath = String.format( "//csw:Record[dc:identifier = '%s']", this.id );
         assertXPath( this.responseDocument, xpath );
@@ -113,7 +113,7 @@ public class TransactionService extends TransactionalOperation {
                                                           TRANSACTION_PASSWORD );
         assertStatusCode( this.response.getStatus(), 200 );
         assertXmlContentType( this.response.getHeaders() );
-        this.responseDocument = this.response.getEntity( Document.class );
+        this.responseDocument = this.response.readEntity( Document.class );
 
         assertQualifiedName( responseDocument, CSW, "TransactionResponse" );
         assertSchemaValid( cswValidator, new DOMSource( this.responseDocument ) );
@@ -133,7 +133,7 @@ public class TransactionService extends TransactionalOperation {
                                                           TRANSACTION_PASSWORD );
         assertStatusCode( this.response.getStatus(), 200 );
         assertXmlContentType( this.response.getHeaders() );
-        this.responseDocument = this.response.getEntity( Document.class );
+        this.responseDocument = this.response.readEntity( Document.class );
 
         String xpath = String.format( "not(//csw:Record[dc:identifier = '%s'])", this.id );
         assertXPath( this.responseDocument, xpath );

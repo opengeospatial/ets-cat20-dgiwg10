@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.transform.Source;
 import javax.xml.validation.Validator;
 import javax.xml.xpath.XPath;
@@ -26,6 +25,8 @@ import org.testng.Assert;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
+import jakarta.ws.rs.core.MultivaluedMap;
 
 /**
  * Provides a set of custom assertion methods.
@@ -56,8 +57,8 @@ public class ETSAssert {
      * @param headers
      *            the available headers
      */
-    public static void assertXmlContentType( MultivaluedMap<String, String> headers ) {
-        List<String> contentType = headers.get( "Content-Type" );
+    public static void assertXmlContentType( MultivaluedMap<String, Object> headers ) {
+        List<Object> contentType = headers.get( "Content-Type" );
         boolean hasContentTypeXml = hasContentTypeXml( contentType );
         if ( !hasContentTypeXml )
             throw new AssertionError( UNEXPECTED_MEDIA_TYPE );
@@ -196,10 +197,14 @@ public class ETSAssert {
                                                                               errHandler.toString() ) );
     }
 
-    private static boolean hasContentTypeXml( List<String> contentType ) {
-        for ( String ct : contentType )
-            if ( ct.contains( "xml" ) )
+    private static boolean hasContentTypeXml( List<Object> contentType ) {
+        for ( Object ct : contentType ) {
+            if(!(ct instanceof String)) {
+                return false;
+            }
+            if ( ((String)ct).contains( "xml" ) )
                 return true;
+        }
         return false;
     }
 

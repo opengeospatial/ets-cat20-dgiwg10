@@ -107,7 +107,7 @@ public class GetRecordById extends CommonFixture {
         assertStatusCode( this.response.getStatus(), 200 );
         assertXmlContentType( this.response.getHeaders() );
 
-        this.responseDocument = this.response.getEntity( Document.class );
+        this.responseDocument = this.response.readEntity( Document.class );
         assertQualifiedName( responseDocument, CSW, "GetRecordByIdResponse" );
 
         assertSchemaValid( this.cswValidator, new DOMSource( this.responseDocument ) );
@@ -132,7 +132,7 @@ public class GetRecordById extends CommonFixture {
         assertStatusCode( this.response.getStatus(), 200 );
         assertXmlContentType( this.response.getHeaders() );
 
-        this.responseDocument = this.response.getEntity( Document.class );
+        this.responseDocument = this.response.readEntity( Document.class );
         assertQualifiedName( responseDocument, CSW, "GetRecordByIdResponse" );
 
         assertSchemaValid( this.isoValidator, new DOMSource( this.responseDocument ) );

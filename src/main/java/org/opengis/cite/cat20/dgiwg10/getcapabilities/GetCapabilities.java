@@ -33,7 +33,7 @@ import org.testng.SkipException;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 
-import com.sun.jersey.api.client.ClientResponse;
+import jakarta.ws.rs.core.Response;
 
 /**
  * A.1.1 GetCapabilities for DGIWG Basic CSW
@@ -87,7 +87,7 @@ public class GetCapabilities extends CommonFixture {
                                                             "OperatesOn", "OperatesOnIdentifier", "OperatesOnName",
                                                             "CouplingType", "Operation" );
 
-    private ClientResponse capabilitiesResponse;
+    private Response capabilitiesResponse;
 
     private Document capabilitiesDocument;
 
@@ -116,7 +116,7 @@ public class GetCapabilities extends CommonFixture {
         assertStatusCode( this.response.getStatus(), 200 );
         assertXmlContentType( this.response.getHeaders() );
 
-        this.capabilitiesDocument = this.response.getEntity( Document.class );
+        this.capabilitiesDocument = this.response.readEntity( Document.class );
         this.responseDocument = this.capabilitiesDocument;
         assertQualifiedName( responseDocument, CSW, "Capabilities" );
     }

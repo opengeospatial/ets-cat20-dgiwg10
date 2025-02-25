@@ -21,7 +21,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.sun.jersey.api.client.ClientResponse;
+import jakarta.ws.rs.core.Response;
 
 /**
  * @author <a href="mailto:goltz@lat-lon.de">Lyn Goltz </a>
@@ -54,12 +54,12 @@ public class DataSampler {
         Document request = requestCreator.createGetRecordsRequest( DC, FULL );
 
         CSWClient cswClient = new CSWClient( this.capabilitiesDocument );
-        ClientResponse getRecordsResponse = cswClient.submitPostRequest( endpoint, request );
+        Response getRecordsResponse = cswClient.submitPostRequest( endpoint, request );
         if ( getRecordsResponse.getStatus() != 200 )
             return;
         try {
             XPath xpath = createXPath();
-            Document getRecordsResponseDoc = getRecordsResponse.getEntity( Document.class );
+            Document getRecordsResponseDoc = getRecordsResponse.readEntity( Document.class );
             NodeList records = (NodeList) xpath.evaluate( "//csw:Record", getRecordsResponseDoc, NODESET );
             for ( int nodeIndex = 0; nodeIndex < records.getLength(); nodeIndex++ ) {
                 Node record = records.item( nodeIndex );

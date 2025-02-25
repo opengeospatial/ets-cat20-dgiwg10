@@ -164,7 +164,7 @@ public class GetRecords extends CommonFixture {
         assertStatusCode( this.response.getStatus(), 200 );
         assertXmlContentType( this.response.getHeaders() );
 
-        this.responseDocument = this.response.getEntity( Document.class );
+        this.responseDocument = this.response.readEntity( Document.class );
         assertQualifiedName( this.responseDocument, CSW, "GetRecordsResponse" );
 
         this.queryableToResponseDublinCore.put( queryable, this.responseDocument );
@@ -193,7 +193,7 @@ public class GetRecords extends CommonFixture {
         assertStatusCode( this.response.getStatus(), 200 );
         assertXmlContentType( this.response.getHeaders() );
 
-        this.responseDocument = this.response.getEntity( Document.class );
+        this.responseDocument = this.response.readEntity( Document.class );
         assertQualifiedName( this.responseDocument, CSW, "GetRecordsResponse" );
 
         this.queryableToResponseIso.put( queryable, this.responseDocument );

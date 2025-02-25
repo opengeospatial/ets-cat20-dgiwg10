@@ -7,25 +7,27 @@ import static org.opengis.cite.cat20.dgiwg10.DGIWG1CAT2.SERVICE_TYPE;
 import static org.opengis.cite.cat20.dgiwg10.ProtocolBinding.GET;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriBuilder;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.w3c.dom.Document;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
-import com.sun.jersey.api.client.filter.LoggingFilter;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.Invocation.Builder;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
 
 /**
  * @author <a href="mailto:goltz@lat-lon.de">Lyn Goltz </a>
@@ -47,17 +49,13 @@ public class CSWClient {
         client = createClient();
     }
 
-    private Client createClient() {
-        ClientConfig config = new DefaultClientConfig();
-        Client client = Client.create( config );
-        client.addFilter( new LoggingFilter() );
-        return client;
+    private Client createClient() {;
+        return ClientUtils.buildClient();
     }
 
     private Client createClient(String username, String pw) {
-
         Client client = createClient();
-        client.addFilter(new HTTPBasicAuthFilter(username, pw));
+        client.register(HttpAuthenticationFeature.basic(username, pw));
         return client;
     }
 
@@ -88,7 +86,7 @@ public class CSWClient {
      *            a list of query parameters, may be <code>null</code>
      * @return A ClientResponse object representing the response message.
      */
-    public ClientResponse submitGetRequest( URI endpoint, Map<String, String> queryParams ) {
+    public Response submitGetRequest( URI endpoint, Map<String, String> queryParams ) {
         LOG.log( Level.FINE, String.format( "Submitting GET request to URI %s", endpoint ) );
         UriBuilder uriBuilder = UriBuilder.fromUri( endpoint );
         if ( queryParams != null ) {
@@ -98,8 +96,9 @@ public class CSWClient {
         }
         URI requestURI = uriBuilder.build();
         LOG.log( Level.FINE, String.format( "Request URI: %s", requestURI ) );
-        WebResource resource = client.resource( requestURI );
-        return resource.get( ClientResponse.class );
+        WebTarget target = this.client.target(requestURI);
+        Builder reqBuilder = target.request();
+        return reqBuilder.buildGet().invoke();
     }
 
     /**
@@ -111,19 +110,19 @@ public class CSWClient {
      *            the request to send, never <code>null</code>
      * @return A ClientResponse object representing the response message.
      */
-    public ClientResponse submitPostRequest( URI endpoint, Document request ) {
+    public Response submitPostRequest( URI endpoint, Document request ) {
         return submitPostRequest(this.client, endpoint, request);
     }
 
-    public ClientResponse submitPostRequest( URI endpoint, Document request, String user, String pw ) {
+    public Response submitPostRequest( URI endpoint, Document request, String user, String pw ) {
         Client client = (user != null && pw != null) ? createClient(user, pw) : this.client;
         return submitPostRequest(client, endpoint, request);
     }
 
-    protected ClientResponse submitPostRequest(Client client, URI endpoint, Document request ) {
-        WebResource resource = client.resource( endpoint );
+    protected Response submitPostRequest(Client client, URI endpoint, Document request ) {
         Source requestBody = new DOMSource( request );
-        return resource.entity( requestBody ).post( ClientResponse.class );
+        WebTarget target = this.client.target(endpoint);
+        return target.request().buildPost(Entity.entity(requestBody, MediaType.APPLICATION_XML)).invoke();
     }
 
     /**
@@ -139,11 +138,17 @@ public class CSWClient {
             throw new IllegalStateException( "Service description is unavailable." );
         }
         URI endpoint = ServiceMetadataUtils.getOperationEndpoint( this.capabilitiesDocument, GETCAPABILITIES, GET );
-        WebResource resource = client.resource( endpoint );
-        MultivaluedMap<String, String> queryParams = new MultivaluedMapImpl();
+        WebTarget target = this.client.target(endpoint);
+        MultivaluedMap<String, String> queryParams = new MultivaluedHashMap<>();
         queryParams.add( REQUEST_PARAM, GETCAPABILITIES );
         queryParams.add( SERVICE_PARAM, SERVICE_TYPE );
-        return resource.queryParams( queryParams ).get( Document.class );
+        UriBuilder uriBuilder = UriBuilder.fromUri(endpoint);
+        if (null != queryParams) {
+                for (Entry<String, List<String>> param : queryParams.entrySet()) {
+                        uriBuilder.queryParam(param.getKey(), param.getValue().get(0));
+                }
+        }
+        return target.request().buildGet().invoke().readEntity(Document.class);
     }
 
 }
