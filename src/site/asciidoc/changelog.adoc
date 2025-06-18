@@ -1,5 +1,11 @@
 = Release Notes DGIWG CAT 2.0.2
 
+== 0.5 (2025-06-18)
+
+Attention: Java 17 and Tomcat 10.1 are required.
+
+- https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/62[#62]: Migrate test suite to TEAM Engine 6 (Java 17)
+
 == 0.4 (2022-08-19)
 - https://github.com/opengeospatial/ets-cat20-dgiwg10/pull/61[#61]: Set teamengine-spi to v5.5
 - https://github.com/opengeospatial/ets-cat20-dgiwg10/issues/56[#56]: Cleanup dependencies
