@@ -20,21 +20,20 @@ import org.xml.sax.SAXException;
  */
 public class DataSamplerIT {
 
-    @Test
-    public void testAcquireRecords()
-                            throws Exception {
-        DataSampler dataSampler = new DataSampler( readCapabilitiesDocument() );
-        dataSampler.acquireRecords();
-        Map<String, Node> records = dataSampler.getRecords();
-        assertThat( records.size(), is( 10 ) );
-    }
+	@Test
+	public void testAcquireRecords() throws Exception {
+		DataSampler dataSampler = new DataSampler(readCapabilitiesDocument());
+		dataSampler.acquireRecords();
+		Map<String, Node> records = dataSampler.getRecords();
+		assertThat(records.size(), is(10));
+	}
 
-    private Document readCapabilitiesDocument()
-                            throws ParserConfigurationException, IOException, SAXException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setNamespaceAware( true );
-        DocumentBuilder docBuilder = factory.newDocumentBuilder();
-        return docBuilder.parse( "http://demo.pycsw.org/cite/csw?service=CSW&acceptVersions=2.0.2&request=GetCapabilities" );
-    }
+	private Document readCapabilitiesDocument() throws ParserConfigurationException, IOException, SAXException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setNamespaceAware(true);
+		DocumentBuilder docBuilder = factory.newDocumentBuilder();
+		return docBuilder
+			.parse("https://demo.pycsw.org/cite/csw?service=CSW&acceptVersions=2.0.2&request=GetCapabilities");
+	}
 
 }

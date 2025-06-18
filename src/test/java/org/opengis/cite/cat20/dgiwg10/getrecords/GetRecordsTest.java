@@ -30,71 +30,69 @@ import org.w3c.dom.Element;
  */
 public class GetRecordsTest {
 
-    private final FilterCreator filterCreator = new FilterCreator();
+	private final FilterCreator filterCreator = new FilterCreator();
 
-    private GetRecords getRecords;
+	private GetRecords getRecords;
 
-    private static ITestContext testContext;
+	private static ITestContext testContext;
 
-    private static ISuite suite;
+	private static ISuite suite;
 
-    @BeforeClass
-    public static void setUpClass()
-                            throws Exception {
-        testContext = mock( ITestContext.class );
-        suite = mock( ISuite.class );
-        when( testContext.getSuite() ).thenReturn( suite );
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setNamespaceAware( true );
-        DocumentBuilder docBuilder = dbf.newDocumentBuilder();
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		testContext = mock(ITestContext.class);
+		suite = mock(ISuite.class);
+		when(testContext.getSuite()).thenReturn(suite);
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		dbf.setNamespaceAware(true);
+		DocumentBuilder docBuilder = dbf.newDocumentBuilder();
 
-        InputStream docAsStream = GetRecordsTest.class.getResourceAsStream( "../getcapabilities/GetCapabilities-DGIWG-response.xml" );
-        Document capabilitiesDoc = docBuilder.parse( docAsStream );
-        when( suite.getAttribute( SuiteAttribute.TEST_SUBJECT.getName() ) ).thenReturn( capabilitiesDoc );
-    }
+		InputStream docAsStream = GetRecordsTest.class
+			.getResourceAsStream("../getcapabilities/GetCapabilities-DGIWG-response.xml");
+		Document capabilitiesDoc = docBuilder.parse(docAsStream);
+		when(suite.getAttribute(SuiteAttribute.TEST_SUBJECT.getName())).thenReturn(capabilitiesDoc);
+	}
 
-    @Before
-    public void setUp() {
-        initJadlerListeningOn( 8090 );
-    }
+	@Before
+	public void setUp() {
+		initJadlerListeningOn(8090);
+	}
 
-    @After
-    public void tearDown() {
-        closeJadler();
-    }
+	@After
+	public void tearDown() {
+		closeJadler();
+	}
 
-    @Before
-    public void initGetRecords() {
-        this.getRecords = new GetRecords();
-        this.getRecords.initCommonFixture( testContext );
-        this.getRecords.buildValidators();
-    }
+	@Before
+	public void initGetRecords() {
+		this.getRecords = new GetRecords();
+		this.getRecords.initCommonFixture(testContext);
+		this.getRecords.buildValidators();
+	}
 
-    @Test
-    public void testGetRecords_DublinCore()
-                            throws XPathExpressionException {
-        prepareJadler( "dublinCore-response.xml" );
+	@Test
+	public void testGetRecords_DublinCore() throws XPathExpressionException {
+		prepareJadler("dublinCore-response.xml");
 
-        String queryable = "Identifier";
-        Element filter = filterCreator.createIdentifierFilter( DC, "{8A1F1B62-5424-44EA-BE46-6BC3B073CDB4}" );
-        getRecords.issueGetRecords_DublinCore( queryable, filter );
-        getRecords.issueGetRecords_Returnables_DublinCore( queryable );
-    }
+		String queryable = "Identifier";
+		Element filter = filterCreator.createIdentifierFilter(DC, "{8A1F1B62-5424-44EA-BE46-6BC3B073CDB4}");
+		getRecords.issueGetRecords_DublinCore(queryable, filter);
+		getRecords.issueGetRecords_Returnables_DublinCore(queryable);
+	}
 
-    @Test
-    public void testGetRecords_Iso()
-                            throws XPathExpressionException {
-        prepareJadler( "iso-response.xml" );
+	@Test
+	public void testGetRecords_Iso() throws XPathExpressionException {
+		prepareJadler("iso-response.xml");
 
-        String queryable = "Identifier";
-        Element filter = filterCreator.createIdentifierFilter( ISO19193, "{8A1F1B62-5424-44EA-BE46-6BC3B073CDB4}" );
-        getRecords.issueGetRecords_Iso( queryable, filter );
-        getRecords.issueGetRecords_Returnables_Iso( queryable );
-    }
+		String queryable = "Identifier";
+		Element filter = filterCreator.createIdentifierFilter(ISO19193, "{8A1F1B62-5424-44EA-BE46-6BC3B073CDB4}");
+		getRecords.issueGetRecords_Iso(queryable, filter);
+		getRecords.issueGetRecords_Returnables_Iso(queryable);
+	}
 
-    private void prepareJadler( String s ) {
-        InputStream responseEntity = getClass().getResourceAsStream( s );
-        onRequest().respond().withStatus( 200 ).withBody( responseEntity ).withContentType( "application/xml" );
-    }
+	private void prepareJadler(String s) {
+		InputStream responseEntity = getClass().getResourceAsStream(s);
+		onRequest().respond().withStatus(200).withBody(responseEntity).withContentType("application/xml");
+	}
 
 }

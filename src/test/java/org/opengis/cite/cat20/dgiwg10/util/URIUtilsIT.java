@@ -17,22 +17,20 @@ import org.xml.sax.SAXException;
  */
 public class URIUtilsIT {
 
-    @Test
-    public void resolveHttpUriAsDocument()
-                            throws SAXException, IOException {
-        URI uriRef = URI.create( "https://www.w3schools.com/xml/note.xml" );
-        Document doc = URIUtils.parseURI( uriRef );
-        assertNotNull( doc );
-        assertEquals( "Document element has unexpected [local name].", "note", doc.getDocumentElement().getLocalName() );
-    }
+	@Test
+	public void resolveHttpUriAsDocument() throws SAXException, IOException {
+		URI uriRef = URI.create("https://www.w3schools.com/xml/note.xml");
+		Document doc = URIUtils.parseURI(uriRef);
+		assertNotNull(doc);
+		assertEquals("Document element has unexpected [local name].", "note", doc.getDocumentElement().getLocalName());
+	}
 
-    @Test
-    public void resolveHttpUriAsFile()
-                            throws IOException {
-        URI uriRef = URI.create( "https://www.w3schools.com/xml/note.xml" );
-        File file = URIUtils.dereferenceURI( uriRef );
-        assertNotNull( file );
-        assertTrue( "File should not be empty", file.length() > 0 );
-    }
+	@Test
+	public void resolveHttpUriAsFile() throws IOException {
+		URI uriRef = URI.create("https://www.w3schools.com/xml/note.xml");
+		File file = URIUtils.dereferenceURI(uriRef);
+		assertNotNull(file);
+		assertTrue("File should not be empty", file.length() > 0);
+	}
 
 }

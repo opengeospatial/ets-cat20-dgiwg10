@@ -44,129 +44,129 @@ import org.w3c.dom.Node;
  */
 public class GetRecordById extends CommonFixture {
 
-    private final RequestCreator requestCreator = new RequestCreator();
+	private final RequestCreator requestCreator = new RequestCreator();
 
-    private DataSampler dataSampler;
+	private DataSampler dataSampler;
 
-    private Validator cswValidator;
+	private Validator cswValidator;
 
-    private Validator isoValidator;
+	private Validator isoValidator;
 
-    private Document dublinCoreResponse;
+	private Document dublinCoreResponse;
 
-    private Document isoResponse;
+	private Document isoResponse;
 
-    /**
-     * @param testContext
-     *            the test context
-     */
-    @BeforeClass
-    public void retrieveDataSampler( ITestContext testContext ) {
-        this.dataSampler = (DataSampler) testContext.getSuite().getAttribute( SuiteAttribute.DATA_SAMPLER.getName() );
-    }
+	/**
+	 * @param testContext the test context
+	 */
+	@BeforeClass
+	public void retrieveDataSampler(ITestContext testContext) {
+		this.dataSampler = (DataSampler) testContext.getSuite().getAttribute(SuiteAttribute.DATA_SAMPLER.getName());
+	}
 
-    @BeforeClass
-    public void buildValidators() {
-        URL cswSchemaUrl = getClass().getResource( "/org/opengis/cite/cat20/dgiwg10/xsd/csw/2.0.2/csw.xsd" );
-        try {
-            Schema cswSchema = ValidationUtils.createSchema( cswSchemaUrl.toURI() );
-            this.cswValidator = cswSchema.newValidator();
-        } catch ( URISyntaxException e ) {
-            // very unlikely to occur with no schema to process
-            TestSuiteLogger.log( Level.WARNING, "Failed to build XML Schema Validator for csw.xsd.", e );
-        }
+	@BeforeClass
+	public void buildValidators() {
+		URL cswSchemaUrl = getClass().getResource("/org/opengis/cite/cat20/dgiwg10/xsd/csw/2.0.2/csw.xsd");
+		try {
+			Schema cswSchema = ValidationUtils.createSchema(cswSchemaUrl.toURI());
+			this.cswValidator = cswSchema.newValidator();
+		}
+		catch (URISyntaxException e) {
+			// very unlikely to occur with no schema to process
+			TestSuiteLogger.log(Level.WARNING, "Failed to build XML Schema Validator for csw.xsd.", e);
+		}
 
-        try {
-            URL metadatEntitySchemaUrl = getClass().getResource( "/org/opengis/cite/cat20/dgiwg10/xsd/iso/19139/20070417/gmd/metadataEntity.xsd" );
-            URL srvSchemaUrl = getClass().getResource( "/org/opengis/cite/cat20/dgiwg10/xsd/iso/19139/20070417/srv/1.0/serviceMetadata.xsd" );
-            URL gmxSchemaUrl = getClass().getResource( "/org/opengis/cite/cat20/dgiwg10/xsd/iso/19139/20070417/gmx/gmx.xsd" );
-            Schema schema = ValidationUtils.createSchema( metadatEntitySchemaUrl.toURI(), srvSchemaUrl.toURI(),
-                                                          gmxSchemaUrl.toURI(), cswSchemaUrl.toURI() );
-            this.isoValidator = schema.newValidator();
-        } catch ( URISyntaxException e ) {
-            // very unlikely to occur with no schema to process
-            TestSuiteLogger.log( Level.WARNING, "Failed to build XML Schema Validator for csw.xsd.", e );
-        }
-    }
+		try {
+			URL metadatEntitySchemaUrl = getClass()
+				.getResource("/org/opengis/cite/cat20/dgiwg10/xsd/iso/19139/20070417/gmd/metadataEntity.xsd");
+			URL srvSchemaUrl = getClass()
+				.getResource("/org/opengis/cite/cat20/dgiwg10/xsd/iso/19139/20070417/srv/1.0/serviceMetadata.xsd");
+			URL gmxSchemaUrl = getClass()
+				.getResource("/org/opengis/cite/cat20/dgiwg10/xsd/iso/19139/20070417/gmx/gmx.xsd");
+			Schema schema = ValidationUtils.createSchema(metadatEntitySchemaUrl.toURI(), srvSchemaUrl.toURI(),
+					gmxSchemaUrl.toURI(), cswSchemaUrl.toURI());
+			this.isoValidator = schema.newValidator();
+		}
+		catch (URISyntaxException e) {
+			// very unlikely to occur with no schema to process
+			TestSuiteLogger.log(Level.WARNING, "Failed to build XML Schema Validator for csw.xsd.", e);
+		}
+	}
 
-    /**
-     * Issue an HTTP GetRecordById request with csw:Record.
-     */
-    @Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'csw:Record' (Requirement 10)")
-    public void issueGetRecordById_DublinCore() {
-        URI endpoint = getOperationEndpoint( this.capabilitiesDoc, GETRECORDS, POST );
-        if ( endpoint == null )
-            throw new SkipException( "No POST binding available for GetRecords request." );
+	/**
+	 * Issue an HTTP GetRecordById request with csw:Record.
+	 */
+	@Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'csw:Record' (Requirement 10)")
+	public void issueGetRecordById_DublinCore() {
+		URI endpoint = getOperationEndpoint(this.capabilitiesDoc, GETRECORDS, POST);
+		if (endpoint == null)
+			throw new SkipException("No POST binding available for GetRecords request.");
 
-        String identifier = dataSampler.findSampleIdentifier();
-        if ( identifier == null )
-            throw new SkipException( "No identifier available." );
+		String identifier = dataSampler.findSampleIdentifier();
+		if (identifier == null)
+			throw new SkipException("No identifier available.");
 
-        this.requestDocument = requestCreator.createGetRecordById( DC, FULL, identifier );
-        this.response = this.cswClient.submitPostRequest( endpoint, this.requestDocument );
-        assertStatusCode( this.response.getStatus(), 200 );
-        assertXmlContentType( this.response.getHeaders() );
+		this.requestDocument = requestCreator.createGetRecordById(DC, FULL, identifier);
+		this.response = this.cswClient.submitPostRequest(endpoint, this.requestDocument);
+		assertStatusCode(this.response.getStatus(), 200);
+		assertXmlContentType(this.response.getHeaders());
 
-        this.responseDocument = this.response.getEntity( Document.class );
-        assertQualifiedName( responseDocument, CSW, "GetRecordByIdResponse" );
+		this.responseDocument = this.response.readEntity(Document.class);
+		assertQualifiedName(responseDocument, CSW, "GetRecordByIdResponse");
 
-        assertSchemaValid( this.cswValidator, new DOMSource( this.responseDocument ) );
-        this.dublinCoreResponse = this.responseDocument;
-    }
+		assertSchemaValid(this.cswValidator, new DOMSource(this.responseDocument));
+		this.dublinCoreResponse = this.responseDocument;
+	}
 
-    /**
-     * Issue an HTTP GetRecordById request with gmd:MD_Metadata.
-     */
-    @Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'gmd:MD_Metadata' (Requirement 10)")
-    public void issueGetRecordById_Iso() {
-        URI endpoint = getOperationEndpoint( this.capabilitiesDoc, GETRECORDS, POST );
-        if ( endpoint == null )
-            throw new SkipException( "No POST binding available for GetRecords request." );
+	/**
+	 * Issue an HTTP GetRecordById request with gmd:MD_Metadata.
+	 */
+	@Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'gmd:MD_Metadata' (Requirement 10)")
+	public void issueGetRecordById_Iso() {
+		URI endpoint = getOperationEndpoint(this.capabilitiesDoc, GETRECORDS, POST);
+		if (endpoint == null)
+			throw new SkipException("No POST binding available for GetRecords request.");
 
-        String identifier = dataSampler.findSampleIdentifier();
-        if ( identifier == null )
-            throw new SkipException( "No identifier available." );
+		String identifier = dataSampler.findSampleIdentifier();
+		if (identifier == null)
+			throw new SkipException("No identifier available.");
 
-        this.requestDocument = requestCreator.createGetRecordById( ISO19193, FULL, identifier );
-        this.response = this.cswClient.submitPostRequest( endpoint, this.requestDocument );
-        assertStatusCode( this.response.getStatus(), 200 );
-        assertXmlContentType( this.response.getHeaders() );
+		this.requestDocument = requestCreator.createGetRecordById(ISO19193, FULL, identifier);
+		this.response = this.cswClient.submitPostRequest(endpoint, this.requestDocument);
+		assertStatusCode(this.response.getStatus(), 200);
+		assertXmlContentType(this.response.getHeaders());
 
-        this.responseDocument = this.response.getEntity( Document.class );
-        assertQualifiedName( responseDocument, CSW, "GetRecordByIdResponse" );
+		this.responseDocument = this.response.readEntity(Document.class);
+		assertQualifiedName(responseDocument, CSW, "GetRecordByIdResponse");
 
-        assertSchemaValid( this.isoValidator, new DOMSource( this.responseDocument ) );
-        this.isoResponse = this.responseDocument;
-    }
+		assertSchemaValid(this.isoValidator, new DOMSource(this.responseDocument));
+		this.isoResponse = this.responseDocument;
+	}
 
-    /**
-     * Verify that all metadata returnables are present in the result (csw:Record).
-     * 
-     * @throws XPathExpressionException
-     *             should never happen
-     */
-    @Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'csw:Record', returnables (Requirement 13)", dependsOnMethods = "issueGetRecordById_DublinCore")
-    public void issueGetRecordById_Returnables_DublinCore()
-                            throws XPathExpressionException {
-        Node record = (Node) evaluateXPath( this.dublinCoreResponse, "//csw:Record[1]", null, NODE );
-        if ( record == null )
-            throw new AssertionError( "No csw:Record record available" );
-        assertReturnablesDublinCore( record );
-    }
+	/**
+	 * Verify that all metadata returnables are present in the result (csw:Record).
+	 * @throws XPathExpressionException should never happen
+	 */
+	@Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'csw:Record', returnables (Requirement 13)",
+			dependsOnMethods = "issueGetRecordById_DublinCore")
+	public void issueGetRecordById_Returnables_DublinCore() throws XPathExpressionException {
+		Node record = (Node) evaluateXPath(this.dublinCoreResponse, "//csw:Record[1]", null, NODE);
+		if (record == null)
+			throw new AssertionError("No csw:Record record available");
+		assertReturnablesDublinCore(record);
+	}
 
-    /**
-     * Verify that all metadata returnables are present in the result (gmd:MD_Metadata).
-     * 
-     * @throws XPathExpressionException
-     *             should never happen
-     */
-    @Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'gmd:MD_Metadata', returnables (Requirement 13)", dependsOnMethods = "issueGetRecordById_Iso")
-    public void issueGetRecordById_Returnables_Iso()
-                            throws XPathExpressionException {
-        Node record = (Node) evaluateXPath( this.isoResponse, "//gmd:MD_Metadata[1]", null, NODE );
-        if ( record == null )
-            throw new AssertionError( "No gmd:MD_Metadata record available" );
-        assertReturnablesIso( record );
-    }
+	/**
+	 * Verify that all metadata returnables are present in the result (gmd:MD_Metadata).
+	 * @throws XPathExpressionException should never happen
+	 */
+	@Test(description = "Implements A.1.3 GetRecordById for DGIWG Basic CSW - 'gmd:MD_Metadata', returnables (Requirement 13)",
+			dependsOnMethods = "issueGetRecordById_Iso")
+	public void issueGetRecordById_Returnables_Iso() throws XPathExpressionException {
+		Node record = (Node) evaluateXPath(this.isoResponse, "//gmd:MD_Metadata[1]", null, NODE);
+		if (record == null)
+			throw new AssertionError("No gmd:MD_Metadata record available");
+		assertReturnablesIso(record);
+	}
 
 }

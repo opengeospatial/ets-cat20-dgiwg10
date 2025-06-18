@@ -20,48 +20,51 @@ import org.testng.annotations.Test;
  */
 public class TransactionCommon extends CommonFixture {
 
-    protected static final String CSWT_IDENTIFIER = "http://www.dgiwg.org/std/csw/1.0/conf/dgiwg_cswt";
+	protected static final String CSWT_IDENTIFIER = "http://www.dgiwg.org/std/csw/1.0/conf/dgiwg_cswt";
 
-    private static final String ABSTRACT_TEXT_19 = "This service implements the DGIWG Catalogue Service for the Web ISO Profile version 1.0, DGIWG Basic CSW conformance class (http://www.dgiwg.org/std/csw/1.0/conf/basic) and DGIWG Transactional CSW (”http://www.dgiwg.org/std/csw/1.0/conf/dgiwg_cswt)";
+	private static final String ABSTRACT_TEXT_19 = "This service implements the DGIWG Catalogue Service for the Web ISO Profile version 1.0, DGIWG Basic CSW conformance class (http://www.dgiwg.org/std/csw/1.0/conf/basic) and DGIWG Transactional CSW (”http://www.dgiwg.org/std/csw/1.0/conf/dgiwg_cswt)";
 
-    /**
-     * Verify that the Abstract present in the service metadata includes basic identifier.
-     */
-    @Test(description = "Implements A.1.4 DGIWG Transactional CSW", groups = "isTransactional")
-    public void isTransactionalCsw() {
-        String xpath = "contains(//csw:Capabilities/ows:ServiceIdentification/ows:Abstract, '%s')";
-        String xpathWithIdentifier = String.format( xpath, CSWT_IDENTIFIER );
-        try {
-            boolean isCswT = (boolean) evaluateXPath( capabilitiesDoc, xpathWithIdentifier,
-                                                      withStandardBindings().getAllBindings(), XPathConstants.BOOLEAN );
-            if ( !isCswT )
-                throw new SkipException( "CSW is not transactional (missing identifier '" + CSWT_IDENTIFIER
-                                         + "' in the abstract of the capabilities)." );
-        } catch ( XPathExpressionException e ) {
-            // should never happen
-        }
-    }
+	/**
+	 * Verify that the Abstract present in the service metadata includes basic identifier.
+	 */
+	@Test(description = "Implements A.1.4 DGIWG Transactional CSW", groups = "isTransactional")
+	public void isTransactionalCsw() {
+		String xpath = "contains(//csw:Capabilities/ows:ServiceIdentification/ows:Abstract, '%s')";
+		String xpathWithIdentifier = String.format(xpath, CSWT_IDENTIFIER);
+		try {
+			boolean isCswT = (boolean) evaluateXPath(capabilitiesDoc, xpathWithIdentifier,
+					withStandardBindings().getAllBindings(), XPathConstants.BOOLEAN);
+			if (!isCswT)
+				throw new SkipException("CSW is not transactional (missing identifier '" + CSWT_IDENTIFIER
+						+ "' in the abstract of the capabilities).");
+		}
+		catch (XPathExpressionException e) {
+			// should never happen
+		}
+	}
 
-    /**
-     * Verify that the service provides a POST URL for Transaction requests.
-     */
-    @Test(description = "Implements A.1.4 DGIWG Transactional CSW", groups = "isTransactional")
-    public void hasTransactionPostUrl() {
-        URI transactionUrl = ServiceMetadataUtils.getOperationEndpoint( capabilitiesDoc, "Transaction",
-                                                                        ProtocolBinding.POST );
-        if ( transactionUrl == null )
-            throw new SkipException( "CSW does not provide a POST Url for Transaction requests." );
-    }
+	/**
+	 * Verify that the service provides a POST URL for Transaction requests.
+	 */
+	@Test(description = "Implements A.1.4 DGIWG Transactional CSW", groups = "isTransactional")
+	public void hasTransactionPostUrl() {
+		URI transactionUrl = ServiceMetadataUtils.getOperationEndpoint(capabilitiesDoc, "Transaction",
+				ProtocolBinding.POST);
+		if (transactionUrl == null)
+			throw new SkipException("CSW does not provide a POST Url for Transaction requests.");
+	}
 
-    /**
-     * Verify that the Abstract present in the service metadata includes the text defined in requirement 19.
-     */
-    @Test(description = "Implements A.1.4 DGIWG Transactional CSW (Requirement 19)", groups = "isTransactional", dependsOnMethods = "isTransactionalCsw")
-    public void verifyAbstract() {
-        String xpath = "contains(normalize-space(//csw:Capabilities/ows:ServiceIdentification/ows:Abstract), '"
-                       + ABSTRACT_TEXT_19 + "')";
-        assertXPath( capabilitiesDoc, xpath, withStandardBindings().getAllBindings(),
-                     "Abstract does not contain the expected text '" + ABSTRACT_TEXT_19 + "'." );
-    }
+	/**
+	 * Verify that the Abstract present in the service metadata includes the text defined
+	 * in requirement 19.
+	 */
+	@Test(description = "Implements A.1.4 DGIWG Transactional CSW (Requirement 19)", groups = "isTransactional",
+			dependsOnMethods = "isTransactionalCsw")
+	public void verifyAbstract() {
+		String xpath = "contains(normalize-space(//csw:Capabilities/ows:ServiceIdentification/ows:Abstract), '"
+				+ ABSTRACT_TEXT_19 + "')";
+		assertXPath(capabilitiesDoc, xpath, withStandardBindings().getAllBindings(),
+				"Abstract does not contain the expected text '" + ABSTRACT_TEXT_19 + "'.");
+	}
 
 }

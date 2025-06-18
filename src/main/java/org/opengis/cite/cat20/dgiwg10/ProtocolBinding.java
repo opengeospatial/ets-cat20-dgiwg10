@@ -1,9 +1,10 @@
 package org.opengis.cite.cat20.dgiwg10;
 
 /**
- * An enumerated type that indicates how a request message is bound to an application protocol. In effect, a binding
- * prescribes how the message content is mapped into a concrete exchange format.
- * 
+ * An enumerated type that indicates how a request message is bound to an application
+ * protocol. In effect, a binding prescribes how the message content is mapped into a
+ * concrete exchange format.
+ *
  * <ul>
  * <li>HTTP GET</li>
  * <li>HTTP POST</li>
@@ -11,21 +12,21 @@ package org.opengis.cite.cat20.dgiwg10;
  */
 public enum ProtocolBinding {
 
-    /** HTTP GET method */
-    GET( "Get" ),
-    /** HTTP POST method */
-    POST( "Post" ),
-    /** Any supported binding */
-    ANY( null );
+	/** HTTP GET method */
+	GET("Get"),
+	/** HTTP POST method */
+	POST("Post"),
+	/** Any supported binding */
+	ANY(null);
 
-    private final String elementName;
+	private final String elementName;
 
-    ProtocolBinding( String elementName ) {
-        this.elementName = elementName;
-    }
+	ProtocolBinding(String elementName) {
+		this.elementName = elementName;
+	}
 
-    public String getElementName() {
-        return elementName;
-    }
+	public String getElementName() {
+		return elementName;
+	}
 
 }

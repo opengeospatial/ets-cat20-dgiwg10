@@ -21,87 +21,79 @@ import org.xml.sax.SAXException;
  */
 public class GetCapabilitiesTest {
 
-    private static ITestContext testContext;
+	private static ITestContext testContext;
 
-    private static ISuite suite;
+	private static ISuite suite;
 
-    private static DocumentBuilder docBuilder;
+	private static DocumentBuilder docBuilder;
 
-    @BeforeClass
-    public static void setUpClass()
-                            throws Exception {
-        testContext = mock( ITestContext.class );
-        suite = mock( ISuite.class );
-        when( testContext.getSuite() ).thenReturn( suite );
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setNamespaceAware( true );
-        docBuilder = dbf.newDocumentBuilder();
-    }
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		testContext = mock(ITestContext.class);
+		suite = mock(ISuite.class);
+		when(testContext.getSuite()).thenReturn(suite);
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		dbf.setNamespaceAware(true);
+		docBuilder = dbf.newDocumentBuilder();
+	}
 
-    @Test
-    public void testVerifyMetadataLink()
-                            throws Exception {
-        Document capabilitiesDocument = parseCapabilitiesDocument( "GetCapabilities-DGIWG-response.xml" );
+	@Test
+	public void testVerifyMetadataLink() throws Exception {
+		Document capabilitiesDocument = parseCapabilitiesDocument("GetCapabilities-DGIWG-response.xml");
 
-        GetCapabilities getCapabilities = new GetCapabilities();
-        getCapabilities.setResponseDocument( capabilitiesDocument );
-        getCapabilities.verifyMetadataLink();
-    }
+		GetCapabilities getCapabilities = new GetCapabilities();
+		getCapabilities.setResponseDocument(capabilitiesDocument);
+		getCapabilities.verifyMetadataLink();
+	}
 
-    @Test(expected = AssertionError.class)
-    public void testVerifyMetadataLink_invalid()
-                            throws Exception {
-        Document capabilitiesDocument = parseCapabilitiesDocument( "GetCapabilities-response.xml" );
+	@Test(expected = AssertionError.class)
+	public void testVerifyMetadataLink_invalid() throws Exception {
+		Document capabilitiesDocument = parseCapabilitiesDocument("GetCapabilities-response.xml");
 
-        GetCapabilities getCapabilities = new GetCapabilities();
-        getCapabilities.setResponseDocument( capabilitiesDocument );
-        getCapabilities.verifyMetadataLink();
-    }
+		GetCapabilities getCapabilities = new GetCapabilities();
+		getCapabilities.setResponseDocument(capabilitiesDocument);
+		getCapabilities.verifyMetadataLink();
+	}
 
-    @Test
-    public void testVerifySupportGetRecordsReturnType()
-                            throws Exception {
-        Document capabilitiesDocument = parseCapabilitiesDocument( "GetCapabilities-DGIWG-response.xml" );
+	@Test
+	public void testVerifySupportGetRecordsReturnType() throws Exception {
+		Document capabilitiesDocument = parseCapabilitiesDocument("GetCapabilities-DGIWG-response.xml");
 
-        GetCapabilities getCapabilities = new GetCapabilities();
-        getCapabilities.setResponseDocument( capabilitiesDocument );
-        getCapabilities.verifySupportGetRecordsReturnType();
-    }
+		GetCapabilities getCapabilities = new GetCapabilities();
+		getCapabilities.setResponseDocument(capabilitiesDocument);
+		getCapabilities.verifySupportGetRecordsReturnType();
+	}
 
-    @Test(expected = AssertionError.class)
-    public void testVerifySupportGetRecordsReturnType_invalid()
-                            throws Exception {
-        Document capabilitiesDocument = parseCapabilitiesDocument( "GetCapabilities-response.xml" );
+	@Test(expected = AssertionError.class)
+	public void testVerifySupportGetRecordsReturnType_invalid() throws Exception {
+		Document capabilitiesDocument = parseCapabilitiesDocument("GetCapabilities-response.xml");
 
-        GetCapabilities getCapabilities = new GetCapabilities();
-        getCapabilities.setResponseDocument( capabilitiesDocument );
-        getCapabilities.verifySupportGetRecordsReturnType();
-    }
+		GetCapabilities getCapabilities = new GetCapabilities();
+		getCapabilities.setResponseDocument(capabilitiesDocument);
+		getCapabilities.verifySupportGetRecordsReturnType();
+	}
 
-    @Test
-    public void testVerifyGetRecordsQueryables()
-                            throws Exception {
-        Document capabilitiesDocument = parseCapabilitiesDocument( "GetCapabilities-DGIWG-response.xml" );
+	@Test
+	public void testVerifyGetRecordsQueryables() throws Exception {
+		Document capabilitiesDocument = parseCapabilitiesDocument("GetCapabilities-DGIWG-response.xml");
 
-        GetCapabilities getCapabilities = new GetCapabilities();
-        getCapabilities.setResponseDocument( capabilitiesDocument );
-        getCapabilities.verifyGetRecordsQueryables();
-    }
+		GetCapabilities getCapabilities = new GetCapabilities();
+		getCapabilities.setResponseDocument(capabilitiesDocument);
+		getCapabilities.verifyGetRecordsQueryables();
+	}
 
-    @Test(expected = AssertionError.class)
-    public void testVerifyGetRecordsQueryables_invalid()
-                            throws Exception {
-        Document capabilitiesDocument = parseCapabilitiesDocument( "GetCapabilities-response.xml" );
+	@Test(expected = AssertionError.class)
+	public void testVerifyGetRecordsQueryables_invalid() throws Exception {
+		Document capabilitiesDocument = parseCapabilitiesDocument("GetCapabilities-response.xml");
 
-        GetCapabilities getCapabilities = new GetCapabilities();
-        getCapabilities.setResponseDocument( capabilitiesDocument );
-        getCapabilities.verifyGetRecordsQueryables();
-    }
+		GetCapabilities getCapabilities = new GetCapabilities();
+		getCapabilities.setResponseDocument(capabilitiesDocument);
+		getCapabilities.verifyGetRecordsQueryables();
+	}
 
-    private Document parseCapabilitiesDocument( String resource )
-                            throws SAXException, IOException {
-        InputStream is = getClass().getResourceAsStream( resource );
-        return docBuilder.parse( is );
-    }
+	private Document parseCapabilitiesDocument(String resource) throws SAXException, IOException {
+		InputStream is = getClass().getResourceAsStream(resource);
+		return docBuilder.parse(is);
+	}
 
 }

@@ -27,43 +27,42 @@ import org.w3c.dom.Document;
  */
 public class ServiceMetadataUtilsTest {
 
-    private static DocumentBuilder docBuilder;
+	private static DocumentBuilder docBuilder;
 
-    @BeforeClass
-    public static void setUpClass()
-                            throws Exception {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setNamespaceAware( true );
-        docBuilder = dbf.newDocumentBuilder();
-    }
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		dbf.setNamespaceAware(true);
+		docBuilder = dbf.newDocumentBuilder();
+	}
 
-    @Test
-    public void testGetOperationEndpoint()
-                            throws Exception {
-        InputStream is = ServiceMetadataUtilsTest.class.getResourceAsStream( "../getcapabilities/GetCapabilities-response.xml" );
-        Document capabilitiesDocument = docBuilder.parse( is );
-        URI operationEndpoint = getOperationEndpoint( capabilitiesDocument, GETCAPABILITIES, GET );
+	@Test
+	public void testGetOperationEndpoint() throws Exception {
+		InputStream is = ServiceMetadataUtilsTest.class
+			.getResourceAsStream("../getcapabilities/GetCapabilities-response.xml");
+		Document capabilitiesDocument = docBuilder.parse(is);
+		URI operationEndpoint = getOperationEndpoint(capabilitiesDocument, GETCAPABILITIES, GET);
 
-        assertThat( operationEndpoint, is( new URI( "http://demo.pycsw.org/cite/csw" ) ) );
-    }
+		assertThat(operationEndpoint, is(new URI("http://demo.pycsw.org/cite/csw")));
+	}
 
-    @Test
-    public void testGetOperationBindings()
-                            throws Exception {
-        InputStream is = ServiceMetadataUtilsTest.class.getResourceAsStream( "../getcapabilities/GetCapabilities-response.xml" );
-        Document capabilitiesDocument = docBuilder.parse( is );
-        Set<ProtocolBinding> operationBindingsGetCapabilities = getOperationBindings( capabilitiesDocument,
-                                                                                      GETCAPABILITIES );
+	@Test
+	public void testGetOperationBindings() throws Exception {
+		InputStream is = ServiceMetadataUtilsTest.class
+			.getResourceAsStream("../getcapabilities/GetCapabilities-response.xml");
+		Document capabilitiesDocument = docBuilder.parse(is);
+		Set<ProtocolBinding> operationBindingsGetCapabilities = getOperationBindings(capabilitiesDocument,
+				GETCAPABILITIES);
 
-        assertThat( operationBindingsGetCapabilities.size(), is( 2 ) );
-        assertThat( operationBindingsGetCapabilities, hasItem( GET ) );
-        assertThat( operationBindingsGetCapabilities, hasItem( POST ) );
+		assertThat(operationBindingsGetCapabilities.size(), is(2));
+		assertThat(operationBindingsGetCapabilities, hasItem(GET));
+		assertThat(operationBindingsGetCapabilities, hasItem(POST));
 
-        Set<ProtocolBinding> operationBindingsTransaction = getOperationBindings( capabilitiesDocument, TRANSACTION );
+		Set<ProtocolBinding> operationBindingsTransaction = getOperationBindings(capabilitiesDocument, TRANSACTION);
 
-        assertThat( operationBindingsTransaction.size(), is( 1 ) );
-        assertThat( operationBindingsTransaction, hasItem( POST ) );
+		assertThat(operationBindingsTransaction.size(), is(1));
+		assertThat(operationBindingsTransaction, hasItem(POST));
 
-    }
+	}
 
 }
